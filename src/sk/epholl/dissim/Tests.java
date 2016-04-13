@@ -1,7 +1,7 @@
 package sk.epholl.dissim;
 
 import sk.epholl.dissim.core.SimulationCore;
-import sk.epholl.dissim.entity.NarrowRoad;
+import sk.epholl.dissim.entity.BumpyRoad;
 import sk.epholl.dissim.entity.SimulationComponent;
 import sk.epholl.dissim.entity.Vehicle;
 
@@ -19,10 +19,10 @@ public class Tests {
             }
         };
 
-        Vehicle v1 = new Vehicle(10, 60, 0, 100);
-        Vehicle v2 = new Vehicle(10, 80, 0, 100);
-        Vehicle v3 = new Vehicle(10, 40, 0, 100);
-        NarrowRoad r1 = new NarrowRoad(core, 30);
+        Vehicle v1 = new Vehicle(10, 60, 0.5, 100);
+        Vehicle v2 = new Vehicle(10, 60, 0.5, 100);
+        Vehicle v3 = new Vehicle(10, 60, 0.5, 100);
+        BumpyRoad r1 = new BumpyRoad(core, 30);
         r1.setOnFinishedListener(new SimulationComponent.EventFinishedListener() {
             @Override
             public void onVehicleFinished(Vehicle vehicle) {
