@@ -9,7 +9,6 @@ import sk.epholl.dissim.sem2.Sem2Results;
  */
 public class PauseEvent extends Event {
 
-    private double timeMultiplier = 1;
     private SimulationCore<Sem2Results> simCore;
 
     boolean active = false;
@@ -19,16 +18,8 @@ public class PauseEvent extends Event {
         this.simCore = simCore;
     }
 
-    public synchronized void setTimeMultiplier(double multiplier) {
-        this.timeMultiplier = multiplier;
-    }
-
     public synchronized void setActive(boolean active) {
         this.active = active;
-    }
-
-    public double getTimeMultiplier() {
-        return timeMultiplier;
     }
 
     public boolean isActive() {
@@ -39,6 +30,7 @@ public class PauseEvent extends Event {
     public synchronized void onOccur() {
         if (active) {
             try {
+                double timeMultiplier = simCore.getSimulationSpeed();
                 simCore.publishContinuousStateResults();
                 Thread.sleep(10);
                 occurTime = simCore.getSimulationTime() + timeMultiplier;

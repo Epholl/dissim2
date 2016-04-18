@@ -22,6 +22,8 @@ public abstract class SimulationCore<T> {
     private boolean stopped;
     private boolean paused;
 
+    private volatile double simulationSpeed = 20d;
+
     private PauseEvent pauseEvent;
 
     private List<ResultListener<T>> listeners;
@@ -47,7 +49,7 @@ public abstract class SimulationCore<T> {
     }
 
     public void setContinuousSpeed(double speedMultiplier) {
-        pauseEvent.setTimeMultiplier(speedMultiplier);
+        simulationSpeed = speedMultiplier;
     }
 
     public void start() {
@@ -74,6 +76,10 @@ public abstract class SimulationCore<T> {
 
     public double getSimulationTime() {
         return simulationTime;
+    }
+
+    public double getSimulationSpeed() {
+        return simulationSpeed;
     }
 
     public void addListener(ResultListener<T> listener) {
