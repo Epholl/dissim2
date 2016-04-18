@@ -8,7 +8,7 @@ import java.util.Random;
 public abstract class RandomGenerator<T extends Number> {
 
     public static final long DEFAULT_SEED = 1;
-    public static final Random seedGenerator = new Random(DEFAULT_SEED);
+    public static final Random seedGenerator = new Random();
 
     public static void setCustomGeneratorSeed(long customSeed) {
         seedGenerator.setSeed(customSeed);

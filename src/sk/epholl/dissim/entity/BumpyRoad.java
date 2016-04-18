@@ -11,8 +11,8 @@ public class BumpyRoad extends SimulationComponent {
 
     private double length;
 
-    public BumpyRoad(SimulationCore core, double length) {
-        super(core);
+    public BumpyRoad(SimulationCore core, String name, double length) {
+        super(core, name);
         this.length = length;
     }
 
@@ -25,6 +25,9 @@ public class BumpyRoad extends SimulationComponent {
 
         double breakupTime = vehicle.calculateTimeSpentRepairing();
         double arriveTime = arriveTimeWithoutBreakup + breakupTime;
+
+        vehicle.setState(vehicle.isBreakdown()?
+                Vehicle.STATE_BREAKDOWN + getName() : Vehicle.STATE_TRAVELLING + getName());
 
         simulationCore.addEvent(new TravelFinishedEvent(arriveTime, vehicle, this));
     }

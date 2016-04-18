@@ -8,7 +8,8 @@ public abstract class Event implements Comparable<Event> {
     public static final float EPSILON = 0.000001f;
 
     private long simulationEnrollId;
-    private double occurTime;
+    protected double enrollTime;
+    protected double occurTime;
 
     public Event(double occurTime) {
         this.occurTime = occurTime;
@@ -16,8 +17,16 @@ public abstract class Event implements Comparable<Event> {
 
     public abstract void onOccur();
 
+    public double getEnrollTime() {
+        return enrollTime;
+    }
+
     public double getOccurTime() {
         return occurTime;
+    }
+
+    public void setEnrollTime(double enrollTime) {
+        this.enrollTime = enrollTime;
     }
 
     public void setSimulationEnrollId(long newId) {

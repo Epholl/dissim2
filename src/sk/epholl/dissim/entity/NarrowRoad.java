@@ -16,8 +16,8 @@ public class NarrowRoad extends SimulationComponent {
 
     private LinkedList<Vehicle> passingVehicles = new LinkedList<>();
 
-    public NarrowRoad(SimulationCore core, double length) {
-        super(core);
+    public NarrowRoad(SimulationCore core, String name, double length) {
+        super(core, name);
         this.length = length;
     }
 
@@ -28,6 +28,8 @@ public class NarrowRoad extends SimulationComponent {
         double travelDurationInHours = length / vehicle.getSpeed();
         double travelDurationInSeconds = travelDurationInHours * 3600;
         double arriveTime = currentTime + travelDurationInSeconds;
+
+        vehicle.setState(Vehicle.STATE_TRAVELLING + getName());
 
         if (passingVehicles.isEmpty()) {
             passingVehicles.add(vehicle);

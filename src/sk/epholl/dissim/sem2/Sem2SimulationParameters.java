@@ -14,9 +14,9 @@ public class Sem2SimulationParameters {
 
     public double cargoAmount = 5000; // t
 
-    public double loaderSpeed = 180; // m^3 / min
+    public double loaderSpeed = 180; // m^3 / h
 
-    public double unloaderSpeed = 200; // m^3 / min
+    public double unloaderSpeed = 200; // m^3 / h
 
     public double roadAbLength = 45; // km
 
@@ -31,5 +31,11 @@ public class Sem2SimulationParameters {
             new Vehicle(5, 70, 0.11, 44),
             new Vehicle(40, 30, 0.06, 170)
     };
-    }
+
+    public int[][] vehicleCombinations = {
+            {0, 1, 2, 3},
+            {0, 2, 4},
+            {1, 2, 3},
+            {0, 1, 2, 3, 4}
+    };
 }
