@@ -1,7 +1,5 @@
 package sk.epholl.dissim.sem2;
 
-import sk.epholl.dissim.entity.Vehicle;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,7 @@ import java.util.List;
  */
 public class Sem2SimulationParameters {
 
-    public List<Vehicle> vehicles = new ArrayList<>();
+    /*public List<Vehicle> vehicles = new ArrayList<>();
 
     public double cargoAmount = 5000; // t
 
@@ -37,5 +35,5 @@ public class Sem2SimulationParameters {
             {0, 2, 4},
             {1, 2, 3},
             {0, 1, 2, 3, 4}
-    };
+    };*/
 }

@@ -7,7 +7,6 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import sk.epholl.dissim.entity.Vehicle;
 import sk.epholl.dissim.sem2.Sem2Results;
 import sk.epholl.dissim.sem2.Sem2SimulationParameters;
 import sk.epholl.dissim.sem2.Sem2SimulationRunner;
@@ -189,7 +188,7 @@ public class MainWindow extends JFrame {
 
             @Override
             public void onContinousUpdate(Sem2Results results) {
-                finishedCargoLabel.setText("" + results.unloader.cargoAmount);
+                /*finishedCargoLabel.setText("" + results.unloader.cargoAmount);
                 loaderCargoLabel.setText("" + results.loader.cargoAmount);
                 double hauledCargo = 0;
 
@@ -203,7 +202,7 @@ public class MainWindow extends JFrame {
 
                 hauledCargoLabel.setText("" + hauledCargo);
                 simTimeLabel.setText(String.format("%2f", Utils.secondsToHours(results.simTime)));
-            }
+            */}
         });
     }
 
@@ -265,7 +264,7 @@ public class MainWindow extends JFrame {
     private void resetSingleRunLabelValues() {
         finishedCargoLabel.setText("0");
         hauledCargoLabel.setText("0");
-        loaderCargoLabel.setText("" + params.cargoAmount);
+        loaderCargoLabel.setText("" /*+ params.cargoAmount*/);
         simTimeLabel.setText("0");
 
         for (int i = 0; i < stateLabels.length; i++) {

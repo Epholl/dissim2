@@ -1,5 +1,7 @@
 package sk.epholl.dissim.generator;
 
+import sk.epholl.dissim.core.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class EmpiricRandom<T extends Number> extends RandomGenerator<T> {
 
         public EmpiricRandom<T> get() {
 
-            if (Double.compare(cumulativeProbability, 1.0) != 0) {
+            if (Math.abs(cumulativeProbability - 1.0) > Event.EPSILON) {
                 throw new IllegalStateException("The total cumulative probability within an empiric random generator did not equal 1: " + cumulativeProbability);
             }
 

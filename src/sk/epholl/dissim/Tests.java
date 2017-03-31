@@ -50,14 +50,14 @@ public class Tests {
         System.out.println("Done...");
 
 
-        core.addListener(new SimulationCore.ResultListener<Sem2Results>() {
+        core.addListener(new SimulationCore.ResultListener<Sem2Results, Void>() {
             @Override
             public void onReplicationFinished(Sem2Results result) {
-                System.out.println("Finished." + result.loader.averageWaitingTime / 60);
+                //System.out.println("Finished." + result.loader.averageWaitingTime / 60);
             }
 
             @Override
-            public void onContinuousUpdate(Sem2Results result) {
+            public void onContinuousUpdate(Void state) {
 
             }
         });

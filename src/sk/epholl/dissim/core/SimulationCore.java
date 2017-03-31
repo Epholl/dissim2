@@ -9,12 +9,14 @@ import java.util.PriorityQueue;
 /**
  * Created by Tomáš on 26.03.2016.
  */
-public abstract class SimulationCore<T> {
+public abstract class SimulationCore<T extends SimulationParameters, S, U> {
 
-    public interface ResultListener<T> {
-        void onReplicationFinished(T result);
-        void onContinuousUpdate(T result);
+    public interface ResultListener<S, U> {
+        void onReplicationFinished(S result);
+        void onContinuousUpdate(U state);
     }
+
+    protected final T simulationParameters;
 
     private long simulationNextEventId = 0;
 
@@ -26,11 +28,12 @@ public abstract class SimulationCore<T> {
 
     private PauseEvent pauseEvent;
 
-    private List<ResultListener<T>> listeners;
+    private List<ResultListener<S, U>> listeners;
 
     private PriorityQueue<Event> events;
 
-    public SimulationCore() {
+    public SimulationCore(T simulationParameters) {
+        this.simulationParameters = simulationParameters;
         simulationTime = 0d;
         stopped = true;
         paused = false;
@@ -62,12 +65,15 @@ public abstract class SimulationCore<T> {
     }
 
     public void resume() {
-        while (!paused && !stopped && !simulationEndCondition() && !events.isEmpty()) {
+        while (!paused && !stopped && !events.isEmpty()) {
             Event current = events.poll();
             simulationTime = current.getOccurTime();
+            if (simulationEndCondition()) {
+                break;
+            }
             current.onOccur();
         }
-        if (paused) {
+;        if (paused) {
             return;
         } else {
             publishResults();
@@ -82,7 +88,7 @@ public abstract class SimulationCore<T> {
         return simulationSpeed;
     }
 
-    public void addListener(ResultListener<T> listener) {
+    public void addListener(ResultListener<S, U> listener) {
         listeners.add(listener);
     }
 
@@ -93,18 +99,21 @@ public abstract class SimulationCore<T> {
     }
 
     protected abstract boolean simulationEndCondition();
+    protected abstract void singleIteration();
 
-    public abstract T getResults();
+    public abstract S getResults();
+
+    public abstract U getState();
 
     public void publishResults() {
-        for (ResultListener<T> listener : listeners) {
+        for (ResultListener<S, U> listener : listeners) {
             listener.onReplicationFinished(getResults());
         }
     }
 
     public void publishContinuousStateResults() {
-        for (ResultListener<T> listener : listeners) {
-            listener.onContinuousUpdate(getResults());
+        for (ResultListener<S, U> listener : listeners) {
+            listener.onContinuousUpdate(getState());
         }
     }
 }

@@ -9,7 +9,7 @@ import sk.epholl.dissim.sem2.Sem2Results;
  */
 public class PauseEvent extends Event {
 
-    private SimulationCore<Sem2Results> simCore;
+    private SimulationCore simCore;
 
     boolean active = false;
 

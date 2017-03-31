@@ -1,5 +1,6 @@
 package sk.epholl.dissim.entity;
 
+import sk.epholl.dissim.core.Simulation;
 import sk.epholl.dissim.core.SimulationCore;
 
 import java.util.LinkedList;
@@ -7,17 +8,17 @@ import java.util.LinkedList;
 /**
  * Created by Tomáš on 12.04.2016.
  */
-public abstract class SimulationComponent implements Cloneable {
+public abstract class SimulationComponent<T> implements Cloneable {
 
-    public interface EventFinishedListener {
-        void onVehicleFinished(Vehicle vehicle);
+    public interface EventFinishedListener<T> {
+        void onFinished(T vehicle);
     }
 
-    protected SimulationCore simulationCore;
+    protected SimulationCore simulation;
 
     protected String name;
 
-    protected LinkedList<Vehicle> entryQueue = new LinkedList<>();
+    protected LinkedList<T> entryQueue = new LinkedList<>();
 
     protected EventFinishedListener onFinishedListener;
 
@@ -27,8 +28,8 @@ public abstract class SimulationComponent implements Cloneable {
     protected double[] queueLengths = new double[10];
     protected double lastQueueLengthUpdate = 0d;
 
-    public SimulationComponent(SimulationCore core, String name) {
-        this.simulationCore = core;
+    public SimulationComponent(SimulationCore sim, String name) {
+        this.simulation = sim;
         this.name = name;
     }
 
@@ -49,7 +50,7 @@ public abstract class SimulationComponent implements Cloneable {
     }
 
     public double getAverageQueueLength() {
-        double totalTime = simulationCore.getSimulationTime();
+        double totalTime = simulation.getSimulationTime();
         double sum = 0d;
         for (int i = 0; i < queueLengths.length; i++) {
             sum += queueLengths[i] * i;
@@ -59,15 +60,15 @@ public abstract class SimulationComponent implements Cloneable {
     }
 
     public void saveQueueState() {
-        queueLengths[entryQueue.size()] += simulationCore.getSimulationTime() - lastQueueLengthUpdate;
-        lastQueueLengthUpdate = simulationCore.getSimulationTime();
+        queueLengths[entryQueue.size()] += simulation.getSimulationTime() - lastQueueLengthUpdate;
+        lastQueueLengthUpdate = simulation.getSimulationTime();
     }
 
     public String getName() {
         return name;
     }
 
-    public abstract void accept(Vehicle vehicle);
+    public abstract void accept(T vehicle);
 
-    public abstract void finished(Vehicle vehicle);
+    public abstract void finished(T vehicle);
 }

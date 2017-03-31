@@ -81,7 +81,7 @@ public class Sem2SimulationRunner implements Runnable {
         currentSimulation.setContinuousRun(true);
         currentSimulation.setContinuousSpeed(speed);
 
-        currentSimulation.addListener(new SimulationCore.ResultListener<Sem2Results>() {
+        currentSimulation.addListener(new SimulationCore.ResultListener<Sem2Results, Void>() {
             @Override
             public void onReplicationFinished(Sem2Results result) {
                 if (simListener != null) {
@@ -90,9 +90,9 @@ public class Sem2SimulationRunner implements Runnable {
             }
 
             @Override
-            public void onContinuousUpdate(Sem2Results result) {
+            public void onContinuousUpdate(Void result) {
                 if (simListener != null) {
-                    simListener.onContinousUpdate(result);
+                    //simListener.onContinousUpdate(result);
                 }
             }
         });
@@ -110,20 +110,20 @@ public class Sem2SimulationRunner implements Runnable {
         currentSimulation = new Sem2SimulationCore(parameters);
         currentSimulation.setVehicleVariant(vehicleVariant);
 
-        currentSimulation.addListener(new SimulationCore.ResultListener<Sem2Results>() {
+        currentSimulation.addListener(new SimulationCore.ResultListener<Sem2Results, Void>() {
             @Override
             public void onReplicationFinished(Sem2Results result) {
-                timeCounter.addValue(currentSimulation.getSimulationTime());
+                /*timeCounter.addValue(currentSimulation.getSimulationTime());
                 loaderWaitedTime.addValue(result.loader.waitingTimeSum);
                 loaderWait.addValue(result.loader.averageWaitingTime);
                 loaderQueue.addValue(result.loader.averageQueueLength);
                 unloaderWaitedTime.addValue(result.unloader.waitingTimeSum);
                 unloaderWait.addValue(result.unloader.averageWaitingTime);
-                unloaderQueue.addValue(result.unloader.averageQueueLength);
+                unloaderQueue.addValue(result.unloader.averageQueueLength);*/
             }
 
             @Override
-            public void onContinuousUpdate(Sem2Results result) {
+            public void onContinuousUpdate(Void result) {
 
             }
         });

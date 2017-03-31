@@ -1,16 +1,44 @@
 package sk.epholl.dissim.sem2;
 
 import sk.epholl.dissim.core.SimulationCore;
-import sk.epholl.dissim.entity.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Tomáš on 14.04.2016.
  */
-public class Sem2SimulationCore extends SimulationCore<Sem2Results> {
+public class Sem2SimulationCore {
+    private double continuousSpeed;
 
+    public Sem2SimulationCore(Sem2SimulationParameters parameters) {
+    }
+
+    public void setVehicleVariant(int vehicleVariant) {
+
+    }
+
+    public void setContinuousRun(boolean b) {
+
+    }
+
+    public void setContinuousSpeed(double continuousSpeed) {
+
+    }
+
+    public void addListener(SimulationCore.ResultListener<Sem2Results, Void> resultListener) {
+
+    }
+
+    public void start() {
+
+    }
+
+    public double getSimulationTime() {
+        return 0d;
+    }
+
+    public void stop() {
+
+    }
+/*
     private Loader loader;
     private Unloader unloader;
     private NarrowRoad abRoad;
@@ -40,8 +68,11 @@ public class Sem2SimulationCore extends SimulationCore<Sem2Results> {
         bcRoad.setOnFinishedListener(vehicle -> {
             caRoad.accept(vehicle);
         });
-        caRoad.setOnFinishedListener(vehicle -> {
-            loader.accept(vehicle);
+        caRoad.setOnFinishedListener(new SimulationComponent.EventFinishedListener() {
+            @Override
+            public void onFinished(Vehicle vehicle) {
+
+            }
         });
     }
 
@@ -78,5 +109,5 @@ public class Sem2SimulationCore extends SimulationCore<Sem2Results> {
         return new Sem2Results(getSimulationTime(), vehicleClones, loaderState, unloaderState);
     }
 
-
+*/
 }
