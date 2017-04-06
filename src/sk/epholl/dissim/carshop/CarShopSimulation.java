@@ -15,7 +15,9 @@ public class CarShopSimulation extends Simulation<CarShopSimulationParameters, C
     }
 
     public class State {
-        
+        //private final double time;
+        //private final long carsEnqueued;
+        //private final
     }
 
     public CarShopSimulation(CarShopSimulationParameters simulationParameters, Simulation.SimulationListener<Results, State> simulationListener) {

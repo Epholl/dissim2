@@ -5,6 +5,7 @@ import sk.epholl.dissim.core.Event;
 import sk.epholl.dissim.core.SimulationCore;
 import sk.epholl.dissim.entity.Car;
 import sk.epholl.dissim.event.*;
+import sk.epholl.dissim.util.StatisticCounter;
 import sk.epholl.dissim.util.StatisticQueue;
 
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,8 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
     private StatisticQueue<Car> workshopQueue;
     private StatisticQueue<Car> returnQueue;
 
+    private StatisticCounter refusedCustomersCounter;
+
     public CarShopSimulationCore(CarShopSimulationParameters simulationParameters) {
         super(simulationParameters);
 
@@ -36,6 +39,8 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         entryQueue = new StatisticQueue<>(this);
         workshopQueue = new StatisticQueue<>(this);
         returnQueue = new StatisticQueue<>(this);
+
+        refusedCustomersCounter = new StatisticCounter();
     }
 
     @Override
@@ -45,6 +50,8 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         entryQueue.clear();
         workshopQueue.clear();
         returnQueue.clear();
+
+        refusedCustomersCounter.clean();
 
         addEvent(NewCarEvent.newInstance(this));
         addEvent(EndOfDayEvent.newInstance(this));
@@ -93,6 +100,7 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         entryQueue.updateStatistics();
         workshopQueue.updateStatistics();
         returnQueue.updateStatistics();
+        refusedCustomersCounter.addValue(refusedCustomersCount);
         System.out.println("Day " + (TimeUtils.getDay(getSimulationTime()) - 1) + " ends. Refused customers: " + refusedCustomersCount);
         System.out.println("Waiting for repairs " + workshopQueue.size() + ", waiting to be returned: " + returnQueue.size());
         System.out.println("Free workers type 1 / 2: " + type1FreeWorkers + " / " + type2FreeWorkers);

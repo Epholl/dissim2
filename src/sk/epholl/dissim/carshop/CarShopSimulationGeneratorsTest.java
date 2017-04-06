@@ -72,4 +72,35 @@ public class CarShopSimulationGeneratorsTest {
 
         System.out.println("Min: " + min + ", max: " + max + " avg: " + (sum/replications));
     }
+
+    @Test
+    public void testGenerator() {
+        CarShopSimulationGenerators gen = new CarShopSimulationGenerators();
+
+        double sum = 0;
+        double min = Double.MAX_VALUE;
+        double max = 0;
+
+        double singleRun;
+        int repairs;
+        int replications = 1000000;
+        for (int i = 0; i < replications; i++) {
+            singleRun = 0d;
+            repairs = gen.getNextAmountOfRepairs();
+            for (int r = 0; r < repairs; r++) {
+                singleRun += gen.getNextRepairDuration();
+                break;
+            }
+
+            if (singleRun > max) {
+                max = singleRun;
+            }
+            if (singleRun < min) {
+                min = singleRun;
+            }
+            sum += singleRun;
+        }
+
+        System.out.println("Min: " + min + ", max: " + max + " avg: " + (sum/replications));
+    }
 }

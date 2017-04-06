@@ -17,6 +17,10 @@ public class StatisticCounter {
         sumSquared += value*value;
     }
 
+    public double getSum() {
+        return sum;
+    }
+
     public double getMean() {
         return sum / count;
     }
@@ -35,5 +39,11 @@ public class StatisticCounter {
 
     public double getRightConfidenceInterval() {
         return getMean() + (CONFIDENCE_INTERVAL_90_PERCENT * getDeviation()) / Math.sqrt(count-1);
+    }
+
+    public void clean() {
+        sum = 0d;
+        count = 0;
+        sumSquared = 0d;
     }
 }
