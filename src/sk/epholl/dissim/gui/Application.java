@@ -32,7 +32,7 @@ public class Application {
             @Override
             public void run()
             {
-                new MainWindow();
+                new MainForm();
             }
         });
     }

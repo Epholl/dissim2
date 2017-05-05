@@ -9,12 +9,15 @@ import java.util.LinkedList;
 /**
  * Created by kocurik on 18.03.2017.
  */
-public class StatisticQueue<T> extends LinkedList<T> {
+public class StatisticQueue<T> extends LinkedList<Pair<Double, T>> {
 
-    private final HashMap<Integer, Double> queueLengths = new HashMap<>();
-    private final SimulationCore simulation;
+    public final HashMap<Integer, Double> queueLengths = new HashMap<>();
+    public final SimulationCore simulation;
 
-    private double lastQueueUpdate;
+    public long processedElements;
+    public double waitingSum;
+
+    public double lastQueueUpdate;
 
     public StatisticQueue(SimulationCore simulation) {
         this.simulation = simulation;
@@ -26,8 +29,9 @@ public class StatisticQueue<T> extends LinkedList<T> {
             throw new IllegalStateException("Tried enqueuing an element already present");
         }
 
+        final double simTime = simulation.getSimulationTime();
         updateStatistics();
-        addLast(element);
+        addLast(new Pair(simTime, element));
     }
 
     public T dequeue() {
@@ -36,7 +40,11 @@ public class StatisticQueue<T> extends LinkedList<T> {
         }
 
         updateStatistics();
-        return pollFirst();
+        final Pair<Double, T> polled = pollFirst();
+        final double duration = simulation.getSimulationTime() - polled.first;
+        processedElements++;
+        waitingSum += duration;
+        return polled.second;
     }
 
     public double getAverageQueueLength() {
@@ -50,6 +58,13 @@ public class StatisticQueue<T> extends LinkedList<T> {
         return sum / totalTime;
     }
 
+    public double getAverageQueueWait() {
+        if (processedElements == 0) {
+            return 0d;
+        }
+        return waitingSum / processedElements;
+    }
+
     public void updateStatistics() {
         final double duration = simulation.getSimulationTime() - lastQueueUpdate;
         final int index = size();
@@ -60,10 +75,16 @@ public class StatisticQueue<T> extends LinkedList<T> {
         }
     }
 
+    public void softClear() {
+        super.clear();
+    }
+
     @Override
     public void clear() {
         super.clear();
         lastQueueUpdate = 0d;
         queueLengths.clear();
+        processedElements = 0;
+        waitingSum = 0d;
     }
 }

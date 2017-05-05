@@ -26,6 +26,8 @@ public abstract class SimulationCore<T extends SimulationParameters, S, U> {
 
     private volatile double simulationSpeed = 20d;
 
+    private volatile boolean continous = false;
+
     private PauseEvent pauseEvent;
 
     private List<ResultListener<S, U>> listeners;
@@ -43,12 +45,7 @@ public abstract class SimulationCore<T extends SimulationParameters, S, U> {
     }
 
     public void setContinuousRun(boolean continousRun) {
-        if (continousRun) {
-            pauseEvent.setActive(true);
-            addEvent(pauseEvent);
-        } else {
-            pauseEvent.setActive(false);
-        }
+        continous = continousRun;
     }
 
     public void setContinuousSpeed(double speedMultiplier) {
@@ -64,8 +61,23 @@ public abstract class SimulationCore<T extends SimulationParameters, S, U> {
         stopped = true;
     }
 
+    public void pause() {
+        paused = true;
+    }
+
     public void resume() {
+        paused = false;
         while (!paused && !stopped && !events.isEmpty()) {
+            if (continous) {
+                if (!pauseEvent.isActive()) {
+                    pauseEvent.setActive(true);
+                    addEvent(pauseEvent);
+                }
+            } else {
+                if (pauseEvent.isActive()) {
+                    pauseEvent.setActive(false);
+                }
+            }
             Event current = events.poll();
             simulationTime = current.getOccurTime();
             if (simulationEndCondition()) {
@@ -73,10 +85,12 @@ public abstract class SimulationCore<T extends SimulationParameters, S, U> {
             }
             current.onOccur();
         }
-;        if (paused) {
+        if (paused) {
             return;
         } else {
             publishResults();
+            simulationTime = 0d;
+            events.clear();
         }
     }
 

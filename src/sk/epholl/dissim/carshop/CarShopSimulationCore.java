@@ -1,6 +1,5 @@
 package sk.epholl.dissim.carshop;
 
-import org.jfree.data.time.TimePeriodFormatException;
 import sk.epholl.dissim.core.Event;
 import sk.epholl.dissim.core.SimulationCore;
 import sk.epholl.dissim.entity.Car;
@@ -8,12 +7,14 @@ import sk.epholl.dissim.event.*;
 import sk.epholl.dissim.util.StatisticCounter;
 import sk.epholl.dissim.util.StatisticQueue;
 
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tomáš on 24.03.2017.
  */
-public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParameters, CarShopSimulation.Results, CarShopSimulation.State> {
+public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParameters, CarShopSimulation.IterationResults, CarShopSimulation.State> {
 
     private CarShopSimulationGenerators generators;
 
@@ -23,11 +24,16 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
     private int type1FreeWorkers;
     private int type2FreeWorkers;
 
+    private HashSet<Car> cars;
+
     private StatisticQueue<Car> entryQueue;
     private StatisticQueue<Car> workshopQueue;
     private StatisticQueue<Car> returnQueue;
 
     private StatisticCounter refusedCustomersCounter;
+    private StatisticCounter timeInSystemCounter;
+    private StatisticCounter timeFromAcquisitionToReturnCounter;
+    private StatisticCounter timeInSystem2Counter;
 
     public CarShopSimulationCore(CarShopSimulationParameters simulationParameters) {
         super(simulationParameters);
@@ -36,22 +42,33 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         type1WorkerCount = simulationParameters.type1WorkerCount;
         type2WorkerCount = simulationParameters.type2WorkerCount;
 
+        cars = new HashSet<>();
+
         entryQueue = new StatisticQueue<>(this);
         workshopQueue = new StatisticQueue<>(this);
         returnQueue = new StatisticQueue<>(this);
 
         refusedCustomersCounter = new StatisticCounter();
+        timeInSystemCounter = new StatisticCounter();
+        timeFromAcquisitionToReturnCounter = new StatisticCounter();
+        timeInSystem2Counter = new StatisticCounter();
     }
 
     @Override
     protected void singleIteration() {
         type1FreeWorkers = type1WorkerCount;
         type2FreeWorkers = type2WorkerCount;
+
+        cars.clear();
+
         entryQueue.clear();
         workshopQueue.clear();
         returnQueue.clear();
 
         refusedCustomersCounter.clean();
+        timeInSystemCounter.clean();
+        timeFromAcquisitionToReturnCounter.clean();
+        timeInSystem2Counter.clean();
 
         addEvent(NewCarEvent.newInstance(this));
         addEvent(EndOfDayEvent.newInstance(this));
@@ -64,6 +81,7 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
 
     public void handleNewCarArrived(Car car) {
         addEvent(NewCarEvent.newInstance(this));
+        cars.add(car);
         entryQueue.enqueue(car);
         checkAcceptNewCar();
     }
@@ -86,13 +104,20 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         type1FreeWorkers++;
         checkWorkForType1Worker();
 
-        System.out.println(car
+        timeInSystemCounter.addValue(car.getTimeSpentInSystem());
+        timeFromAcquisitionToReturnCounter.addValue(car.getTimeFromAcquisitionEndToReturn());
+
+        timeInSystem2Counter.addValue(car.getTimeSpentInSystemWithOvertimes());
+
+        cars.remove(car);
+
+        /*System.out.println(car
                 + ", entered "
                 + TimeUtils.formatDayTime(car.getEntryTime())
                 + ", left "
                 + TimeUtils.formatDayTime(car.getExitTime())
                 + ", total: "
-                + TimeUtils.formatTimePeriod(car.getTimeSpentInSystem()));
+                + TimeUtils.formatTimePeriod(car.getTimeSpentInSystem()));*/
     }
 
     public void handleEndOfDay() {
@@ -101,10 +126,10 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         workshopQueue.updateStatistics();
         returnQueue.updateStatistics();
         refusedCustomersCounter.addValue(refusedCustomersCount);
-        System.out.println("Day " + (TimeUtils.getDay(getSimulationTime()) - 1) + " ends. Refused customers: " + refusedCustomersCount);
+        /*System.out.println("Day " + (TimeUtils.getDay(getSimulationTime()) - 1) + " ends. Refused customers: " + refusedCustomersCount);
         System.out.println("Waiting for repairs " + workshopQueue.size() + ", waiting to be returned: " + returnQueue.size());
-        System.out.println("Free workers type 1 / 2: " + type1FreeWorkers + " / " + type2FreeWorkers);
-        entryQueue.clear();
+        System.out.println("Free workers type 1 / 2: " + type1FreeWorkers + " / " + type2FreeWorkers);*/
+        entryQueue.softClear();
         addEvent(EndOfDayEvent.newInstance(this));
     }
 
@@ -142,17 +167,38 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
 
     @Override
     protected boolean simulationEndCondition() {
-        return getSimulationTime() > TimeUnit.HOURS.toSeconds(24);
+        return getSimulationTime() > TimeUnit.HOURS.toSeconds(simulationParameters.durationHours);
     }
 
     @Override
-    public CarShopSimulation.Results getResults() {
-        return null;
+    public CarShopSimulation.IterationResults getResults() {
+        CarShopSimulation.IterationResults results = new CarShopSimulation.IterationResults(
+                timeInSystemCounter.getCount(),
+                (long) refusedCustomersCounter.getSum(),
+                refusedCustomersCounter.getMean(),
+                cars.size(),
+                entryQueue.getAverageQueueWait(),
+                timeInSystemCounter.getMean(),
+                timeFromAcquisitionToReturnCounter.getMean(),
+                entryQueue.getAverageQueueWait(),
+                entryQueue.getAverageQueueLength(),
+                workshopQueue.getAverageQueueWait(),
+                workshopQueue.getAverageQueueLength(),
+                returnQueue.getAverageQueueWait(),
+                returnQueue.getAverageQueueLength());
+        return results;
     }
 
     @Override
     public CarShopSimulation.State getState() {
-        return null;
+        CarShopSimulation.State state = new CarShopSimulation.State(
+                getResults(),
+                getSimulationTime(),
+                cars.stream().sorted((o1, o2) -> (int) (o1.getId() - o2.getId())).map(Car::toString).collect(Collectors.toList()).toArray(new String[cars.size()]),
+                cars.stream().sorted((o1, o2) -> (int) (o1.getId() - o2.getId())).map(Car::getState).collect(Collectors.toList()).toArray(new Car.State[cars.size()]),
+                type1FreeWorkers,
+                type2FreeWorkers);
+        return state;
     }
 
     public static final class TimeUtils {

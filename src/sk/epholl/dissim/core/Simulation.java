@@ -5,17 +5,17 @@ import javax.swing.*;
 /**
  * Created by Tomáš on 09.03.2016.
  */
-public abstract class Simulation<T extends SimulationParameters, S, U> implements Runnable {
+public abstract class Simulation<T extends SimulationParameters, R, S, U> implements Runnable {
 
-    public interface SimulationListener<S, U> {
+    public interface SimulationListener<R, U> {
         void onStarted();
-        void onFinished(S results);
-        void onGuiUpdate(final double progress, S results);
+        void onFinished(R results);
+        void onGuiUpdate(final double progress, R results);
         void onGuiSimulationStatus(U state);
     }
 
     protected final T simulationParameters;
-    protected final SimulationListener<S, U> simulationListener;
+    protected final SimulationListener<R, U> simulationListener;
 
     protected SimulationCore<T, S, U> simulationCore;
 
@@ -24,14 +24,26 @@ public abstract class Simulation<T extends SimulationParameters, S, U> implement
     private volatile boolean running = false;
     private volatile boolean cancelled = false;
 
-    public Simulation(T simulationParameters, SimulationListener<S, U> simulationListener) {
+    public Simulation(T simulationParameters, SimulationListener<R, U> simulationListener) {
         this.simulationParameters = simulationParameters;
         this.simulationListener = simulationListener;
+        simulationCore = initSimulationCore();
     }
 
     @Override
     public final void run() {
-        simulationCore = initSimulationCore();
+
+        simulationCore.addListener(new SimulationCore.ResultListener<S, U>() {
+            @Override
+            public void onReplicationFinished(S result) {
+                replicationFinished(result);
+            }
+
+            @Override
+            public void onContinuousUpdate(U state) {
+                SwingUtilities.invokeLater(() -> simulationListener.onGuiSimulationStatus(state));
+            }
+        });
         running = true;
         cancelled = false;
         SwingUtilities.invokeLater(simulationListener::onStarted);
@@ -40,15 +52,16 @@ public abstract class Simulation<T extends SimulationParameters, S, U> implement
         performIterations();
 
         if (!cancelled) {
-            SwingUtilities.invokeLater(() -> simulationListener.onFinished(simulationCore.getResults()));
+            SwingUtilities.invokeLater(() -> simulationListener.onFinished(getResult()));
         } else {
-            SwingUtilities.invokeLater(() -> simulationListener.onGuiUpdate(getProgress(), simulationCore.getResults()));
+            SwingUtilities.invokeLater(() -> simulationListener.onGuiUpdate(getProgress(), getResult()));
         }
         running = false;
     }
 
     public void pause() {
         running = false;
+        simulationCore.pause();
     }
 
     public void resume() {
@@ -58,6 +71,10 @@ public abstract class Simulation<T extends SimulationParameters, S, U> implement
     public void cancel() {
         running = false;
         cancelled = true;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     private void performIterations() {
@@ -74,19 +91,36 @@ public abstract class Simulation<T extends SimulationParameters, S, U> implement
             }
             if (isUpdateGuiReplication()) {
                 final double progress = getProgress();
-                final S results = simulationCore.getResults();
+                if (isWarmupFinished()) {
+                    final R results = getResult();
 
-                SwingUtilities.invokeLater( () -> simulationListener.onGuiUpdate(progress, results));
+                    SwingUtilities.invokeLater( () -> simulationListener.onGuiUpdate(progress, results));
+                } else {
+                    SwingUtilities.invokeLater( () -> simulationListener.onGuiUpdate(progress, null));
+                }
             }
             simulationCore.singleIteration();
         }
     }
 
+    public void setContinous(boolean continous) {
+        simulationCore.setContinuousRun(continous);
+    }
+
+    public void setSpeed(double speed) {
+        simulationCore.setContinuousSpeed(speed);
+    }
+
     protected abstract SimulationCore<T, S, U> initSimulationCore();
+    protected abstract void replicationFinished(S result);
+    protected abstract R getResult();
 
     private boolean isUpdateGuiReplication() {
-        return  currentReplication > simulationParameters.getWarmupReplicationCount() //warmup finished
-                || currentReplication % simulationParameters.getGuiUpdateInterval() == 0; // is gui update frame
+        return  currentReplication % simulationParameters.getGuiUpdateInterval() == 0; // is gui update frame
+    }
+
+    private boolean isWarmupFinished() {
+        return currentReplication > simulationParameters.getWarmupReplicationCount(); //warmup finished
     }
 
     private double getProgress() {

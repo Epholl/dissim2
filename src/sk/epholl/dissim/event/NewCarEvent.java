@@ -10,7 +10,7 @@ public class NewCarEvent extends CarShopEvent {
 
     public static NewCarEvent newInstance(CarShopSimulationCore simulation) {
         final double arrivalTime = simulation.getSimulationTime() + simulation.getGenerators().getNextCustomerEnteranceDelay();
-        Car newCar = new Car(arrivalTime);
+        Car newCar = new Car(simulation, arrivalTime);
         return new NewCarEvent(arrivalTime, simulation, newCar);
     }
 

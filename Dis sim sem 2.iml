@@ -8,5 +8,22 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dis sim sem 2" level="project" />
+    <orderEntry type="library" name="ABACore" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jgoodies-common.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jgoodies-forms.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jgoodies-common-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jgoodies-forms-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/jgoodies-common-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jgoodies-forms-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

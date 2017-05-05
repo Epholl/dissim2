@@ -22,10 +22,20 @@ public class StatisticCounter {
     }
 
     public double getMean() {
+        if (count == 0) {
+            return 0;
+        }
         return sum / count;
     }
 
+    public long getCount() {
+        return count;
+    }
+
     public double getVariance() {
+        if (count == 0) {
+            return 0;
+        }
         return Math.abs((sumSquared / count) - (getMean() * getMean()));
     }
 
@@ -45,5 +55,27 @@ public class StatisticCounter {
         sum = 0d;
         count = 0;
         sumSquared = 0d;
+    }
+
+    public StatisticCounter copy() {
+        StatisticCounter counter = new StatisticCounter();
+        counter.sum = this.sum;
+        counter.count = this.count;
+
+        counter.sumSquared = this.sumSquared;
+        return counter;
+    }
+
+    @Override
+    public String toString() {
+        return "Statistic counter: " + getMean();
+    }
+
+    public String formatMeanWithConfidenceInterval() {
+        return f(getMean()) + ", \n <" + f(getLeftConfidenceInterval()) + "; " + f(getRightConfidenceInterval()) + ">";
+    }
+
+    private String f(double val) {
+        return String.format("%.4f", val);
     }
 }

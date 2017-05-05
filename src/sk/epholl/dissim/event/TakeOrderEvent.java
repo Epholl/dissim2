@@ -20,9 +20,9 @@ public class TakeOrderEvent extends CarShopEvent {
         car.setTransferToGarageDuration(carTransferTime);
 
         car.setTimeOrderStartedTaking(simTime);
-        car.setTimeOrderTaken(CarShopSimulationCore.TimeUtils.getEventFinishTimeAtomicEvent(simTime, orderTakingTime));
-        car.setTimeCarAcquired(CarShopSimulationCore.TimeUtils.getEventFinishTimeAtomicEvent(simTime, orderTakingTime + carAcquiringTime));
-        car.setTimeCarTransferredToGarage(CarShopSimulationCore.TimeUtils.getEventFinishTimeAtomicEvent(simTime, orderTakingTime + carAcquiringTime + carTransferTime));
+        car.setTimeOrderTaken(simTime + orderTakingTime);
+        car.setTimeCarAcquired(simTime + orderTakingTime + carAcquiringTime);
+        car.setTimeCarTransferredToGarage(simTime + orderTakingTime + carAcquiringTime + carTransferTime);
 
         TakeOrderEvent event = new TakeOrderEvent(occurTime, simulation, car);
         return event;

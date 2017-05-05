@@ -1,12 +1,38 @@
 package sk.epholl.dissim.entity;
 
+import sk.epholl.dissim.carshop.CarShopSimulationCore;
+
 /**
  * Created by Tomáš on 23.03.2017.
  */
 public class Car {
 
+    public enum State {
+        WaitingForOrder("Waiting to enter"),
+        TakingOrder("Taking order"),
+        Acquiring("Acquiring from customer"),
+        MovingToWorkshop("Transferring to workshop"),
+        WaitingForRepair("Waiting to be repaired"),
+        Repairing("Repairing"),
+        WaitingForReturnFromRepair("Waiting to be returned from workshop"),
+        MovingFromWorkshop("Transferring from workshop"),
+        ReturningToCustomer("Returning to customer"),
+        Finished("Finished");
+
+        private String name;
+
+        State(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
+
     public static long carIndex = 0;
 
+    private final CarShopSimulationCore simulation;
     private final long index;
 
     private double timeEnteredSimulation;
@@ -27,7 +53,8 @@ public class Car {
     private double transferFromGarageDuration;
     private double returnToCustomerDuration;
 
-    public Car(double simulationEntryTime) {
+    public Car(CarShopSimulationCore simulation, double simulationEntryTime) {
+        this.simulation = simulation;
         timeEnteredSimulation = simulationEntryTime;
         index = carIndex++;
     }
@@ -109,8 +136,51 @@ public class Car {
         return getExitTime() - getEntryTime();
     }
 
+    public double getTimeSpentInSystemWithOvertimes() {
+        double sum = timeOrderStartedTaking - timeEnteredSimulation;
+        sum += orderTakingDuration;
+        sum += carAcquisitionDuration;
+        sum += transferToGarageDuration;
+        sum += timeCarStartedRepairing - timeCarTransferredToGarage;
+        sum += repairDuration;
+        sum += timeCarStartedTransferringFromGarage - timeCarRepaired;
+        sum += transferFromGarageDuration;
+        sum += returnToCustomerDuration;
+        return sum;
+    }
+
+    public double getTimeFromAcquisitionEndToReturn() {
+        return timeCarReturnedToCustomer - timeCarTransferredToGarage;
+    }
+
+    public State getState() {
+        final double simTime = simulation.getSimulationTime();
+        if (timeOrderStartedTaking <= 0.001d) {
+            return State.WaitingForOrder;
+        } else if (timeOrderTaken >= simTime) {
+            return State.TakingOrder;
+        } else if (timeCarAcquired >= simTime) {
+            return State.Acquiring;
+        } else if (timeCarTransferredToGarage >= simTime) {
+            return State.MovingToWorkshop;
+        } else if (timeCarStartedRepairing <= 0.001d) {
+            return State.WaitingForRepair;
+        } else if (timeCarRepaired >= simTime) {
+            return State.Repairing;
+        } else if (timeCarStartedTransferringFromGarage <= 0.001d) {
+            return State.WaitingForReturnFromRepair;
+        } else if (timeCarTransferredFromGarage >= simTime) {
+            return State.MovingFromWorkshop;
+        } else if (timeCarReturnedToCustomer >= simTime) {
+            return State.ReturningToCustomer;
+        } else if (timeCarReturnedToCustomer <= simTime) {
+            return State.Finished;
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
-        return "Car " + index;
+        return "Car " + index + ": " + getState().toString();
     }
 }

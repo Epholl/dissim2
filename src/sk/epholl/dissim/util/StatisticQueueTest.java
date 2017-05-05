@@ -40,6 +40,18 @@ public class StatisticQueueTest {
         mockSim.setMockTime(7000d);
         Assert.assertEquals(1, queue.getAverageQueueLength(), 0.00001d);
 
+        queue.clear();
+        mockSim.setMockTime(0d);
+
+        queue.enqueue(o1);
+        mockSim.setMockTime(1000);
+        queue.enqueue(o2);
+        mockSim.setMockTime(2000);
+        Assert.assertEquals(0d, queue.getAverageQueueWait(), 0.000001d);
+        queue.dequeue();
+        Assert.assertEquals(2000d, queue.getAverageQueueWait(), 0.000001d);
+        queue.dequeue();
+        Assert.assertEquals(1500d, queue.getAverageQueueWait(), 0.000001d);
     }
 
     private MockSimulationCore newMockSim() {
