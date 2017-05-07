@@ -8,17 +8,17 @@ import java.util.*;
  */
 public class ResultManager {
 
-    private Map<ResultValueType, List<Subscriber>> subscribers;
+    private Map<ValueType<?>, List<Subscriber>> valueTypeToSubscriberMapping;
 
-    private LinkedHashMap<ResultValueType, LinkedList<Object>> values;
+    private LinkedHashMap<ValueType<?>, LinkedList<Object>> emittedValuesBuffer;
 
     public ResultManager() {
-        this.subscribers = new HashMap<>();
-        this.values = new LinkedHashMap<>();
+        this.valueTypeToSubscriberMapping = new HashMap<>();
+        this.emittedValuesBuffer = new LinkedHashMap<>();
     }
 
-    public <T> void addSubscriber(final ResultValueType value, final Subscriber<T> subscriber) {
-        subscribers.compute(value, (v, subscriberList) -> {
+    public <T> void addSubscriber(final ValueType value, final Subscriber<T> subscriber) {
+        valueTypeToSubscriberMapping.compute(value, (v, subscriberList) -> {
            if (subscriberList == null) {
                subscriberList = new LinkedList<>();
            }
@@ -27,9 +27,18 @@ public class ResultManager {
         });
     }
 
-    public void addValue(final ResultValueType type, final Object value) {
+    public void removeSubscriber(final Subscriber removed) {
+        for (Map.Entry<ValueType<?>, List<Subscriber>> valueTypeSubscribers: valueTypeToSubscriberMapping.entrySet()) {
+            List<Subscriber> subscribers = valueTypeSubscribers.getValue();
+            if (removed != null) {
+                subscribers.remove(removed);
+            }
+        }
+    }
+
+    public void addValue(final ValueType type, final Object value) {
         type.clazz.cast(value);
-        values.compute(type, (t, valueList) -> {
+        emittedValuesBuffer.compute(type, (t, valueList) -> {
             if (valueList == null) {
                 valueList = new LinkedList<>();
             }
@@ -39,9 +48,9 @@ public class ResultManager {
     }
 
     public void flush() {
-        for (Map.Entry<ResultValueType, LinkedList<Object>> entry: values.entrySet()) {
+        for (Map.Entry<ValueType<?>, LinkedList<Object>> entry: emittedValuesBuffer.entrySet()) {
 
-            final List<Subscriber> entrySubscribers = subscribers.get(entry.getKey());
+            final List<Subscriber> entrySubscribers = valueTypeToSubscriberMapping.get(entry.getKey());
 
             if (entrySubscribers != null) {
 
@@ -52,16 +61,11 @@ public class ResultManager {
                 }
             }
         }
-        values.clear();
+        emittedValuesBuffer.clear();
     }
 
     public void swingFlush() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                flush();
-            }
-        });
+        SwingUtilities.invokeLater(() -> flush());
     }
 
 }
