@@ -22,7 +22,7 @@ public class BottomProgressBarController {
     private double currentTime;
 
     private final Subscriber<Integer> currentReplicationSubscriber = value -> {
-        currentReplication = value;
+        currentReplication = value+1;
         refresh();
     };
 
@@ -41,6 +41,11 @@ public class BottomProgressBarController {
     public void setContinous(final boolean isContinous) {
         this.isContinous = isContinous;
         refresh();
+    }
+
+    public void reset() {
+        currentReplication = 0;
+        currentTime = 0;
     }
 
     private void refresh() {

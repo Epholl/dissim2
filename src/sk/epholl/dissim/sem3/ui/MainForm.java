@@ -79,6 +79,7 @@ public class MainForm extends JFrame {
             switch (state) {
                 case Initial:
                     RecursiveComponentEnabler.setEnabled(configurationPanel, true);
+                    progressBarController.reset();
                     resetButton.setEnabled(false);
                     runButton.setEnabled(true);
                     runButton.setText("Run");
@@ -146,6 +147,7 @@ public class MainForm extends JFrame {
 
     private void initSimulationController() {
         simulationController = new SimulationController();
+        simulationController.getParameters().setReplicationDurationDays(21); //TODO parametrize
         simulationController.addSimulationEndedCallback(() -> {
             setState(State.Finished);
         });

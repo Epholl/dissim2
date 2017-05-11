@@ -7,7 +7,10 @@ import sk.epholl.dissim.util.subscribers.ResultManager;
 public class MySimulation extends Simulation {
 
 	private ResultManager resultManager;
+
 	private boolean isContinuous = false;
+	private double updateInterval;
+	private double updateDuration;
 
 	private SimulationParameters parameters;
 
@@ -25,6 +28,9 @@ public class MySimulation extends Simulation {
 	public void prepareReplication() {
 		super.prepareReplication();
 		// Reset entities, queues, local statistics, etc...
+		if (isContinuous) {
+			super.setSimSpeed(updateInterval, updateDuration);
+		}
 
 		modelAgent().startSimulation();
 	}
@@ -48,6 +54,8 @@ public class MySimulation extends Simulation {
 	@Override
 	public void setSimSpeed(double interval, double duration) {
 		super.setSimSpeed(interval, duration);
+		this.updateInterval = interval;
+		this.updateDuration = duration;
 		resultManager.addValue(Rst.CONSOLE_LOG, "Sim speed updated: " + interval + ", " + duration);
 		isContinuous = true;
 	}

@@ -28,6 +28,9 @@ public class SimulationSpeed {
             HOUR * 6,
             HOUR * 12,
             DAY,
+            DAY * 2,
+            DAY * 5,
+            DAY * 20
     };
 
     public static final String[] UNITS_NAMES = {

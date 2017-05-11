@@ -78,7 +78,7 @@ public class SimulationController {
 
         simulation.onRefreshUI(simulation1 -> {
             simulation.execIfContinous(() -> {
-                simulation.getResultManager().addValue(Rst.CONSOLE_LOG, "Sim time " + simulation.currentTime());
+                simulation.getResultManager().addValue(Rst.SIMULATION_TIME, simulation.currentTime());
             });
             simulation.getResultManager().swingFlush();
         });
