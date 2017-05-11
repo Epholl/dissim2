@@ -14,6 +14,8 @@ public class SimulationParameters {
 
     private int repliacationCount;
 
+    private double replicationDurationSeconds;
+
     private int warmupPercentage;
 
     private int number1Workers;
@@ -97,5 +99,17 @@ public class SimulationParameters {
     public void setAdvertismentIncrease(double clientIncomeIncreasePercent) {
         this.clientIncomeIncreasePercent = clientIncomeIncreasePercent;
         generators.recreateCustomerEntryGeneratorWithMultiplier(getClientIncomeCoeficient());
+    }
+
+    public double getReplicationDurationSeconds() {
+        return replicationDurationSeconds;
+    }
+
+    public void setReplicationDurationSeconds(double replicationDurationSeconds) {
+        this.replicationDurationSeconds = replicationDurationSeconds;
+    }
+
+    public void setReplicationDurationDays(double replicationDurationDays) {
+        this.replicationDurationSeconds = replicationDurationDays * 8 * 60 * 60;
     }
 }

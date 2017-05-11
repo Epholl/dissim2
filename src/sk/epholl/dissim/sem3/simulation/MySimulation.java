@@ -32,8 +32,8 @@ public class MySimulation extends Simulation {
 	@Override
 	public void replicationFinished() {
 		// Collect local statistics into global, update UI, etc...
-		resultManager.addValue(Rst.REPLICATION_COUNT, replicationCount());
-		resultManager.addValue(Rst.CONSOLE_LOG, "Replication finished: " + replicationCount());
+		resultManager.addValue(Rst.REPLICATION_COUNT, currentReplication());
+		resultManager.addValue(Rst.CONSOLE_LOG, "Replication finished: " + currentReplication());
 		super.replicationFinished();
 	}
 

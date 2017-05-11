@@ -40,8 +40,14 @@ public class InputParser {
 
             // Date difference
             newTime = LocalDateTime.parse(split[0], INPUT_DATE_TIME_FORMATTER);
-            if (oldTime == null || oldTime.getDayOfMonth() != newTime.getDayOfMonth()) {
+            if (oldTime == null) {
                 oldTime = LocalDateTime.of(newTime.getYear(), newTime.getMonth(), newTime.getDayOfMonth(), 7, 0, 0);
+            }
+            while (oldTime.until(newTime, ChronoUnit.HOURS) > 24) {
+                oldTime = oldTime.plusDays(1);
+            }
+            if (oldTime.getDayOfMonth() != newTime.getDayOfMonth()) {
+                oldTime = oldTime.plusHours(16);
             }
             long secondsBetween = oldTime.until(newTime, ChronoUnit.SECONDS);
             entryTimesWriter.write(secondsBetween + "");

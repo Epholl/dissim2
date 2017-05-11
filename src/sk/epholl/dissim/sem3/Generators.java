@@ -51,7 +51,7 @@ public class Generators {
 
     public void recreateCustomerEntryGeneratorWithMultiplier(double multiplier) {
         customerEntryRandom =
-                new ExponentialRandom(2d, 1120d / multiplier);
+                new ExponentialRandom(2d, 1170d / multiplier);
     }
 
     public RandomGenerator<Double> getCustomerEntryRandom() {

@@ -16,7 +16,8 @@ public class MainForm extends JFrame {
     enum State {
         Initial,
         Running,
-        Paused
+        Paused,
+        Finished
     }
 
     private JPanel contentPanel;
@@ -50,6 +51,7 @@ public class MainForm extends JFrame {
     private State state;
 
     private SimulationController simulationController;
+    private BottomProgressBarController progressBarController;
 
     public MainForm() {
         super("Parking lot simulation");
@@ -59,19 +61,15 @@ public class MainForm extends JFrame {
 
         setVisible(true);
 
-        initTopPanel();
-
         initSimulationController();
+        initProgressBarController();
+
+        initTopPanel();
         initConfigurationPanel();
         initConsolePanel();
 
         setState(State.Initial);
 
-        simulationController.getResultManager().addSubscriber(Rst.REPLICATION_COUNT, (Subscriber<Integer>) value -> {
-            simulationProgressBar.setString("" + value);
-            final int val = value / 10;
-            simulationProgressBar.setValue(val);
-        });
         mainTabbedPane.setSelectedIndex(2);
     }
 
@@ -82,6 +80,7 @@ public class MainForm extends JFrame {
                 case Initial:
                     RecursiveComponentEnabler.setEnabled(configurationPanel, true);
                     resetButton.setEnabled(false);
+                    runButton.setEnabled(true);
                     runButton.setText("Run");
                     break;
 
@@ -96,6 +95,12 @@ public class MainForm extends JFrame {
                     resetButton.setEnabled(true);
                     runButton.setText("Resume");
                     break;
+
+                case Finished:
+                    RecursiveComponentEnabler.setEnabled(configurationPanel, false);
+                    resetButton.setEnabled(true);
+                    runButton.setEnabled(false);
+                    break;
             }
         }
     }
@@ -105,6 +110,7 @@ public class MainForm extends JFrame {
         runButton.addActionListener(e -> {
             switch (state) {
                 case Initial:
+                    figureSimSpeed();
                     simulationController.startSimulation();
                     setState(State.Running);
                     break;
@@ -120,19 +126,29 @@ public class MainForm extends JFrame {
             }
         });
 
-        continousRunCheckBox.addActionListener(e -> {
-            if (continousRunCheckBox.isSelected()) {
-                final long speed = 1000; //TODO get from slider
-                simulationController.setContinuous(speed);
-            } else {
-                simulationController.setMaxSpeed();
-            }
+        simSpeedSlider.setMinimum(0);
+        simSpeedSlider.setMaximum(SimulationSpeed.SPEEDS.length-1);
+        simSpeedSlider.setValue(0);
+        simSpeedSlider.addChangeListener(e -> {
+            figureSimSpeed();
         });
 
+        resetButton.addActionListener(e -> {
+            simulationController.resetSimulation();
+            setState(State.Initial);
+        });
+
+        continousRunCheckBox.addActionListener(e -> {
+            figureSimSpeed();
+        });
+        figureSimSpeed();
     }
 
     private void initSimulationController() {
         simulationController = new SimulationController();
+        simulationController.addSimulationEndedCallback(() -> {
+            setState(State.Finished);
+        });
     }
 
     private void initConsolePanel() {
@@ -195,5 +211,24 @@ public class MainForm extends JFrame {
 
     private void updateTotalPrice() {
         totalMonthlyCostsLabel.setText("= " + simulationController.getParameters().getTotalPrice() + "€ monthly");
+    }
+
+    private void initProgressBarController() {
+
+        progressBarController = new BottomProgressBarController(simulationProgressBar, simulationController);
+        progressBarController.setContinous(continousRunCheckBox.isSelected());
+    }
+
+    private void figureSimSpeed() {
+        final int value = simSpeedSlider.getValue();
+        final double speedSeconds = SimulationSpeed.SPEEDS[value];
+        if (continousRunCheckBox.isSelected()) {
+            simulationController.setSimulationSpeed(speedSeconds);
+        } else {
+            simulationController.setMaxSpeed();
+        }
+
+        progressBarController.setContinous(continousRunCheckBox.isSelected());
+        simSpeedExplanationLabel.setText(SimulationSpeed.getLabel(value));
     }
 }

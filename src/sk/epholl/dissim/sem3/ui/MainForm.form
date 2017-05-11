@@ -160,6 +160,8 @@
                 <rowspec value="top:4dlu:noGrow"/>
                 <rowspec value="center:28px:noGrow"/>
                 <rowspec value="top:5dlu:noGrow"/>
+                <rowspec value="center:28px:noGrow"/>
+                <rowspec value="top:5dlu:noGrow"/>
                 <rowspec value="center:max(d;4px):grow"/>
                 <colspec value="fill:153px:noGrow"/>
                 <colspec value="left:4dlu:noGrow"/>

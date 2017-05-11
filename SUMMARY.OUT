@@ -6,12 +6,12 @@ Data File: C:\dev\Java\Dis sim sem 2\sources\entries.txt
 
 Function       Sq Error
 -----------------------
-Weibull        0.000478
-Gamma          0.000484
-Erlang         0.000563
-Exponential    0.000563
-Beta           0.00095
-Lognormal      0.00647
-Normal         0.0304
-Triangular     0.0521
-Uniform        0.0819
+Weibull        0.00039
+Gamma          0.000438
+Erlang         0.000452
+Exponential    0.000452
+Beta           0.00103
+Lognormal      0.00565
+Normal         0.0308
+Triangular     0.0487
+Uniform        0.0779
