@@ -7,10 +7,11 @@ import sk.epholl.dissim.sem3.continualAssistants.TakeOrderProcess;
 import sk.epholl.dissim.sem3.managers.OfficeManager;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="87"
-public class OfficeAgent extends Agent {
-	public OfficeAgent(int id, Simulation mySim, Agent parent) {
+public class OfficeAgent extends BaseAgent {
+	public OfficeAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 	}

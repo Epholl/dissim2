@@ -1,6 +1,6 @@
 package sk.epholl.dissim;
 
-import sk.epholl.dissim.core.SimulationCore;
+import sk.epholl.dissim.sem2.core.SimulationCore;
 import sk.epholl.dissim.sem2.Sem2Results;
 import sk.epholl.dissim.sem2.Sem2SimulationCore;
 import sk.epholl.dissim.sem2.Sem2SimulationParameters;

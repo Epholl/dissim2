@@ -1,6 +1,6 @@
 package sk.epholl.dissim.generator;
 
-import sk.epholl.dissim.core.Event;
+import sk.epholl.dissim.sem2.core.Event;
 
 import java.util.ArrayList;
 import java.util.List;

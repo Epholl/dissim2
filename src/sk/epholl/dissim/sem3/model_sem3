@@ -5,7 +5,7 @@
       <SimId>12</SimId>
       <InternalId>92</InternalId>
       <Name>ParkingAgent</Name>
-      <Bounds>1050,800,250,250</Bounds>
+      <Bounds>1318,1088,250,250</Bounds>
       <Reasoner>ParkingManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -14,7 +14,7 @@
       <SimId>8</SimId>
       <InternalId>85</InternalId>
       <Name>SurroundingsAgent</Name>
-      <Bounds>507,449,250,250</Bounds>
+      <Bounds>529,460,250,250</Bounds>
       <Reasoner>SurroundingsManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -23,7 +23,7 @@
           <SimId>1015</SimId>
           <InternalId>109</InternalId>
           <Name>NewCustomerScheduler</Name>
-          <Bounds>32,107,35,13</Bounds>
+          <Bounds>32,108,35,13</Bounds>
         </Scheduler>
       </Components>
     </Agent>
@@ -31,7 +31,7 @@
       <SimId>10</SimId>
       <InternalId>87</InternalId>
       <Name>OfficeAgent</Name>
-      <Bounds>1750,800,250,250</Bounds>
+      <Bounds>2018,1088,250,250</Bounds>
       <Reasoner>OfficeManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -60,7 +60,7 @@
       <SimId>11</SimId>
       <InternalId>88</InternalId>
       <Name>RepairAgent</Name>
-      <Bounds>1400,800,250,250</Bounds>
+      <Bounds>1668,1088,250,250</Bounds>
       <Reasoner>RepairManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -77,7 +77,7 @@
       <SimId>6</SimId>
       <InternalId>83</InternalId>
       <Name>CarShopModelAgent</Name>
-      <Bounds>1125,125,400,400</Bounds>
+      <Bounds>1393,413,400,400</Bounds>
       <Reasoner>CarShopModelManager</Reasoner>
       <ReasonerBounds>173,54,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -91,10 +91,19 @@
       </Components>
     </Agent>
     <Agent>
+      <SimId>18</SimId>
+      <InternalId>132</InternalId>
+      <Name>ModelAgent</Name>
+      <Bounds>954,49,250,250</Bounds>
+      <Reasoner>ModelManager</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
       <SimId>9</SimId>
       <InternalId>86</InternalId>
       <Name>TransportationAgent</Name>
-      <Bounds>700,800,250,250</Bounds>
+      <Bounds>959,1095,250,250</Bounds>
       <Reasoner>TransportationManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -109,6 +118,90 @@
     </Agent>
   </Agents>
   <Messages>
+    <Message>
+      <InternalId>129</InternalId>
+      <Type>StartFinish</Type>
+      <Source>87</Source>
+      <Destination>128</Destination>
+    </Message>
+    <Message>
+      <SimId>1021</SimId>
+      <InternalId>134</InternalId>
+      <Name>CustomerEntry</Name>
+      <Type>Notice</Type>
+      <Source>132</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
+      <SimId>1022</SimId>
+      <InternalId>135</InternalId>
+      <Name>CustomerExit</Name>
+      <Type>Notice</Type>
+      <Source>132</Source>
+      <Destination>85</Destination>
+    </Message>
+    <Message>
+      <InternalId>137</InternalId>
+      <Type>Parent</Type>
+      <Source>83</Source>
+      <Destination>132</Destination>
+    </Message>
+    <Message>
+      <SimId>1023</SimId>
+      <InternalId>139</InternalId>
+      <Name>Init</Name>
+      <Type>Notice</Type>
+      <Source>132</Source>
+      <Destination>85</Destination>
+    </Message>
+    <Message>
+      <SimId>1013</SimId>
+      <InternalId>89</InternalId>
+      <Name>CustomerEntry</Name>
+      <Type>Notice</Type>
+      <Source>85</Source>
+      <Destination>132</Destination>
+    </Message>
+    <Message>
+      <SimId>1014</SimId>
+      <InternalId>90</InternalId>
+      <Name>CustomerExit</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>132</Destination>
+    </Message>
+    <Message>
+      <SimId>1015</SimId>
+      <InternalId>91</InternalId>
+      <Name>TransferVehicle</Name>
+      <Type>RequestResponse</Type>
+      <Source>83</Source>
+      <Destination>86</Destination>
+    </Message>
+    <Message>
+      <SimId>1016</SimId>
+      <InternalId>93</InternalId>
+      <Name>TakeOrder</Name>
+      <Type>RequestResponse</Type>
+      <Source>83</Source>
+      <Destination>87</Destination>
+    </Message>
+    <Message>
+      <SimId>1017</SimId>
+      <InternalId>94</InternalId>
+      <Name>AcquireParkingSpace</Name>
+      <Type>RequestResponse</Type>
+      <Source>83</Source>
+      <Destination>92</Destination>
+    </Message>
+    <Message>
+      <SimId>1018</SimId>
+      <InternalId>95</InternalId>
+      <Name>FreeParkingSpace</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>92</Destination>
+    </Message>
     <Message>
       <SimId>1019</SimId>
       <InternalId>96</InternalId>
@@ -126,16 +219,10 @@
       <Destination>87</Destination>
     </Message>
     <Message>
-      <InternalId>129</InternalId>
-      <Type>StartFinish</Type>
-      <Source>87</Source>
-      <Destination>128</Destination>
-    </Message>
-    <Message>
       <InternalId>101</InternalId>
       <Type>Parent</Type>
       <Source>85</Source>
-      <Destination>83</Destination>
+      <Destination>132</Destination>
     </Message>
     <Message>
       <InternalId>102</InternalId>
@@ -180,34 +267,10 @@
       <Destination>117</Destination>
     </Message>
     <Message>
-      <SimId>1013</SimId>
-      <InternalId>89</InternalId>
-      <Name>CustomerEntry</Name>
-      <Type>Notice</Type>
-      <Source>85</Source>
-      <Destination>83</Destination>
-    </Message>
-    <Message>
       <InternalId>121</InternalId>
       <Type>StartFinish</Type>
       <Source>87</Source>
       <Destination>120</Destination>
-    </Message>
-    <Message>
-      <SimId>1014</SimId>
-      <InternalId>90</InternalId>
-      <Name>CustomerExit</Name>
-      <Type>Notice</Type>
-      <Source>83</Source>
-      <Destination>85</Destination>
-    </Message>
-    <Message>
-      <SimId>1015</SimId>
-      <InternalId>91</InternalId>
-      <Name>TransferVehicle</Name>
-      <Type>RequestResponse</Type>
-      <Source>83</Source>
-      <Destination>86</Destination>
     </Message>
     <Message>
       <InternalId>123</InternalId>
@@ -216,35 +279,11 @@
       <Destination>122</Destination>
     </Message>
     <Message>
-      <SimId>1016</SimId>
-      <InternalId>93</InternalId>
-      <Name>TakeOrder</Name>
-      <Type>RequestResponse</Type>
-      <Source>83</Source>
-      <Destination>87</Destination>
-    </Message>
-    <Message>
-      <SimId>1017</SimId>
-      <InternalId>94</InternalId>
-      <Name>AcquireParkingSpace</Name>
-      <Type>RequestResponse</Type>
-      <Source>83</Source>
-      <Destination>92</Destination>
-    </Message>
-    <Message>
       <InternalId>126</InternalId>
       <Type>StartFinish</Type>
       <Source>83</Source>
       <Destination>125</Destination>
     </Message>
-    <Message>
-      <SimId>1018</SimId>
-      <InternalId>95</InternalId>
-      <Name>FreeParkingSpace</Name>
-      <Type>Notice</Type>
-      <Source>83</Source>
-      <Destination>92</Destination>
-    </Message>
   </Messages>
-  <IID>131</IID>
+  <IID>151</IID>
 </ABAsim>

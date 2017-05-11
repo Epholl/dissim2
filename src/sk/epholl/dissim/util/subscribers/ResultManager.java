@@ -12,12 +12,15 @@ public class ResultManager {
 
     private LinkedHashMap<ValueType<?>, LinkedList<Object>> emittedValuesBuffer;
 
+    private HashMap<ValueType<?>, Object> lastValues;
+
     public ResultManager() {
         this.valueTypeToSubscriberMapping = new HashMap<>();
         this.emittedValuesBuffer = new LinkedHashMap<>();
+        this.lastValues = new HashMap<>();
     }
 
-    public <T> void addSubscriber(final ValueType value, final Subscriber<T> subscriber) {
+    public synchronized <T> void addSubscriber(final ValueType value, final Subscriber<T> subscriber) {
         valueTypeToSubscriberMapping.compute(value, (v, subscriberList) -> {
            if (subscriberList == null) {
                subscriberList = new LinkedList<>();
@@ -27,7 +30,7 @@ public class ResultManager {
         });
     }
 
-    public void removeSubscriber(final Subscriber removed) {
+    public synchronized void removeSubscriber(final Subscriber removed) {
         for (Map.Entry<ValueType<?>, List<Subscriber>> valueTypeSubscribers: valueTypeToSubscriberMapping.entrySet()) {
             List<Subscriber> subscribers = valueTypeSubscribers.getValue();
             if (removed != null) {
@@ -36,8 +39,9 @@ public class ResultManager {
         }
     }
 
-    public void addValue(final ValueType type, final Object value) {
+    public synchronized void addValue(final ValueType type, final Object value) {
         type.clazz.cast(value);
+        lastValues.put(type, value);
         emittedValuesBuffer.compute(type, (t, valueList) -> {
             if (valueList == null) {
                 valueList = new LinkedList<>();
@@ -47,7 +51,11 @@ public class ResultManager {
         });
     }
 
-    public void flush() {
+    public <T> T getLastValue(final ValueType type) {
+        return (T) lastValues.get(type);
+    }
+
+    public synchronized void flush() {
         for (Map.Entry<ValueType<?>, LinkedList<Object>> entry: emittedValuesBuffer.entrySet()) {
 
             final List<Subscriber> entrySubscribers = valueTypeToSubscriberMapping.get(entry.getKey());

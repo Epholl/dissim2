@@ -37,7 +37,7 @@ public class CarShopModelManager extends Manager {
 	public void processFinish(MessageForm message) {
 	}
 
-	//meta! sender="SurroundingsAgent", id="89", type="Notice"
+	//meta! sender="ModelAgent", id="134", type="Notice"
 	public void processCustomerEntry(MessageForm message) {
 	}
 
@@ -66,10 +66,6 @@ public class CarShopModelManager extends Manager {
 			processTransferVehicle(message);
 		break;
 
-		case Mc.customerEntry:
-			processCustomerEntry(message);
-		break;
-
 		case Mc.takeOrder:
 			processTakeOrder(message);
 		break;
@@ -84,6 +80,10 @@ public class CarShopModelManager extends Manager {
 
 		case Mc.repairWehicle:
 			processRepairWehicle(message);
+		break;
+
+		case Mc.customerEntry:
+			processCustomerEntry(message);
 		break;
 
 		case Mc.finish:

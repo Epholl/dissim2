@@ -1,6 +1,6 @@
 package sk.epholl.dissim.sem2;
 
-import sk.epholl.dissim.core.SimulationCore;
+import sk.epholl.dissim.sem2.core.SimulationCore;
 
 /**
  * Created by Tomáš on 14.04.2016.

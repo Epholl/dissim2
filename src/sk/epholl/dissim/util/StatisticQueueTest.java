@@ -2,9 +2,8 @@ package sk.epholl.dissim.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import sk.epholl.dissim.core.Simulation;
-import sk.epholl.dissim.core.SimulationCore;
-import sk.epholl.dissim.core.SimulationParameters;
+import sk.epholl.dissim.sem2.core.SimulationCore;
+import sk.epholl.dissim.sem2.core.SimulationParameters;
 
 /**
  * Created by Tomáš on 18.03.2017.

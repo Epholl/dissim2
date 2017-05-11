@@ -2,7 +2,9 @@ package sk.epholl.dissim.sem3.managers;
 
 import OSPABA.*;
 import sk.epholl.dissim.sem3.agents.SurroundingsAgent;
+import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.Rst;
 
 //meta! id="85"
 public class SurroundingsManager extends Manager {
@@ -21,18 +23,32 @@ public class SurroundingsManager extends Manager {
 		}
 	}
 
-	//meta! sender="CarShopModelAgent", id="90", type="Notice"
-	public void processCustomerExit(MessageForm message) {
-	}
-
 	//meta! sender="NewCustomerScheduler", id="110", type="Finish"
 	public void processFinish(MessageForm message) {
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "New customer entry at " + myAgent().mySim().currentTime());
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message) {
 		switch (message.code()) {
 		}
+	}
+
+	//meta! sender="ModelAgent", id="135", type="Notice"
+	public void processCustomerExit(MessageForm message) {
+	}
+
+	//meta! sender="ModelAgent", id="139", type="Notice"
+	public void processInit(MessageForm message) {
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Init message received in SurroundingsAgent");
+		message.setCode(Mc.start);
+		message.setAddressee(myAgent().findAssistant(Id.newCustomerScheduler));
+		notice(message);
+	}
+
+	//meta! userInfo="Removed from model"
+	public void processCustomerEntry(MessageForm message) {
+
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -42,12 +58,16 @@ public class SurroundingsManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.customerExit:
-			processCustomerExit(message);
-		break;
-
 		case Mc.finish:
 			processFinish(message);
+		break;
+
+		case Mc.init:
+			processInit(message);
+		break;
+
+		case Mc.customerExit:
+			processCustomerExit(message);
 		break;
 
 		default:

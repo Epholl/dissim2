@@ -5,14 +5,21 @@ package sk.epholl.dissim.generator;
  */
 public class ExponentialRandom extends RandomGenerator<Double> {
 
+    private double min;
     private double lambda;
 
+    public ExponentialRandom(double min, double mean) {
+        this.min = min;
+        this.lambda = 1d/mean;
+    }
+
     public ExponentialRandom(double mean) {
+        this.min = 0d;
         this.lambda = 1d/mean;
     }
 
     @Override
     public Double nextValue() {
-        return Math.log(1-nextDoubleValue())/(-lambda);
+        return min + Math.log(1-nextDoubleValue())/(-lambda);
     }
 }

@@ -2,8 +2,15 @@ package sk.epholl.dissim.sem3.simulation;
 
 import OSPABA.*;
 import sk.epholl.dissim.sem3.agents.*;
+import sk.epholl.dissim.util.subscribers.ResultManager;
 
 public class MySimulation extends Simulation {
+
+	private ResultManager resultManager;
+	private boolean isContinuous = false;
+
+	private SimulationParameters parameters;
+
 	public MySimulation() {
 		init();
 	}
@@ -18,29 +25,72 @@ public class MySimulation extends Simulation {
 	public void prepareReplication() {
 		super.prepareReplication();
 		// Reset entities, queues, local statistics, etc...
+
+		modelAgent().startSimulation();
 	}
 
 	@Override
 	public void replicationFinished() {
 		// Collect local statistics into global, update UI, etc...
+		resultManager.addValue(Rst.REPLICATION_COUNT, replicationCount());
+		resultManager.addValue(Rst.CONSOLE_LOG, "Replication finished: " + replicationCount());
 		super.replicationFinished();
 	}
 
 	@Override
 	public void simulationFinished() {
 		// Dysplay simulation results
+
+		resultManager.addValue(Rst.CONSOLE_LOG, "Simulation finished.");
 		super.simulationFinished();
+	}
+
+	@Override
+	public void setSimSpeed(double interval, double duration) {
+		super.setSimSpeed(interval, duration);
+		resultManager.addValue(Rst.CONSOLE_LOG, "Sim speed updated: " + interval + ", " + duration);
+		isContinuous = true;
+	}
+
+	@Override
+	public void setMaxSimSpeed() {
+		isContinuous = false;
+		resultManager.addValue(Rst.CONSOLE_LOG, "Sim speed set to max");
+		super.setMaxSimSpeed();
+	}
+
+	public void setResultManager(final ResultManager resultManager) {
+		this.resultManager = resultManager;
+	}
+
+	public ResultManager getResultManager() {
+		return resultManager;
+	}
+
+	public void execIfContinous(final Runnable r) {
+		if (isContinuous) {
+			r.run();
+		}
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
-		setCarShopModelAgent(new CarShopModelAgent(Id.carShopModelAgent, this, null));
-		setSurroundingsAgent(new SurroundingsAgent(Id.surroundingsAgent, this, carShopModelAgent()));
+		setModelAgent(new ModelAgent(Id.modelAgent, this, null));
+		setCarShopModelAgent(new CarShopModelAgent(Id.carShopModelAgent, this, modelAgent()));
+		setSurroundingsAgent(new SurroundingsAgent(Id.surroundingsAgent, this, modelAgent()));
 		setTransportationAgent(new TransportationAgent(Id.transportationAgent, this, carShopModelAgent()));
 		setOfficeAgent(new OfficeAgent(Id.officeAgent, this, carShopModelAgent()));
 		setRepairAgent(new RepairAgent(Id.repairAgent, this, carShopModelAgent()));
 		setParkingAgent(new ParkingAgent(Id.parkingAgent, this, carShopModelAgent()));
 	}
+
+	private ModelAgent _modelAgent;
+
+public ModelAgent modelAgent()
+	{ return _modelAgent; }
+
+	public void setModelAgent(ModelAgent modelAgent)
+	{_modelAgent = modelAgent; }
 
 	private CarShopModelAgent _carShopModelAgent;
 
@@ -90,4 +140,12 @@ public ParkingAgent parkingAgent()
 	public void setParkingAgent(ParkingAgent parkingAgent)
 	{_parkingAgent = parkingAgent; }
 	//meta! tag="end"
+
+	public void setParameters(SimulationParameters parameters) {
+		this.parameters = parameters;
+	}
+
+	public SimulationParameters getParameters() {
+		return parameters;
+	}
 }

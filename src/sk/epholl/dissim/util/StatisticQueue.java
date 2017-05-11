@@ -1,7 +1,6 @@
 package sk.epholl.dissim.util;
 
-import sk.epholl.dissim.core.Simulation;
-import sk.epholl.dissim.core.SimulationCore;
+import sk.epholl.dissim.sem2.core.SimulationCore;
 
 import java.util.HashMap;
 import java.util.LinkedList;

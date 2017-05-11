@@ -1,0 +1,10 @@
+0 repairs: P = 0.0
+1 repairs: P = 0.05442176870748299
+2 repairs: P = 0.320578231292517
+3 repairs: P = 0.30612244897959184
+4 repairs: P = 0.2108843537414966
+5 repairs: P = 0.09863945578231292
+6 repairs: P = 0.00935374149659864
+7 repairs: P = 0.0
+8 repairs: P = 0.0
+9 repairs: P = 0.0

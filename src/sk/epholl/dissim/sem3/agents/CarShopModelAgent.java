@@ -5,10 +5,11 @@ import sk.epholl.dissim.sem3.continualAssistants.DayEndProcess;
 import sk.epholl.dissim.sem3.managers.CarShopModelManager;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="83"
-public class CarShopModelAgent extends Agent {
-	public CarShopModelAgent(int id, Simulation mySim, Agent parent) {
+public class CarShopModelAgent extends BaseAgent {
+	public CarShopModelAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 	}

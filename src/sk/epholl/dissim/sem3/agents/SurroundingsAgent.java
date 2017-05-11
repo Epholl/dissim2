@@ -5,10 +5,11 @@ import sk.epholl.dissim.sem3.continualAssistants.NewCustomerScheduler;
 import sk.epholl.dissim.sem3.managers.SurroundingsManager;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="85"
-public class SurroundingsAgent extends Agent {
-	public SurroundingsAgent(int id, Simulation mySim, Agent parent) {
+public class SurroundingsAgent extends BaseAgent {
+	public SurroundingsAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 	}
@@ -23,7 +24,9 @@ public class SurroundingsAgent extends Agent {
 	private void init() {
 		new SurroundingsManager(Id.surroundingsManager, mySim(), this);
 		new NewCustomerScheduler(Id.newCustomerScheduler, mySim(), this);
+		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.customerExit);
+		addOwnMessage(Mc.customerEntry);
 	}
 	//meta! tag="end"
 }

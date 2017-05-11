@@ -5,10 +5,11 @@ import sk.epholl.dissim.sem3.continualAssistants.MoveCarProcess;
 import sk.epholl.dissim.sem3.managers.TransportationManager;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="86"
-public class TransportationAgent extends Agent {
-	public TransportationAgent(int id, Simulation mySim, Agent parent) {
+public class TransportationAgent extends BaseAgent {
+	public TransportationAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 	}

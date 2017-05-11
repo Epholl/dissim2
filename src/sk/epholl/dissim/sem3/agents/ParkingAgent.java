@@ -4,10 +4,11 @@ import OSPABA.*;
 import sk.epholl.dissim.sem3.managers.ParkingManager;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="92"
-public class ParkingAgent extends Agent {
-	public ParkingAgent(int id, Simulation mySim, Agent parent) {
+public class ParkingAgent extends BaseAgent {
+	public ParkingAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 	}

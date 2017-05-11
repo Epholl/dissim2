@@ -5,10 +5,11 @@ import sk.epholl.dissim.sem3.continualAssistants.RepairCarProcess;
 import sk.epholl.dissim.sem3.managers.RepairManager;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="88"
-public class RepairAgent extends Agent {
-	public RepairAgent(int id, Simulation mySim, Agent parent) {
+public class RepairAgent extends BaseAgent {
+	public RepairAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 	}

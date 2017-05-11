@@ -4,12 +4,14 @@ import OSPABA.*;
 
 public class Id extends IdList {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public static final int modelAgent = 18;
 	public static final int carShopModelAgent = 6;
 	public static final int surroundingsAgent = 8;
 	public static final int transportationAgent = 9;
 	public static final int officeAgent = 10;
 	public static final int repairAgent = 11;
 	public static final int parkingAgent = 12;
+	public static final int modelManager = 118;
 	public static final int carShopModelManager = 106;
 	public static final int surroundingsManager = 108;
 	public static final int transportationManager = 109;

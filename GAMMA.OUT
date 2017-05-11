@@ -1,0 +1,38 @@
+
+	Distribution Summary
+
+Distribution:	Gamma        
+Expression:	0.5 + GAMM(0.569, 4.41)
+Square Error:	0.002195
+
+Chi Square Test
+  Number of intervals	= 6
+  Degrees of freedom 	= 3
+  Test Statistic     	= 30.9
+  Corresponding p-value	< 0.005
+
+	Data Summary
+
+Number of Data Points	= 1176
+Min Data Value       	= 1
+Max Data Value       	= 6
+Sample Mean          	= 3.01
+Sample Std Dev       	= 1.11
+
+	Histogram Summary
+
+Histogram Range    	= 0.5 to 6.5
+Number of Intervals	= 6
+
+
+==================================================================
+Int.   No. of               Probability           Cumulative      
+No.    Data Pts.   x        Density               Distribution    
+------------------------------------------------------------------
+                            Data   Function       Data   Function   
+   0    64       1.00     0.0544     0.0661     0.0544     0.0661
+   1   377       2.00      0.321      0.317      0.375      0.383
+   2   360       3.00      0.306      0.323      0.681      0.706
+   3   248       4.00      0.211      0.180      0.892      0.886
+   4   116       5.00     0.0986     0.0747      0.991      0.961
+   5    11       6.00    0.00935     0.0259       1.00      0.987
