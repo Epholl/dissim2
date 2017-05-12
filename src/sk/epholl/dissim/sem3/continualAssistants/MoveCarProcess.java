@@ -3,7 +3,10 @@ package sk.epholl.dissim.sem3.continualAssistants;
 import OSPABA.*;
 import OSPABA.Process;
 import sk.epholl.dissim.sem3.agents.TransportationAgent;
+import sk.epholl.dissim.sem3.entity.Road;
+import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MyMessage;
 
 //meta! id="113"
 public class MoveCarProcess extends Process {
@@ -19,11 +22,26 @@ public class MoveCarProcess extends Process {
 
 	//meta! sender="TransportationAgent", id="114", type="Start"
 	public void processStart(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		final Vehicle vehicle = msg.getVehicle();
+		final Road road = vehicle.getCurrentRoad();
+		final double duration = road.getTotalDuration();
+		vehicle.setCurrentState(Vehicle.State.MoveToOfficeLot, mySim().currentTime() + duration);
+
+		msg.setCode(Mc.finish);
+		hold(duration, msg);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message) {
 		switch (message.code()) {
+			case Mc.finish:
+				MyMessage msg = (MyMessage) message;
+				final Vehicle vehicle = msg.getVehicle();
+				vehicle.persistCurrentState();
+				vehicle.setCurrentPlace(msg.getDestination());
+				assistantFinished(msg);
+				break;
 		}
 	}
 

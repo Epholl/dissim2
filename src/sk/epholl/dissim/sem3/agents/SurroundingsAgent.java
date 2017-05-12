@@ -12,6 +12,7 @@ public class SurroundingsAgent extends BaseAgent {
 	public SurroundingsAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.customerEntry);
 	}
 
 	@Override
@@ -26,7 +27,6 @@ public class SurroundingsAgent extends BaseAgent {
 		new NewCustomerScheduler(Id.newCustomerScheduler, mySim(), this);
 		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.customerExit);
-		addOwnMessage(Mc.customerEntry);
 	}
 	//meta! tag="end"
 }

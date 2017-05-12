@@ -11,20 +11,63 @@
       <UsePetriNet>false</UsePetriNet>
     </Agent>
     <Agent>
-      <SimId>8</SimId>
-      <InternalId>85</InternalId>
-      <Name>SurroundingsAgent</Name>
-      <Bounds>529,460,250,250</Bounds>
-      <Reasoner>SurroundingsManager</Reasoner>
+      <SimId>11</SimId>
+      <InternalId>88</InternalId>
+      <Name>RepairAgent</Name>
+      <Bounds>1668,1088,250,250</Bounds>
+      <Reasoner>RepairManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
       <Components>
-        <Scheduler>
-          <SimId>1015</SimId>
-          <InternalId>109</InternalId>
-          <Name>NewCustomerScheduler</Name>
-          <Bounds>32,108,35,13</Bounds>
-        </Scheduler>
+        <Process>
+          <SimId>1017</SimId>
+          <InternalId>117</InternalId>
+          <Name>RepairCarProcess</Name>
+          <Bounds>83,110,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>9</SimId>
+      <InternalId>86</InternalId>
+      <Name>TransportationAgent</Name>
+      <Bounds>959,1095,250,250</Bounds>
+      <Reasoner>TransportationManager</Reasoner>
+      <ReasonerBounds>109,35,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1016</SimId>
+          <InternalId>113</InternalId>
+          <Name>MoveCarProcess</Name>
+          <Bounds>56,94,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>18</SimId>
+      <InternalId>132</InternalId>
+      <Name>ModelAgent</Name>
+      <Bounds>954,49,250,250</Bounds>
+      <Reasoner>ModelManager</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>6</SimId>
+      <InternalId>83</InternalId>
+      <Name>CarShopModelAgent</Name>
+      <Bounds>1393,413,400,400</Bounds>
+      <Reasoner>CarShopModelManager</Reasoner>
+      <ReasonerBounds>173,54,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1020</SimId>
+          <InternalId>125</InternalId>
+          <Name>DayEndProcess</Name>
+          <Bounds>86,127,35,18</Bounds>
+        </Process>
       </Components>
     </Agent>
     <Agent>
@@ -57,63 +100,20 @@
       </Components>
     </Agent>
     <Agent>
-      <SimId>11</SimId>
-      <InternalId>88</InternalId>
-      <Name>RepairAgent</Name>
-      <Bounds>1668,1088,250,250</Bounds>
-      <Reasoner>RepairManager</Reasoner>
+      <SimId>8</SimId>
+      <InternalId>85</InternalId>
+      <Name>SurroundingsAgent</Name>
+      <Bounds>529,460,250,250</Bounds>
+      <Reasoner>SurroundingsManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
       <Components>
-        <Process>
-          <SimId>1017</SimId>
-          <InternalId>117</InternalId>
-          <Name>RepairCarProcess</Name>
-          <Bounds>83,110,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>6</SimId>
-      <InternalId>83</InternalId>
-      <Name>CarShopModelAgent</Name>
-      <Bounds>1393,413,400,400</Bounds>
-      <Reasoner>CarShopModelManager</Reasoner>
-      <ReasonerBounds>173,54,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1020</SimId>
-          <InternalId>125</InternalId>
-          <Name>DayEndProcess</Name>
-          <Bounds>86,127,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>18</SimId>
-      <InternalId>132</InternalId>
-      <Name>ModelAgent</Name>
-      <Bounds>954,49,250,250</Bounds>
-      <Reasoner>ModelManager</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>9</SimId>
-      <InternalId>86</InternalId>
-      <Name>TransportationAgent</Name>
-      <Bounds>959,1095,250,250</Bounds>
-      <Reasoner>TransportationManager</Reasoner>
-      <ReasonerBounds>109,35,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1016</SimId>
-          <InternalId>113</InternalId>
-          <Name>MoveCarProcess</Name>
-          <Bounds>56,94,35,18</Bounds>
-        </Process>
+        <Scheduler>
+          <SimId>1015</SimId>
+          <InternalId>109</InternalId>
+          <Name>NewCustomerScheduler</Name>
+          <Bounds>32,108,35,13</Bounds>
+        </Scheduler>
       </Components>
     </Agent>
   </Agents>
@@ -153,6 +153,14 @@
       <Type>Notice</Type>
       <Source>132</Source>
       <Destination>85</Destination>
+    </Message>
+    <Message>
+      <SimId>1024</SimId>
+      <InternalId>152</InternalId>
+      <Name>Init</Name>
+      <Type>Notice</Type>
+      <Source>132</Source>
+      <Destination>83</Destination>
     </Message>
     <Message>
       <SimId>1013</SimId>
@@ -285,5 +293,5 @@
       <Destination>125</Destination>
     </Message>
   </Messages>
-  <IID>151</IID>
+  <IID>153</IID>
 </ABAsim>

@@ -14,4 +14,6 @@ public class Const {
     public static final int repairShopHourlyRate = 25;
 
     public static final double onePercentCustomerIncreaseCost = 62.5;
+
+    public static final double speedInKmh = 5.0;
 }

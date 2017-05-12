@@ -57,10 +57,6 @@ public class OfficeManager extends Manager {
 		switch (message.code()) {
 		case Mc.finish:
 			switch (message.sender().id()) {
-			case Id.cancelCustomerProcess:
-				processFinishCancelCustomerProcess(message);
-			break;
-
 			case Id.takeOrderProcess:
 				processFinishTakeOrderProcess(message);
 			break;
@@ -68,15 +64,19 @@ public class OfficeManager extends Manager {
 			case Id.returnCarProcess:
 				processFinishReturnCarProcess(message);
 			break;
-			}
-		break;
 
-		case Mc.returnCar:
-			processReturnCar(message);
+			case Id.cancelCustomerProcess:
+				processFinishCancelCustomerProcess(message);
+			break;
+			}
 		break;
 
 		case Mc.takeOrder:
 			processTakeOrder(message);
+		break;
+
+		case Mc.returnCar:
+			processReturnCar(message);
 		break;
 
 		default:

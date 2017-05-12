@@ -1,6 +1,7 @@
 package sk.epholl.dissim.sem3.simulation;
 
 import sk.epholl.dissim.sem3.Generators;
+import sk.epholl.dissim.sem3.entity.RoadModel;
 import sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl;
 
 /**
@@ -27,6 +28,8 @@ public class SimulationParameters {
     private double clientIncomeIncreasePercent;
 
     private Generators generators = new Generators(1.0);
+
+    private RoadModel roadModel = new RoadModel();
 
     public int getRepliacationCount() {
         return repliacationCount;
@@ -111,5 +114,13 @@ public class SimulationParameters {
 
     public void setReplicationDurationDays(double replicationDurationDays) {
         this.replicationDurationSeconds = replicationDurationDays * 8 * 60 * 60;
+    }
+
+    public RoadModel getRoadModel() {
+        return roadModel;
+    }
+
+    public void setRoadModel(RoadModel roadModel) {
+        this.roadModel = roadModel;
     }
 }

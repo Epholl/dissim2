@@ -25,6 +25,7 @@ public class CarShopModelAgent extends BaseAgent {
 		new CarShopModelManager(Id.carShopModelManager, mySim(), this);
 		new DayEndProcess(Id.dayEndProcess, mySim(), this);
 		addOwnMessage(Mc.returnCar);
+		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.acquireParkingSpace);
 		addOwnMessage(Mc.repairWehicle);
 		addOwnMessage(Mc.customerEntry);

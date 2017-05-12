@@ -42,12 +42,12 @@ public class ParkingManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.freeParkingSpace:
-			processFreeParkingSpace(message);
-		break;
-
 		case Mc.acquireParkingSpace:
 			processAcquireParkingSpace(message);
+		break;
+
+		case Mc.freeParkingSpace:
+			processFreeParkingSpace(message);
 		break;
 
 		default:

@@ -2,14 +2,20 @@ package sk.epholl.dissim.sem3.continualAssistants;
 
 import OSPABA.*;
 import sk.epholl.dissim.generator.RandomGenerator;
+import sk.epholl.dissim.sem2.entity.Car;
 import sk.epholl.dissim.sem3.agents.SurroundingsAgent;
+import sk.epholl.dissim.sem3.entity.Place;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.simulation.MyMessage;
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 
 //meta! id="109"
 public class NewCustomerScheduler extends Scheduler {
 
 	private RandomGenerator<Double> newCustomerGenerator;
+
+	private long idCounter;
 
 	public NewCustomerScheduler(int id, Simulation mySim, CommonAgent myAgent) {
 		super(id, mySim, myAgent);
@@ -21,6 +27,7 @@ public class NewCustomerScheduler extends Scheduler {
 	public void prepareReplication() {
 		super.prepareReplication();
 		newCustomerGenerator = myAgent().getSimulation().getParameters().getGenerators().getCustomerEntryRandom();
+		idCounter = 0;
 		// Setup component for the next replication
 	}
 
@@ -36,7 +43,11 @@ public class NewCustomerScheduler extends Scheduler {
 		switch (message.code()) {
 			case Mc.customerEntry:
 				double duration = newCustomerGenerator.nextValue();
-				MessageForm copy = message.createCopy();
+				MyMessage copy = (MyMessage) message.createCopy();
+				final Vehicle vehicle = new Vehicle((MySimulation) mySim(), idCounter++);
+				vehicle.addFinsihedState(Vehicle.State.EnterSystem);
+				vehicle.setCurrentPlace(Place.Enterance);
+				copy.setVehicle(vehicle);
 				hold(duration, message);
 
 				assistantFinished(copy);

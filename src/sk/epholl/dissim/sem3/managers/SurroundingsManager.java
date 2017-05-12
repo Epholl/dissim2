@@ -1,9 +1,11 @@
 package sk.epholl.dissim.sem3.managers;
 
 import OSPABA.*;
+import sk.epholl.dissim.sem3.agents.ModelAgent;
 import sk.epholl.dissim.sem3.agents.SurroundingsAgent;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MyMessage;
 import sk.epholl.dissim.sem3.simulation.Rst;
 
 //meta! id="85"
@@ -25,7 +27,11 @@ public class SurroundingsManager extends Manager {
 
 	//meta! sender="NewCustomerScheduler", id="110", type="Finish"
 	public void processFinish(MessageForm message) {
-		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "New customer entry at " + myAgent().mySim().currentTime());
+		MyMessage msg = (MyMessage) message;
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "New customer entry: " + msg.getVehicle());
+		msg.setCode(Mc.customerEntry);
+		msg.setAddressee(mySim().findAgent(Id.modelAgent));
+		notice(msg);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -58,12 +64,12 @@ public class SurroundingsManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.finish:
-			processFinish(message);
-		break;
-
 		case Mc.init:
 			processInit(message);
+		break;
+
+		case Mc.finish:
+			processFinish(message);
 		break;
 
 		case Mc.customerExit:
