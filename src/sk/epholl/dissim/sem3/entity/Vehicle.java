@@ -24,7 +24,6 @@ public class Vehicle extends Entity {
         MoveToLot2,
         ReturnToOfficeLot,
         RetrieveCar,
-        MoveAway,
         LeaveSystem
     }
 
@@ -34,6 +33,8 @@ public class Vehicle extends Entity {
 
     private Place currentPlace;
     private Road currentRoad;
+
+    private ParkingSpot assignedParkingSpot;
 
     private State currentState;
     private double currentStateFinishTime;
@@ -80,6 +81,14 @@ public class Vehicle extends Entity {
     public void setCurrentRoad(Road currentRoad) {
         this.currentRoad = currentRoad;
         currentPlace = null;
+    }
+
+    public ParkingSpot getAssignedParkingSpot() {
+        return assignedParkingSpot;
+    }
+
+    public void setAssignedParkingSpot(ParkingSpot assignedParkingSpot) {
+        this.assignedParkingSpot = assignedParkingSpot;
     }
 
     @Override

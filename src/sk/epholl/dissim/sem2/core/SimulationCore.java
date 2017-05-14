@@ -1,6 +1,8 @@
 package sk.epholl.dissim.sem2.core;
 
 import sk.epholl.dissim.sem2.event.PauseEvent;
+import sk.epholl.dissim.util.SimTimeProvider;
+import sk.epholl.dissim.util.StatisticQueue;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.PriorityQueue;
 /**
  * Created by Tomáš on 26.03.2016.
  */
-public abstract class SimulationCore<T extends SimulationParameters, S, U> {
+public abstract class SimulationCore<T extends SimulationParameters, S, U> implements SimTimeProvider {
 
     public interface ResultListener<S, U> {
         void onReplicationFinished(S result);

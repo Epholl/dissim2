@@ -33,6 +33,7 @@ public class TransportationAgent extends BaseAgent {
 	private void init() {
 		new TransportationManager(Id.transportationManager, mySim(), this);
 		new MoveCarProcess(Id.moveCarProcess, mySim(), this);
+		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.transferVehicle);
 	}
 	//meta! tag="end"

@@ -5,7 +5,7 @@
       <SimId>12</SimId>
       <InternalId>92</InternalId>
       <Name>ParkingAgent</Name>
-      <Bounds>1318,1088,250,250</Bounds>
+      <Bounds>1189,1094,250,250</Bounds>
       <Reasoner>ParkingManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -31,7 +31,7 @@
       <SimId>9</SimId>
       <InternalId>86</InternalId>
       <Name>TransportationAgent</Name>
-      <Bounds>959,1095,250,250</Bounds>
+      <Bounds>680,1088,250,250</Bounds>
       <Reasoner>TransportationManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -74,7 +74,7 @@
       <SimId>10</SimId>
       <InternalId>87</InternalId>
       <Name>OfficeAgent</Name>
-      <Bounds>2018,1088,250,250</Bounds>
+      <Bounds>2165,1077,250,250</Bounds>
       <Reasoner>OfficeManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -187,6 +187,22 @@
       <Destination>86</Destination>
     </Message>
     <Message>
+      <SimId>1025</SimId>
+      <InternalId>155</InternalId>
+      <Name>Init</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>86</Destination>
+    </Message>
+    <Message>
+      <SimId>1026</SimId>
+      <InternalId>156</InternalId>
+      <Name>Init</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>92</Destination>
+    </Message>
+    <Message>
       <SimId>1016</SimId>
       <InternalId>93</InternalId>
       <Name>TakeOrder</Name>
@@ -195,20 +211,28 @@
       <Destination>87</Destination>
     </Message>
     <Message>
+      <SimId>1027</SimId>
+      <InternalId>157</InternalId>
+      <Name>Init</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>88</Destination>
+    </Message>
+    <Message>
       <SimId>1017</SimId>
       <InternalId>94</InternalId>
-      <Name>AcquireParkingSpace</Name>
+      <Name>ParkCar</Name>
       <Type>RequestResponse</Type>
       <Source>83</Source>
       <Destination>92</Destination>
     </Message>
     <Message>
-      <SimId>1018</SimId>
-      <InternalId>95</InternalId>
-      <Name>FreeParkingSpace</Name>
+      <SimId>1028</SimId>
+      <InternalId>158</InternalId>
+      <Name>Init</Name>
       <Type>Notice</Type>
       <Source>83</Source>
-      <Destination>92</Destination>
+      <Destination>87</Destination>
     </Message>
     <Message>
       <SimId>1019</SimId>
@@ -217,6 +241,14 @@
       <Type>RequestResponse</Type>
       <Source>83</Source>
       <Destination>88</Destination>
+    </Message>
+    <Message>
+      <SimId>1029</SimId>
+      <InternalId>160</InternalId>
+      <Name>ReserveSpot</Name>
+      <Type>RequestResponse</Type>
+      <Source>92</Source>
+      <Destination>83</Destination>
     </Message>
     <Message>
       <SimId>1020</SimId>
@@ -239,8 +271,24 @@
       <Destination>83</Destination>
     </Message>
     <Message>
+      <SimId>1030</SimId>
+      <InternalId>166</InternalId>
+      <Name>ReserveSpot</Name>
+      <Type>RequestResponse</Type>
+      <Source>87</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
       <InternalId>103</InternalId>
       <Type>Parent</Type>
+      <Source>92</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
+      <SimId>1031</SimId>
+      <InternalId>167</InternalId>
+      <Name>ParkingSpotsUpdate</Name>
+      <Type>Notice</Type>
       <Source>92</Source>
       <Destination>83</Destination>
     </Message>
@@ -251,10 +299,26 @@
       <Destination>83</Destination>
     </Message>
     <Message>
+      <SimId>1032</SimId>
+      <InternalId>168</InternalId>
+      <Name>ParkingSpotsUpdate</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>88</Destination>
+    </Message>
+    <Message>
       <InternalId>105</InternalId>
       <Type>Parent</Type>
       <Source>87</Source>
       <Destination>83</Destination>
+    </Message>
+    <Message>
+      <SimId>1033</SimId>
+      <InternalId>169</InternalId>
+      <Name>ParkingSpotsUpdate</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>87</Destination>
     </Message>
     <Message>
       <InternalId>110</InternalId>
@@ -293,5 +357,5 @@
       <Destination>125</Destination>
     </Message>
   </Messages>
-  <IID>153</IID>
+  <IID>170</IID>
 </ABAsim>

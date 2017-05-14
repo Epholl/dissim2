@@ -30,7 +30,7 @@ public class CarShopModelManager extends Manager {
 	}
 
 	//meta! sender="ParkingAgent", id="94", type="Response"
-	public void processAcquireParkingSpace(MessageForm message) {
+	public void processParkCar(MessageForm message) {
 	}
 
 	//meta! sender="RepairAgent", id="96", type="Response"
@@ -47,7 +47,7 @@ public class CarShopModelManager extends Manager {
 	public void processCustomerEntry(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		msg.setCode(Mc.transferVehicle);
-		msg.setDestination(Place.MainLot);
+		msg.setPlace(Place.MainLot);
 		msg.setAddressee(Id.transportationAgent);
 		request(msg);
 	}
@@ -71,6 +71,47 @@ public class CarShopModelManager extends Manager {
 
 	//meta! sender="ModelAgent", id="152", type="Notice"
 	public void processInit(MessageForm message) {
+
+		message.setCode(Mc.init);
+		MessageForm transportationAgentInit = message.createCopy();
+		transportationAgentInit.setAddressee(Id.transportationAgent);
+		notice(transportationAgentInit);
+
+		MessageForm parkingAgentInit = message.createCopy();
+		parkingAgentInit.setAddressee(Id.parkingAgent);
+		notice(parkingAgentInit);
+
+		MessageForm repairAgentInit = message.createCopy();
+		repairAgentInit.setAddressee(Id.repairAgent);
+		notice(repairAgentInit);
+
+		MessageForm officeAgentInit = message.createCopy();
+		officeAgentInit.setAddressee(Id.officeAgent);
+		notice(officeAgentInit);
+
+	}
+
+	//meta! sender="ParkingAgent", id="160", type="Request"
+	public void processReserveSpotParkingAgent(MessageForm message) {
+	}
+
+	//meta! sender="OfficeAgent", id="166", type="Request"
+	public void processReserveSpotOfficeAgent(MessageForm message) {
+	}
+
+	//meta! sender="ParkingAgent", id="167", type="Notice"
+	public void processParkingSpotsUpdate(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		switch (msg.getPlace()) {
+			case ParkingLot1:
+				msg.setAddressee(Id.officeAgent);
+				notice(msg);
+				break;
+			case ParkingLot2:
+				msg.setAddressee(Id.repairAgent);
+				notice(msg);
+				break;
+		}
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -96,12 +137,28 @@ public class CarShopModelManager extends Manager {
 			processCustomerEntry(message);
 		break;
 
+		case Mc.parkingSpotsUpdate:
+			processParkingSpotsUpdate(message);
+		break;
+
+		case Mc.reserveSpot:
+			switch (message.sender().id()) {
+			case Id.parkingAgent:
+				processReserveSpotParkingAgent(message);
+			break;
+
+			case Id.officeAgent:
+				processReserveSpotOfficeAgent(message);
+			break;
+			}
+		break;
+
 		case Mc.takeOrder:
 			processTakeOrder(message);
 		break;
 
-		case Mc.acquireParkingSpace:
-			processAcquireParkingSpace(message);
+		case Mc.parkCar:
+			processParkCar(message);
 		break;
 
 		case Mc.init:

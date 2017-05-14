@@ -35,6 +35,14 @@ public class RepairManager extends Manager {
 		}
 	}
 
+	//meta! sender="CarShopModelAgent", id="157", type="Notice"
+	public void processInit(MessageForm message) {
+	}
+
+	//meta! sender="CarShopModelAgent", id="168", type="Notice"
+	public void processParkingSpotsUpdate(MessageForm message) {
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -42,6 +50,14 @@ public class RepairManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.init:
+			processInit(message);
+		break;
+
+		case Mc.parkingSpotsUpdate:
+			processParkingSpotsUpdate(message);
+		break;
+
 		case Mc.finish:
 			processFinish(message);
 		break;

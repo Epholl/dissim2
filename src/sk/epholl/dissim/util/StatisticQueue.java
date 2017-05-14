@@ -11,14 +11,14 @@ import java.util.LinkedList;
 public class StatisticQueue<T> extends LinkedList<Pair<Double, T>> {
 
     public final HashMap<Integer, Double> queueLengths = new HashMap<>();
-    public final SimulationCore simulation;
+    public final SimTimeProvider simulation;
 
     public long processedElements;
     public double waitingSum;
 
     public double lastQueueUpdate;
 
-    public StatisticQueue(SimulationCore simulation) {
+    public StatisticQueue(SimTimeProvider simulation) {
         this.simulation = simulation;
         lastQueueUpdate = simulation.getSimulationTime();
     }

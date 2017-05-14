@@ -2,7 +2,6 @@ package sk.epholl.dissim.sem3.simulation;
 
 import sk.epholl.dissim.sem3.Generators;
 import sk.epholl.dissim.sem3.entity.RoadModel;
-import sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl;
 
 /**
  * Created by Tomáš on 10.05.2017.
@@ -19,9 +18,9 @@ public class SimulationParameters {
 
     private int warmupPercentage;
 
-    private int number1Workers;
+    private int type1WorkerCount;
 
-    private int number2Workers;
+    private int type2WorkerCount;
 
     private Worker1Strategy worker1Strategy;
 
@@ -47,24 +46,24 @@ public class SimulationParameters {
         this.warmupPercentage = warmupPercentage;
     }
 
-    public int getNumber1Workers() {
-        return number1Workers;
+    public int getType1WorkerCount() {
+        return type1WorkerCount;
     }
 
     public int getWorker1TotalPrice() {
-        return number1Workers * Const.worker1Price;
+        return type1WorkerCount * Const.worker1Price;
     }
 
     public int getWorker2TotalPrice() {
-        return number2Workers * Const.worker2Price;
+        return type2WorkerCount * Const.worker2Price;
     }
 
-    public void setNumber1Workers(int number1Workers) {
-        this.number1Workers = number1Workers;
+    public void setType1WorkerCount(int type1WorkerCount) {
+        this.type1WorkerCount = type1WorkerCount;
     }
 
-    public int getNumber2Workers() {
-        return number2Workers;
+    public int getType2WorkerCount() {
+        return type2WorkerCount;
     }
 
     public double getAdvertisementTotalPrice() {
@@ -79,8 +78,8 @@ public class SimulationParameters {
         return 1.0 + (clientIncomeIncreasePercent/100);
     }
 
-    public void setNumber2Workers(int number2Workers) {
-        this.number2Workers = number2Workers;
+    public void setType2WorkerCount(int type2WorkerCount) {
+        this.type2WorkerCount = type2WorkerCount;
     }
 
     public Generators getGenerators() {

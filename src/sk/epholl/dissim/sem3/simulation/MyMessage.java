@@ -8,7 +8,9 @@ public class MyMessage extends MessageForm {
 
 	private Vehicle vehicle;
 
-	private Place destination;
+	private Place place;
+
+	private Object variable;
 
 	public MyMessage(Simulation sim) {
 		super(sim);
@@ -40,11 +42,20 @@ public class MyMessage extends MessageForm {
 		this.vehicle = vehicle;
 	}
 
-	public Place getDestination() {
-		return destination;
+	public Place getPlace() {
+		return place;
 	}
 
-	public void setDestination(Place destination) {
-		this.destination = destination;
+	public void setPlace(Place place) {
+		this.place = place;
 	}
+
+	public Object getVariable() {
+		return variable;
+	}
+
+	public void setVariable(final Object object) {
+		this.variable = object;
+	}
+
 }

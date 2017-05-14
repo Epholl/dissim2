@@ -42,7 +42,7 @@ public class TransportationManager extends Manager {
 		final MyMessage msg = (MyMessage) message;
 		final Vehicle vehicle = msg.getVehicle();
 		final Place current = vehicle.getCurrentPlace();
-		final Place destination = msg.getDestination();
+		final Place destination = msg.getPlace();
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Requested transport: " + current + " to " + destination + " for " + vehicle);
 		vehicle.setCurrentRoad(myAgent().getRoadModel().getRoad(current, destination));
 
@@ -56,6 +56,10 @@ public class TransportationManager extends Manager {
 		}
 	}
 
+	//meta! sender="CarShopModelAgent", id="155", type="Notice"
+	public void processInit(MessageForm message) {
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -63,6 +67,10 @@ public class TransportationManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.init:
+			processInit(message);
+		break;
+
 		case Mc.finish:
 			processFinish(message);
 		break;

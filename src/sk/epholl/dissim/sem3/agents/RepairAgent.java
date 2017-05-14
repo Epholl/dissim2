@@ -24,7 +24,9 @@ public class RepairAgent extends BaseAgent {
 	private void init() {
 		new RepairManager(Id.repairManager, mySim(), this);
 		new RepairCarProcess(Id.repairCarProcess, mySim(), this);
+		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.repairWehicle);
+		addOwnMessage(Mc.parkingSpotsUpdate);
 	}
 	//meta! tag="end"
 }

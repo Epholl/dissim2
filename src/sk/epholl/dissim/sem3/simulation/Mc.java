@@ -9,10 +9,11 @@ public class Mc extends IdList {
 	public static final int init = 1023;
 	public static final int transferVehicle = 1015;
 	public static final int takeOrder = 1016;
-	public static final int acquireParkingSpace = 1017;
-	public static final int freeParkingSpace = 1018;
+	public static final int parkCar = 1017;
 	public static final int repairWehicle = 1019;
+	public static final int reserveSpot = 1029;
 	public static final int returnCar = 1020;
+	public static final int parkingSpotsUpdate = 1031;
 	//meta! tag="end"
 
 	// 1..1000 range reserved for user

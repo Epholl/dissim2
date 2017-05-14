@@ -2,7 +2,6 @@ package sk.epholl.dissim.sem3.ui;
 
 import sk.epholl.dissim.sem3.simulation.Rst;
 import sk.epholl.dissim.sem3.simulation.SimulationController;
-import sk.epholl.dissim.util.subscribers.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -183,14 +182,14 @@ public class MainForm extends JFrame {
 
         type1WorkersSpinner.setModel(new SpinnerNumberModel(1, 1, 50, 1));
         type1WorkersSpinner.addChangeListener(changeEvent -> {
-            simulationController.getParameters().setNumber1Workers((Integer)type1WorkersSpinner.getModel().getValue());
+            simulationController.getParameters().setType1WorkerCount((Integer)type1WorkersSpinner.getModel().getValue());
             type1WorkersPriceLabel.setText("= " + simulationController.getParameters().getWorker1TotalPrice() + "€ monthly");
             updateTotalPrice();
         });
 
         type2WorkersSpinner.setModel(new SpinnerNumberModel(1, 1, 50, 1));
         type2WorkersSpinner.addChangeListener(changeEvent -> {
-            simulationController.getParameters().setNumber2Workers((Integer)type2WorkersSpinner.getModel().getValue());
+            simulationController.getParameters().setType2WorkerCount((Integer)type2WorkersSpinner.getModel().getValue());
             type2WorkersPricelabel.setText("= " + simulationController.getParameters().getWorker2TotalPrice() + "€ monthly");
             updateTotalPrice();
         });
@@ -203,9 +202,9 @@ public class MainForm extends JFrame {
 
         simulationController.getParameters().setRepliacationCount((Integer)replicationCountSpinner.getModel().getValue());
         simulationController.getParameters().setWarmupPercentage((Integer)warmupPercentSpinner.getModel().getValue());
-        simulationController.getParameters().setNumber1Workers((Integer)type1WorkersSpinner.getModel().getValue());
+        simulationController.getParameters().setType1WorkerCount((Integer)type1WorkersSpinner.getModel().getValue());
         type1WorkersPriceLabel.setText("= " + simulationController.getParameters().getWorker1TotalPrice() + "€ monthly");
-        simulationController.getParameters().setNumber2Workers((Integer)type2WorkersSpinner.getModel().getValue());
+        simulationController.getParameters().setType2WorkerCount((Integer)type2WorkersSpinner.getModel().getValue());
         type2WorkersPricelabel.setText("= " + simulationController.getParameters().getWorker2TotalPrice() + "€ monthly");
         advertismentsPriceLabel.setText("% = " + simulationController.getParameters().getAdvertisementTotalPrice() + "€ monthly");
         updateTotalPrice();

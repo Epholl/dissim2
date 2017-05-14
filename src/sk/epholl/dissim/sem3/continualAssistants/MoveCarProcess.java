@@ -39,7 +39,7 @@ public class MoveCarProcess extends Process {
 				MyMessage msg = (MyMessage) message;
 				final Vehicle vehicle = msg.getVehicle();
 				vehicle.persistCurrentState();
-				vehicle.setCurrentPlace(msg.getDestination());
+				vehicle.setCurrentPlace(msg.getPlace());
 				assistantFinished(msg);
 				break;
 		}

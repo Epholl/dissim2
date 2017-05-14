@@ -3,6 +3,7 @@ package sk.epholl.dissim.sem3.agents;
 import OSPABA.Agent;
 import OSPABA.Simulation;
 import sk.epholl.dissim.sem3.simulation.MySimulation;
+import sk.epholl.dissim.sem3.simulation.SimulationParameters;
 import sk.epholl.dissim.util.subscribers.ResultManager;
 import sk.epholl.dissim.util.subscribers.ValueType;
 
@@ -17,6 +18,10 @@ public class BaseAgent extends Agent {
 
     public MySimulation getSimulation() {
         return ((MySimulation)mySim());
+    }
+
+    public SimulationParameters getParams() {
+        return getSimulation().getParameters();
     }
 
     public <T> void publishValue(final ValueType<T> type, final T value) {

@@ -2,9 +2,11 @@ package sk.epholl.dissim.sem3.simulation;
 
 import OSPABA.*;
 import sk.epholl.dissim.sem3.agents.*;
+import sk.epholl.dissim.util.SimTimeProvider;
+import sk.epholl.dissim.util.StatisticQueue;
 import sk.epholl.dissim.util.subscribers.ResultManager;
 
-public class MySimulation extends Simulation {
+public class MySimulation extends Simulation implements SimTimeProvider {
 
 	private ResultManager resultManager;
 
@@ -155,5 +157,10 @@ public ParkingAgent parkingAgent()
 
 	public SimulationParameters getParameters() {
 		return parameters;
+	}
+
+	@Override
+	public double getSimulationTime() {
+		return currentTime();
 	}
 }

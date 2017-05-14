@@ -4,6 +4,8 @@ import OSPABA.*;
 import sk.epholl.dissim.sem3.agents.OfficeAgent;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MyMessage;
+import sk.epholl.dissim.sem3.simulation.Rst;
 
 //meta! id="87"
 public class OfficeManager extends Manager {
@@ -48,6 +50,22 @@ public class OfficeManager extends Manager {
 		}
 	}
 
+	//meta! sender="CarShopModelAgent", id="158", type="Notice"
+	public void processInit(MessageForm message) {
+	}
+
+	//meta! sender="CarShopModelAgent", id="166", type="Response"
+	public void processReserveSpot(MessageForm message) {
+	}
+
+	//meta! sender="CarShopModelAgent", id="169", type="Notice"
+	public void processParkingSpotsUpdate(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		int freeSpots = (Integer) msg.getVariable();
+		myAgent().setLot1FreeParkingSpots(freeSpots);
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Parking spot capacity notice: " + msg.getPlace() + ": " + freeSpots);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -75,8 +93,20 @@ public class OfficeManager extends Manager {
 			processTakeOrder(message);
 		break;
 
+		case Mc.init:
+			processInit(message);
+		break;
+
+		case Mc.parkingSpotsUpdate:
+			processParkingSpotsUpdate(message);
+		break;
+
 		case Mc.returnCar:
 			processReturnCar(message);
+		break;
+
+		case Mc.reserveSpot:
+			processReserveSpot(message);
 		break;
 
 		default:

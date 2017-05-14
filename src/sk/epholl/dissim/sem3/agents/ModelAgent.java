@@ -18,7 +18,11 @@ public class ModelAgent extends BaseAgent {
 		MyMessage message = new MyMessage(mySim());
 		message.setCode(Mc.init);
 		message.setAddressee(Id.surroundingsAgent);
+		MyMessage message2 = (MyMessage) message.createCopy();
+		message2.setAddressee(Id.carShopModelAgent);
+
 		manager().notice(message);
+		manager().notice(message2);
 	}
 
 	@Override
