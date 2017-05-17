@@ -1,12 +1,9 @@
 package sk.epholl.dissim.sem3.agents;
 
 import OSPABA.*;
-import sk.epholl.dissim.sem3.entity.ParkingLot;
-import sk.epholl.dissim.sem3.entity.ParkingSpot;
-import sk.epholl.dissim.sem3.entity.Place;
+import sk.epholl.dissim.sem3.entity.*;
 import sk.epholl.dissim.sem3.managers.ParkingManager;
 import sk.epholl.dissim.sem3.simulation.*;
-import sk.epholl.dissim.sem3.entity.Vehicle;
 
 import java.util.HashSet;
 
@@ -44,15 +41,20 @@ public class ParkingAgent extends BaseAgent {
 		new ParkingManager(Id.parkingManager, mySim(), this);
 		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.reserveSpot);
+		addOwnMessage(Mc.freeSpot);
 		addOwnMessage(Mc.parkCar);
 	}
 	//meta! tag="end"
 
-	public void reserveSpot(final Vehicle vehicle, final Place parkingLot) {
-		if (parkingLot == Place.ParkingLot1) {
+	public void reserveSpot(MyMessage message) {
+	    final Place parkingLot = message.getPlace();
+	    final Vehicle vehicle = message.getVehicle();
+		if (parkingLot == Place.ParkingLot1) {;
 			lot1.reserve(vehicle);
+			noticeParkingSpotStatus(parkingLot, lot1.getFreeCapacity());
 		} else if (parkingLot == Place.ParkingLot2) {
 			lot2.reserve(vehicle);
+            noticeParkingSpotStatus(parkingLot, lot2.getFreeCapacity());
 		}
 	}
 
@@ -74,22 +76,24 @@ public class ParkingAgent extends BaseAgent {
 		} else if (parkingLot == Place.ParkingLot1) {
 			vehicle.setAssignedParkingSpot(null);
 			lot1.free(vehicle);
+            noticeParkingSpotStatus(Place.ParkingLot1, lot1.getFreeCapacity());
 		} else if (parkingLot == Place.ParkingLot2) {
 			vehicle.setAssignedParkingSpot(null);
 			lot2.free(vehicle);
+            noticeParkingSpotStatus(Place.ParkingLot2, lot2.getFreeCapacity());
 		}
 	}
 
 	public void initialCapacityNotices() {
-        noticeParkingSpaceFreed(Place.ParkingLot1, lot1.getFreeSpotsCount());
-        noticeParkingSpaceFreed(Place.ParkingLot2, lot2.getFreeSpotsCount());
+        noticeParkingSpotStatus(Place.ParkingLot1, lot1.getFreeCapacity());
+        noticeParkingSpotStatus(Place.ParkingLot2, lot2.getFreeCapacity());
     }
 
-	private void noticeParkingSpaceFreed(final Place lot, final int freeSpots) {
+	private void noticeParkingSpotStatus(final Place lot, final FreeCapacity freeSpots) {
         MyMessage message = new MyMessage(mySim());
         message.setCode(Mc.parkingSpotsUpdate);
         message.setPlace(lot);
-        message.setVariable(freeSpots);
+        message.setCapacity(freeSpots);
         message.setAddressee(Id.carShopModelAgent);
         manager().notice(message);
     }

@@ -20,4 +20,6 @@ public class Const {
     public static final int parkingLot1Capacity = 6;
 
     public static final int parkingLot2Capacity = 10;
+
+    public static final double customerWaitForOrderTimeout = 10 * 60;
 }

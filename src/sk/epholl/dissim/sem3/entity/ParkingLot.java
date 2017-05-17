@@ -1,9 +1,7 @@
 package sk.epholl.dissim.sem3.entity;
 
-import sk.epholl.dissim.entity.*;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Tomáš on 12.05.2017.
@@ -28,8 +26,8 @@ public class ParkingLot {
         this.parkedVehicles = new HashMap<>();
     }
 
-    public int getFreeSpotsCount() {
-        return freeSpots;
+    public FreeCapacity getFreeCapacity() {
+        return new FreeCapacity(capacity, freeSpots);
     }
 
     public ParkingSpot reserve(final Vehicle vehicle) {
@@ -49,6 +47,7 @@ public class ParkingLot {
         final ParkingSpot spot = spots[index];
         spot.setVehicle(null);
         spot.setState(ParkingSpot.State.Free);
+        freeSpots++;
     }
 
     public void clear() {

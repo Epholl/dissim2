@@ -2,7 +2,11 @@ package sk.epholl.dissim.sem3.managers;
 
 import OSPABA.*;
 import sk.epholl.dissim.sem3.agents.RepairAgent;
+import sk.epholl.dissim.sem3.entity.FreeCapacity;
+import sk.epholl.dissim.sem3.entity.Place;
 import sk.epholl.dissim.sem3.simulation.Mc;
+import sk.epholl.dissim.sem3.simulation.MyMessage;
+import sk.epholl.dissim.sem3.simulation.Rst;
 
 //meta! id="88"
 public class RepairManager extends Manager {
@@ -27,6 +31,10 @@ public class RepairManager extends Manager {
 
 	//meta! sender="CarShopModelAgent", id="96", type="Request"
 	public void processRepairWehicle(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Car available for repair: " + msg.getVehicle());
+		myAgent().newVehicleArrived(msg);
+
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -41,6 +49,12 @@ public class RepairManager extends Manager {
 
 	//meta! sender="CarShopModelAgent", id="168", type="Notice"
 	public void processParkingSpotsUpdate(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		FreeCapacity capacity = msg.getCapacity();
+		Place parkingLot = msg.getPlace();
+		if (parkingLot == Place.ParkingLot2) {
+			myAgent().setLot2FreeParkingSpots(capacity);
+		}
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

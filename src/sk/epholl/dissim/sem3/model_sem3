@@ -247,8 +247,8 @@
       <InternalId>160</InternalId>
       <Name>ReserveSpot</Name>
       <Type>RequestResponse</Type>
-      <Source>92</Source>
-      <Destination>83</Destination>
+      <Source>83</Source>
+      <Destination>92</Destination>
     </Message>
     <Message>
       <SimId>1020</SimId>
@@ -321,10 +321,42 @@
       <Destination>87</Destination>
     </Message>
     <Message>
+      <SimId>1034</SimId>
+      <InternalId>172</InternalId>
+      <Name>FreeWorker1</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>87</Destination>
+    </Message>
+    <Message>
       <InternalId>110</InternalId>
       <Type>StartFinish</Type>
       <Source>85</Source>
       <Destination>109</Destination>
+    </Message>
+    <Message>
+      <SimId>1035</SimId>
+      <InternalId>174</InternalId>
+      <Name>FreeSpot</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>92</Destination>
+    </Message>
+    <Message>
+      <SimId>1036</SimId>
+      <InternalId>175</InternalId>
+      <Name>FreeSpot</Name>
+      <Type>Notice</Type>
+      <Source>88</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
+      <SimId>1037</SimId>
+      <InternalId>176</InternalId>
+      <Name>FreeSpot</Name>
+      <Type>Notice</Type>
+      <Source>86</Source>
+      <Destination>83</Destination>
     </Message>
     <Message>
       <InternalId>114</InternalId>
@@ -357,5 +389,5 @@
       <Destination>125</Destination>
     </Message>
   </Messages>
-  <IID>170</IID>
+  <IID>177</IID>
 </ABAsim>

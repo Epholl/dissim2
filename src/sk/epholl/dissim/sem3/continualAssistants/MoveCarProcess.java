@@ -26,7 +26,7 @@ public class MoveCarProcess extends Process {
 		final Vehicle vehicle = msg.getVehicle();
 		final Road road = vehicle.getCurrentRoad();
 		final double duration = road.getTotalDuration();
-		vehicle.setCurrentState(Vehicle.State.MoveToOfficeLot, mySim().currentTime() + duration);
+		vehicle.setCurrentState(road.getVehicleState(), mySim().currentTime() + duration);
 
 		msg.setCode(Mc.finish);
 		hold(duration, msg);

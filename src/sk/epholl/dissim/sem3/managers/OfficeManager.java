@@ -1,7 +1,11 @@
 package sk.epholl.dissim.sem3.managers;
 
 import OSPABA.*;
+import sk.epholl.dissim.sem3.entity.FreeCapacity;
+import sk.epholl.dissim.sem3.entity.Place;
+import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.agents.OfficeAgent;
+import sk.epholl.dissim.sem3.entity.Worker1;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
 import sk.epholl.dissim.sem3.simulation.MyMessage;
@@ -30,10 +34,18 @@ public class OfficeManager extends Manager {
 
 	//meta! sender="CancelCustomerProcess", id="129", type="Finish"
 	public void processFinishCancelCustomerProcess(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().onCustomerWaitTimeout(msg);
 	}
 
 	//meta! sender="TakeOrderProcess", id="121", type="Finish"
 	public void processFinishTakeOrderProcess(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		final Vehicle vehicle = msg.getVehicle();
+		msg.setCode(Mc.takeOrder);
+
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Order taking finished: " + vehicle);
+		response(msg);
 	}
 
 	//meta! sender="ReturnCarProcess", id="123", type="Finish"
@@ -42,6 +54,11 @@ public class OfficeManager extends Manager {
 
 	//meta! sender="CarShopModelAgent", id="93", type="Request"
 	public void processTakeOrder(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		final Vehicle vehicle = msg.getVehicle();
+		myAgent().onNewCarArrived(msg);
+
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Vehicle waiting to take order: " + vehicle);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -56,14 +73,32 @@ public class OfficeManager extends Manager {
 
 	//meta! sender="CarShopModelAgent", id="166", type="Response"
 	public void processReserveSpot(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().startTakingOrder(msg);
+
 	}
 
 	//meta! sender="CarShopModelAgent", id="169", type="Notice"
 	public void processParkingSpotsUpdate(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
-		int freeSpots = (Integer) msg.getVariable();
-		myAgent().setLot1FreeParkingSpots(freeSpots);
-		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Parking spot capacity notice: " + msg.getPlace() + ": " + freeSpots);
+		FreeCapacity capacity = msg.getCapacity();
+		Place parkingLot = msg.getPlace();
+		if (parkingLot == Place.ParkingLot1) {
+			myAgent().setLot1FreeParkingSpots(capacity);
+		} else if (parkingLot == Place.ParkingLot2) {
+			myAgent().setLot2FreeParkingSpots(capacity);
+		}
+
+		myAgent().findWork();
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Parking spot capacity notice: " + msg.getPlace() + ": " + capacity);
+	}
+
+	//meta! sender="CarShopModelAgent", id="172", type="Notice"
+	public void processFreeWorker1(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		Worker1 worker = msg.getWorker1();
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Worker freed: " + worker);
+		myAgent().freeWorker(worker);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -91,6 +126,10 @@ public class OfficeManager extends Manager {
 
 		case Mc.takeOrder:
 			processTakeOrder(message);
+		break;
+
+		case Mc.freeWorker1:
+			processFreeWorker1(message);
 		break;
 
 		case Mc.init:

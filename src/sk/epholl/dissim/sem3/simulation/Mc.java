@@ -14,6 +14,8 @@ public class Mc extends IdList {
 	public static final int reserveSpot = 1029;
 	public static final int returnCar = 1020;
 	public static final int parkingSpotsUpdate = 1031;
+	public static final int freeWorker1 = 1034;
+	public static final int freeSpot = 1035;
 	//meta! tag="end"
 
 	// 1..1000 range reserved for user

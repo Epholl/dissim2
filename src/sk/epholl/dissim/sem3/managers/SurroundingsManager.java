@@ -1,12 +1,16 @@
 package sk.epholl.dissim.sem3.managers;
 
 import OSPABA.*;
-import sk.epholl.dissim.sem3.agents.ModelAgent;
+import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.agents.SurroundingsAgent;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
 import sk.epholl.dissim.sem3.simulation.MyMessage;
 import sk.epholl.dissim.sem3.simulation.Rst;
+import sk.epholl.dissim.util.Pair;
+import sk.epholl.dissim.util.TimeUtils;
+
+import java.util.List;
 
 //meta! id="85"
 public class SurroundingsManager extends Manager {
@@ -42,6 +46,13 @@ public class SurroundingsManager extends Manager {
 
 	//meta! sender="ModelAgent", id="135", type="Notice"
 	public void processCustomerExit(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Customer exit: " + msg.getVehicle());
+		List<Pair<Double, Vehicle.State>> history = msg.getVehicle().getHistory();
+		System.out.println("\n" + msg.getVehicle());
+		for (Pair<Double, Vehicle.State> state: history) {
+			System.out.println(TimeUtils.formatDayTime(state.first) + ": " + state.second);
+		}
 	}
 
 	//meta! sender="ModelAgent", id="139", type="Notice"
@@ -50,11 +61,6 @@ public class SurroundingsManager extends Manager {
 		message.setCode(Mc.start);
 		message.setAddressee(myAgent().findAssistant(Id.newCustomerScheduler));
 		notice(message);
-	}
-
-	//meta! userInfo="Removed from model"
-	public void processCustomerEntry(MessageForm message) {
-
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

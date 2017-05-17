@@ -31,7 +31,6 @@ public class TransportationManager extends Manager {
 		MyMessage msg = (MyMessage) message;
 
 		if (message.sender() == myAgent().findAssistant(Id.moveCarProcess)) {
-			myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Transfer finished: " + msg.getVehicle());
 			msg.setCode(Mc.transferVehicle);
 			response(msg);
 		}

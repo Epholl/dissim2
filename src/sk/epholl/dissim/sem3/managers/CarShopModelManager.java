@@ -3,6 +3,8 @@ package sk.epholl.dissim.sem3.managers;
 import OSPABA.*;
 import sk.epholl.dissim.sem3.agents.CarShopModelAgent;
 import sk.epholl.dissim.sem3.entity.Place;
+import sk.epholl.dissim.sem3.entity.Vehicle;
+import sk.epholl.dissim.sem3.entity.Worker1;
 import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
 import sk.epholl.dissim.sem3.simulation.MyMessage;
@@ -31,6 +33,29 @@ public class CarShopModelManager extends Manager {
 
 	//meta! sender="ParkingAgent", id="94", type="Response"
 	public void processParkCar(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		final Vehicle vehicle = msg.getVehicle();
+		final Place destination = msg.getPlace();
+		switch (destination) {
+			case MainLot:
+				msg.setCode(Mc.takeOrder);
+				msg.setAddressee(Id.officeAgent);
+				request(msg);
+				break;
+			case ParkingLot1:
+				msg.setCode(Mc.repairWehicle);
+				msg.setAddressee(Id.repairAgent);
+				Worker1 worker = vehicle.getWorker1();
+				vehicle.setWorker1(null);
+				MyMessage copy = (MyMessage) msg.createCopy();
+				copy.setWorker1(worker);
+				copy.setAddressee(Id.officeAgent);
+				copy.setCode(Mc.freeWorker1);
+
+				request(msg);
+				notice(copy);
+				break;
+		}
 	}
 
 	//meta! sender="RepairAgent", id="96", type="Response"
@@ -54,13 +79,48 @@ public class CarShopModelManager extends Manager {
 
 	//meta! sender="OfficeAgent", id="93", type="Response"
 	public void processTakeOrder(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		final Vehicle vehicle = msg.getVehicle();
+		if (vehicle.isOrderCancelled()) {
+			msg.setCode(Mc.transferVehicle);
+			msg.setPlace(Place.Enterance);
+			msg.setAddressee(Id.transportationAgent);
+			request(msg);
+		} else {
+			msg.setCode(Mc.transferVehicle);
+			msg.setPlace(Place.ParkingLot1);
+			msg.setAddressee(Id.transportationAgent);
+			request(msg);
+		}
 	}
 
 	//meta! sender="TransportationAgent", id="91", type="Response"
 	public void processTransferVehicle(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
+		Vehicle vehicle = msg.getVehicle();
 
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Transfer finish: " + msg.getVehicle());
+		switch (msg.getPlace()) {
+			case MainLot:
+				if (!vehicle.isRepaired()) {
+					msg.setAddressee(Id.parkingAgent);
+					msg.setCode(Mc.parkCar);
+					request(msg);
+				} else {
+					// return to customer
+				}
+				break;
+			case Enterance:
+				msg.setAddressee(Id.modelAgent);
+				msg.setCode(Mc.customerExit);
+				msg.getVehicle().addFinsihedState(Vehicle.State.LeaveSystem);
+				notice(msg);
+				break;
+			case ParkingLot1:
+				msg.setAddressee(Id.parkingAgent);
+				msg.setCode(Mc.parkCar);
+				request(msg);
+		}
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -91,27 +151,45 @@ public class CarShopModelManager extends Manager {
 
 	}
 
-	//meta! sender="ParkingAgent", id="160", type="Request"
+	//meta! sender="ParkingAgent", id="160", type="Response"
 	public void processReserveSpotParkingAgent(MessageForm message) {
+		response(message);
 	}
 
 	//meta! sender="OfficeAgent", id="166", type="Request"
 	public void processReserveSpotOfficeAgent(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		msg.setAddressee(Id.parkingAgent);
+		request(msg);
 	}
 
 	//meta! sender="ParkingAgent", id="167", type="Notice"
 	public void processParkingSpotsUpdate(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
+		msg.setAddressee(Id.officeAgent);
 		switch (msg.getPlace()) {
 			case ParkingLot1:
-				msg.setAddressee(Id.officeAgent);
 				notice(msg);
 				break;
 			case ParkingLot2:
-				msg.setAddressee(Id.repairAgent);
+				MyMessage copy = (MyMessage) msg.createCopy();
+				copy.setAddressee(Id.repairAgent);
 				notice(msg);
+				notice(copy);
 				break;
 		}
+	}
+
+	//meta! sender="TransportationAgent", id="176", type="Notice"
+	public void processFreeSpotTransportationAgent(MessageForm message) {
+		message.setAddressee(Id.parkingAgent);
+		notice(message);
+	}
+
+	//meta! sender="RepairAgent", id="175", type="Notice"
+	public void processFreeSpotRepairAgent(MessageForm message) {
+		message.setAddressee(Id.parkingAgent);
+		notice(message);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -121,8 +199,36 @@ public class CarShopModelManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.parkCar:
+			processParkCar(message);
+		break;
+
+		case Mc.reserveSpot:
+			switch (message.sender().id()) {
+			case Id.officeAgent:
+				processReserveSpotOfficeAgent(message);
+			break;
+
+			case Id.parkingAgent:
+				processReserveSpotParkingAgent(message);
+			break;
+			}
+		break;
+
 		case Mc.finish:
 			processFinish(message);
+		break;
+
+		case Mc.freeSpot:
+			switch (message.sender().id()) {
+			case Id.transportationAgent:
+				processFreeSpotTransportationAgent(message);
+			break;
+
+			case Id.repairAgent:
+				processFreeSpotRepairAgent(message);
+			break;
+			}
 		break;
 
 		case Mc.transferVehicle:
@@ -141,24 +247,8 @@ public class CarShopModelManager extends Manager {
 			processParkingSpotsUpdate(message);
 		break;
 
-		case Mc.reserveSpot:
-			switch (message.sender().id()) {
-			case Id.parkingAgent:
-				processReserveSpotParkingAgent(message);
-			break;
-
-			case Id.officeAgent:
-				processReserveSpotOfficeAgent(message);
-			break;
-			}
-		break;
-
 		case Mc.takeOrder:
 			processTakeOrder(message);
-		break;
-
-		case Mc.parkCar:
-			processParkCar(message);
 		break;
 
 		case Mc.init:

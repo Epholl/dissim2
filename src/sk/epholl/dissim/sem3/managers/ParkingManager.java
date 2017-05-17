@@ -5,6 +5,7 @@ import sk.epholl.dissim.sem3.agents.ParkingAgent;
 import sk.epholl.dissim.sem3.entity.Place;
 import sk.epholl.dissim.sem3.simulation.Mc;
 import sk.epholl.dissim.sem3.simulation.MyMessage;
+import sk.epholl.dissim.sem3.simulation.Rst;
 
 //meta! id="92"
 public class ParkingManager extends Manager {
@@ -28,6 +29,9 @@ public class ParkingManager extends Manager {
 	public void processParkCar(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		Place destination = msg.getPlace();
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Parking car: " + destination + " for " + msg.getVehicle());
+		myAgent().parkCar(msg.getVehicle(), destination);
+		response(msg);
 	}
 
 	//meta! userInfo="Removed from model"
@@ -45,8 +49,19 @@ public class ParkingManager extends Manager {
 		myAgent().initialCapacityNotices();
 	}
 
-	//meta! sender="CarShopModelAgent", id="160", type="Response"
+	//meta! sender="CarShopModelAgent", id="160", type="Request"
 	public void processReserveSpot(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Requested parking spot on " + msg.getPlace() + " by " + msg.getVehicle());
+		myAgent().reserveSpot(msg);
+		response(msg);
+	}
+
+	//meta! sender="CarShopModelAgent", id="174", type="Notice"
+	public void processFreeSpot(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Freeing parking spot " + msg.getPlace() + " from " + msg.getVehicle());
+		myAgent().freeSpot(msg.getVehicle(), msg.getPlace());
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -62,6 +77,10 @@ public class ParkingManager extends Manager {
 
 		case Mc.parkCar:
 			processParkCar(message);
+		break;
+
+		case Mc.freeSpot:
+			processFreeSpot(message);
 		break;
 
 		case Mc.init:

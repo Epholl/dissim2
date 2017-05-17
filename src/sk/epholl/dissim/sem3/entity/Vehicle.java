@@ -4,7 +4,9 @@ import OSPABA.Entity;
 import sk.epholl.dissim.sem3.simulation.MySimulation;
 import sk.epholl.dissim.util.Pair;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Tomáš on 12.05.2017.
@@ -15,11 +17,12 @@ public class Vehicle extends Entity {
         EnterSystem,
         MoveToOfficeLot,
         CancelOrder,
-        MoveFromOfficeLot,
+        LeaveFromOfficeLot,
+        StartTakingOrder,
         TakeOrder,
         RetrieveFromCustomer,
         MoveToLot1,
-        MoveToRepair,
+        StartRepairing,
         Repair,
         MoveToLot2,
         ReturnToOfficeLot,
@@ -36,8 +39,13 @@ public class Vehicle extends Entity {
 
     private ParkingSpot assignedParkingSpot;
 
+    private Worker1 worker1;
+    private Worker2 worker2;
+
     private State currentState;
     private double currentStateFinishTime;
+
+    private int repairDuratioinInMinutes;
 
     public Vehicle(final MySimulation simulation, final long id) {
         super(simulation);
@@ -63,6 +71,10 @@ public class Vehicle extends Entity {
             throw new AssertionError("Attempted to persist a null currentState");
         }
         history.add(new Pair<>(currentStateFinishTime, currentState));
+    }
+
+    public List<Pair<Double, State>> getHistory() {
+        return Collections.unmodifiableList(history);
     }
 
     public Place getCurrentPlace() {
@@ -91,10 +103,55 @@ public class Vehicle extends Entity {
         this.assignedParkingSpot = assignedParkingSpot;
     }
 
+    public Worker1 getWorker1() {
+        return worker1;
+    }
+
+    public void setWorker1(Worker1 worker1) {
+        this.worker1 = worker1;
+    }
+
+    public Worker2 getWorker2() {
+        return worker2;
+    }
+
+    public void setWorker2(Worker2 worker2) {
+        this.worker2 = worker2;
+    }
+
+    public boolean isRepaired() {
+        return isStateFinished(State.Repair);
+    }
+
+    public boolean isOrderCancelled() {
+        return isStateFinished(State.CancelOrder);
+    }
+
+    public boolean isStateFinished(State state) {
+        for (Pair<Double, State> pastState: history) {
+            if (pastState.second == state) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getRepairDuratioinInMinutes() {
+        return repairDuratioinInMinutes;
+    }
+
+    public void setRepairDuratioinInMinutes(int repairDuratioinInMinutes) {
+        this.repairDuratioinInMinutes = repairDuratioinInMinutes;
+    }
+
     @Override
     public String toString() {
         Pair<Double, State> lastState = history.getLast();
         String position = currentPlace == null? currentRoad.toString() : currentPlace.toString();
-        return "Vehicle " + id + ": " + position + ", " + lastState.second + ", " + lastState.first;
+        String workers = (worker1 == null && worker2 == null)? "no workers" : worker1 != null? worker1.toString() : worker2.toString();
+        String parkingSpot = assignedParkingSpot == null? "no parking spot" : assignedParkingSpot.getState() == ParkingSpot.State.Reserved? "Spot reserved" : "Parking on spot;";
+        return "Vehicle " + id + ": " + position + ", " + lastState.second + ", " + lastState.first + ", " + workers + ", " + parkingSpot;
     }
+
+
 }

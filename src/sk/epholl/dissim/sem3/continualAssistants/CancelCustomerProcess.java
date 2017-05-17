@@ -3,6 +3,7 @@ package sk.epholl.dissim.sem3.continualAssistants;
 import OSPABA.*;
 import OSPABA.Process;
 import sk.epholl.dissim.sem3.agents.OfficeAgent;
+import sk.epholl.dissim.sem3.simulation.Const;
 import sk.epholl.dissim.sem3.simulation.Mc;
 
 //meta! id="128"
@@ -19,11 +20,16 @@ public class CancelCustomerProcess extends Process {
 
 	//meta! sender="OfficeAgent", id="129", type="Start"
 	public void processStart(MessageForm message) {
+		double duration = Const.customerWaitForOrderTimeout;
+		message.setCode(Mc.finish);
+		hold(duration, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message) {
 		switch (message.code()) {
+			case Mc.finish:
+				assistantFinished(message);
 		}
 	}
 
