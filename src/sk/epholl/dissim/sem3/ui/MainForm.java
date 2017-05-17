@@ -55,8 +55,8 @@ public class MainForm extends JFrame {
     private JComboBox worker1ConditionArg2Combo;
     private JComboBox worker1ConditionReturnValueCombo;
     private JButton worker1AddButton;
-    private JTextField worker1Arg1TextField;
-    private JTextField worker1Arg2TextField;
+    private JSpinner worker1ConditionArg1Spinner;
+    private JSpinner worker1ConditionArg2Spinner;
 
     private State state;
 

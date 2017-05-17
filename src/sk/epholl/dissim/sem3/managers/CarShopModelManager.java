@@ -29,6 +29,11 @@ public class CarShopModelManager extends Manager {
 
 	//meta! sender="OfficeAgent", id="97", type="Response"
 	public void processReturnCar(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		msg.setAddressee(Id.transportationAgent);
+		msg.setCode(Mc.transferVehicle);
+		msg.setPlace(Place.Enterance);
+		request(msg);
 	}
 
 	//meta! sender="ParkingAgent", id="94", type="Response"
@@ -57,16 +62,16 @@ public class CarShopModelManager extends Manager {
 				notice(copy);
 				break;
 			case ParkingLot2:
-				copy = (MyMessage) msg.createCopy();
 				response(msg);
-				copy.setCode(Mc.returnCar);
-				copy.setAddressee(Id.officeAgent);
-				request(copy);
 		}
 	}
 
 	//meta! sender="RepairAgent", id="96", type="Response"
 	public void processRepairWehicle(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		msg.setCode(Mc.returnCar);
+		msg.setAddressee(Id.officeAgent);
+		request(msg);
 	}
 
 	//meta! sender="DayEndProcess", id="126", type="Finish"
@@ -102,7 +107,7 @@ public class CarShopModelManager extends Manager {
 	}
 
 	//meta! sender="TransportationAgent", id="91", type="Response"
-	public void processTransferVehicle(MessageForm message) {
+	public void processTransferVehicleTransportationAgent(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		Vehicle vehicle = msg.getVehicle();
 
@@ -114,7 +119,7 @@ public class CarShopModelManager extends Manager {
 					msg.setCode(Mc.parkCar);
 					request(msg);
 				} else {
-					// return to customer
+					response(msg);
 				}
 				break;
 			case Enterance:
@@ -205,6 +210,19 @@ public class CarShopModelManager extends Manager {
 		request(message);
 	}
 
+	//meta! sender="OfficeAgent", id="183", type="Request"
+	public void processTransferVehicleOfficeAgent(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		MyMessage copy = (MyMessage) msg.createCopy();
+		copy.setCode(Mc.freeSpot);
+		copy.setPlace(Place.ParkingLot2);
+		copy.setAddressee(Id.parkingAgent);
+		notice(copy);
+		msg.setPlace(Place.MainLot);
+		msg.setAddressee(Id.transportationAgent);
+		request(msg);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -253,7 +271,15 @@ public class CarShopModelManager extends Manager {
 		break;
 
 		case Mc.transferVehicle:
-			processTransferVehicle(message);
+			switch (message.sender().id()) {
+			case Id.transportationAgent:
+				processTransferVehicleTransportationAgent(message);
+			break;
+
+			case Id.officeAgent:
+				processTransferVehicleOfficeAgent(message);
+			break;
+			}
 		break;
 
 		case Mc.repairWehicle:

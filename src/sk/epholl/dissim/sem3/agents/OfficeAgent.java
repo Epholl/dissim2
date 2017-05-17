@@ -81,6 +81,7 @@ public class OfficeAgent extends BaseAgent {
 		addOwnMessage(Mc.reserveSpot);
 		addOwnMessage(Mc.parkingSpotsUpdate);
 		addOwnMessage(Mc.takeOrder);
+		addOwnMessage(Mc.transferVehicle);
 	}
 	//meta! tag="end"
 
@@ -104,7 +105,23 @@ public class OfficeAgent extends BaseAgent {
 	}
 
 	public void onRepairedCarReady(MyMessage message) {
+		vehiclesToBeReturned.enqueue(message);
+		findWork();
+	}
 
+	public void onReadyToRetrieveCar(MyMessage message) {
+		message.setAddressee(findAssistant(Id.returnCarProcess));
+		manager().startContinualAssistant(message);
+	}
+
+	public void onCarReturned(MyMessage message) {
+		Vehicle vehicle = message.getVehicle();
+		Worker1 worker = vehicle.getWorker1();
+		freeWorker(worker);
+		vehicle.setWorker1(null);
+		findWork();
+		message.setCode(Mc.returnCar);
+		manager().response(message);
 	}
 
 	public void findWork() {
@@ -143,7 +160,14 @@ public class OfficeAgent extends BaseAgent {
 	}
 
 	private void returnRepairedCar() {
-
+		MyMessage msg = vehiclesToBeReturned.dequeue();
+		Worker1 worker = assignWorker();
+		Vehicle vehicle = msg.getVehicle();
+		vehicle.setWorker1(worker);
+		vehicle.addFinsihedState(Vehicle.State.LeaveFromLot2);
+		msg.setCode(Mc.transferVehicle);
+		msg.setAddressee(Id.carShopModelAgent);
+		manager().request(msg);
 	}
 
 	private Worker1 assignWorker() {

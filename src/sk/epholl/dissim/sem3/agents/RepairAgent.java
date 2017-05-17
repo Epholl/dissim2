@@ -88,7 +88,10 @@ public class RepairAgent extends BaseAgent {
 		Worker2 worker = vehicle.getWorker2();
 		freeWorker(worker);
 		vehicle.setWorker2(null);
+		vehicle.addFinsihedState(Vehicle.State.MoveToLot2);
 		findWork();
+		message.setCode(Mc.repairWehicle);
+		manager().response(message);
 	}
 
 	public void findWork() {

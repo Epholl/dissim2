@@ -53,7 +53,7 @@ public class OfficeManager extends Manager {
 
 	//meta! sender="ReturnCarProcess", id="123", type="Finish"
 	public void processFinishReturnCarProcess(MessageForm message) {
-
+		myAgent().onCarReturned((MyMessage) message);
 	}
 
 	//meta! sender="CarShopModelAgent", id="93", type="Request"
@@ -105,6 +105,11 @@ public class OfficeManager extends Manager {
 		myAgent().freeWorker(worker);
 	}
 
+	//meta! sender="CarShopModelAgent", id="183", type="Response"
+	public void processTransferVehicle(MessageForm message) {
+		myAgent().onReadyToRetrieveCar((MyMessage) message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -150,6 +155,10 @@ public class OfficeManager extends Manager {
 
 		case Mc.reserveSpot:
 			processReserveSpot(message);
+		break;
+
+		case Mc.transferVehicle:
+			processTransferVehicle(message);
 		break;
 
 		default:

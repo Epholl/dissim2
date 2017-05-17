@@ -379,6 +379,14 @@
       <Destination>117</Destination>
     </Message>
     <Message>
+      <SimId>1039</SimId>
+      <InternalId>183</InternalId>
+      <Name>TransferVehicle</Name>
+      <Type>RequestResponse</Type>
+      <Source>87</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
       <InternalId>121</InternalId>
       <Type>StartFinish</Type>
       <Source>87</Source>
@@ -397,5 +405,5 @@
       <Destination>125</Destination>
     </Message>
   </Messages>
-  <IID>182</IID>
+  <IID>185</IID>
 </ABAsim>

@@ -31,7 +31,7 @@ public class TakeOrderProcess extends Process {
 	public void processStart(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		double duration = orderTakingGenerator.nextValue() + carEntrollmentGeneratior.nextValue();
-		msg.getVehicle().setCurrentState(Vehicle.State.TakeOrder, mySim().currentTime() + duration);
+		msg.getVehicle().setCurrentState(Vehicle.State.TakeOrderAndRetrieve, mySim().currentTime() + duration);
 		msg.setCode(Mc.finish);
 		hold(duration, msg);
 	}
