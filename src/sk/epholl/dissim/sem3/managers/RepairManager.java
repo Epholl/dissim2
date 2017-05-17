@@ -27,6 +27,7 @@ public class RepairManager extends Manager {
 
 	//meta! sender="RepairCarProcess", id="118", type="Finish"
 	public void processFinish(MessageForm message) {
+		myAgent().repairFinished((MyMessage) message);
 	}
 
 	//meta! sender="CarShopModelAgent", id="96", type="Request"
@@ -57,6 +58,11 @@ public class RepairManager extends Manager {
 		}
 	}
 
+	//meta! sender="CarShopModelAgent", id="178", type="Response"
+	public void processParkCar(MessageForm message) {
+		myAgent().carReparked((MyMessage) message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -78,6 +84,10 @@ public class RepairManager extends Manager {
 
 		case Mc.repairWehicle:
 			processRepairWehicle(message);
+		break;
+
+		case Mc.parkCar:
+			processParkCar(message);
 		break;
 
 		default:

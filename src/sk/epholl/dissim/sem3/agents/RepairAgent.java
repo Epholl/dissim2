@@ -68,6 +68,7 @@ public class RepairAgent extends BaseAgent {
 
 	public void setLot2FreeParkingSpots(FreeCapacity lot2FreeParkingSpots) {
 		this.lot2FreeParkingSpots = lot2FreeParkingSpots;
+		findWork();
 	}
 
 	public void newVehicleArrived(MyMessage message) {
@@ -76,9 +77,24 @@ public class RepairAgent extends BaseAgent {
 		findWork();
 	}
 
+	public void repairFinished(MyMessage message) {
+		vehiclesRepairing.remove(message);
+		vehiclesRepaired.enqueue(message);
+		findWork();
+	}
+
+	public void carReparked(MyMessage message) {
+		Vehicle vehicle = message.getVehicle();
+		Worker2 worker = vehicle.getWorker2();
+		freeWorker(worker);
+		vehicle.setWorker2(null);
+		findWork();
+	}
+
 	public void findWork() {
 		if (canStartWork()) {
 			MyMessage message = vehiclesWaitingOnParkingLot.dequeue();
+			vehiclesRepairing.add(message);
 			Worker2 worker = assignWorker();
 			Vehicle vehicle = message.getVehicle();
 			vehicle.setWorker2(worker);
@@ -86,9 +102,17 @@ public class RepairAgent extends BaseAgent {
 			copy.setCode(Mc.freeSpot);
 			copy.setPlace(Place.ParkingLot1);
 			copy.setAddressee(Id.carShopModelAgent);
+			vehicle.setCurrentPlace(Place.RepairShop);
 			manager().notice(copy);
 			message.setAddressee(findAssistant(Id.repairCarProcess));
 			manager().startContinualAssistant(message);
+		}
+		if (canReparkCar()) {
+			MyMessage message = vehiclesRepaired.dequeue();
+			message.setCode(Mc.parkCar);
+			message.setPlace(Place.ParkingLot2);
+			message.setAddressee(Id.carShopModelAgent);
+			manager().request(message);
 		}
 	}
 
@@ -96,9 +120,17 @@ public class RepairAgent extends BaseAgent {
 		return !vehiclesWaitingOnParkingLot.isEmpty() && !type2FreeWorkers.isEmpty();
 	}
 
+	public boolean canReparkCar() {
+		return lot2FreeParkingSpots.getFreeUnits() > 0 && !vehiclesRepaired.isEmpty();
+	}
+
 	public Worker2 assignWorker() {
 		Worker2 worker = type2FreeWorkers.removeLast();
 		return worker;
+	}
+
+	public void freeWorker(Worker2 worker) {
+		type2FreeWorkers.add(worker);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -107,6 +139,7 @@ public class RepairAgent extends BaseAgent {
 		new RepairCarProcess(Id.repairCarProcess, mySim(), this);
 		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.repairWehicle);
+		addOwnMessage(Mc.parkCar);
 		addOwnMessage(Mc.parkingSpotsUpdate);
 	}
 	//meta! tag="end"

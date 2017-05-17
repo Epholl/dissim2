@@ -45,6 +45,6 @@ public abstract class Condition<T> {
 
     @Override
     public String toString() {
-        return arg1Provider.getName() + " " + comparator.getName() + " " + arg2Provider.getName();
+        return arg1Provider.getName() + " " + comparator.getName() + " " + arg2Provider.getName() + ": " + getReturnValue();
     }
 }

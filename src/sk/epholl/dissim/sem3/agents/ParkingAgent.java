@@ -59,13 +59,22 @@ public class ParkingAgent extends BaseAgent {
 	}
 
 	public void parkCar(final Vehicle vehicle, final Place parkingLot) {
+        vehicle.setCurrentPlace(parkingLot);
 		if (parkingLot == Place.MainLot) {
 			mainLot.add(vehicle);
 		} else if (parkingLot == Place.ParkingLot1) {
 			ParkingSpot assigned = vehicle.getAssignedParkingSpot();
+			if (assigned == null) {
+			    lot1.reserve(vehicle);
+			    assigned = vehicle.getAssignedParkingSpot();
+            }
 			assigned.setState(ParkingSpot.State.Occupied);
 		} else if (parkingLot == Place.ParkingLot2) {
 			ParkingSpot assigned = vehicle.getAssignedParkingSpot();
+            if (assigned == null) {
+                lot2.reserve(vehicle);
+                assigned = vehicle.getAssignedParkingSpot();
+            }
 			assigned.setState(ParkingSpot.State.Occupied);
 		}
 	}

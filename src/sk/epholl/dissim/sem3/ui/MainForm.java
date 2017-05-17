@@ -32,7 +32,6 @@ public class MainForm extends JFrame {
     private JButton resetButton;
     private JPanel continousSimControlPanel;
     private JLabel simSpeedExplanationLabel;
-    private JComboBox type1WorkerStrategyComboBox;
     private JSpinner type1WorkersSpinner;
     private JSpinner type2WorkersSpinner;
     private JSpinner advertisementCostSpinner;
@@ -46,6 +45,18 @@ public class MainForm extends JFrame {
     private JPanel resultsPanel;
     private JPanel entriesPanel;
     private JPanel consolePanel;
+    private JList worker1ConditionsList;
+    private JPanel worker1StrategyPanel;
+    private JButton worker1MoveUpButton;
+    private JButton worker1MoveDownButton;
+    private JButton worker1DeleteButton;
+    private JComboBox worker1ConditionArg1Combo;
+    private JComboBox worker1ConditionComparatorCombo;
+    private JComboBox worker1ConditionArg2Combo;
+    private JComboBox worker1ConditionReturnValueCombo;
+    private JButton worker1AddButton;
+    private JTextField worker1Arg1TextField;
+    private JTextField worker1Arg2TextField;
 
     private State state;
 

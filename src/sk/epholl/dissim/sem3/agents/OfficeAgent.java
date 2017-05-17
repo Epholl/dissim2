@@ -103,6 +103,10 @@ public class OfficeAgent extends BaseAgent {
 		}
 	}
 
+	public void onRepairedCarReady(MyMessage message) {
+
+	}
+
 	public void findWork() {
 		if (hasFreeWorkers() && hasWork()) {
 			if (!hasOrdersToTake()) {
@@ -133,6 +137,7 @@ public class OfficeAgent extends BaseAgent {
 	}
 
 	public void startTakingOrder(MyMessage msg) {
+		msg.getVehicle().addFinsihedState(Vehicle.State.StartTakingOrder);
 		msg.setAddressee(Id.takeOrderProcess);
 		manager().startContinualAssistant(msg);
 	}

@@ -30,6 +30,9 @@ public class OfficeManager extends Manager {
 
 	//meta! sender="CarShopModelAgent", id="97", type="Request"
 	public void processReturnCar(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().onRepairedCarReady(msg);
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Requested returning vehicle: " + msg.getVehicle());
 	}
 
 	//meta! sender="CancelCustomerProcess", id="129", type="Finish"
@@ -50,6 +53,7 @@ public class OfficeManager extends Manager {
 
 	//meta! sender="ReturnCarProcess", id="123", type="Finish"
 	public void processFinishReturnCarProcess(MessageForm message) {
+
 	}
 
 	//meta! sender="CarShopModelAgent", id="93", type="Request"

@@ -8,6 +8,10 @@ import sk.epholl.dissim.sem3.simulation.Id;
 import sk.epholl.dissim.sem3.simulation.Mc;
 import sk.epholl.dissim.sem3.simulation.MyMessage;
 import sk.epholl.dissim.sem3.simulation.Rst;
+import sk.epholl.dissim.util.Pair;
+import sk.epholl.dissim.util.TimeUtils;
+
+import java.util.List;
 
 //meta! id="86"
 public class TransportationManager extends Manager {
@@ -33,6 +37,13 @@ public class TransportationManager extends Manager {
 		if (message.sender() == myAgent().findAssistant(Id.moveCarProcess)) {
 			msg.setCode(Mc.transferVehicle);
 			response(msg);
+		}
+
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Update after transportation: " + msg.getVehicle());
+		List<Pair<Double, Vehicle.State>> history = msg.getVehicle().getHistory();
+		System.out.println("\n" + msg.getVehicle());
+		for (Pair<Double, Vehicle.State> state: history) {
+			System.out.println(TimeUtils.formatDayTime(state.first) + ": " + state.second);
 		}
 	}
 
