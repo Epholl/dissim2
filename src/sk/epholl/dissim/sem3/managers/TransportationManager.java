@@ -40,11 +40,6 @@ public class TransportationManager extends Manager {
 		}
 
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Update after transportation: " + msg.getVehicle());
-		List<Pair<Double, Vehicle.State>> history = msg.getVehicle().getHistory();
-		System.out.println("\n" + msg.getVehicle());
-		for (Pair<Double, Vehicle.State> state: history) {
-			System.out.println(TimeUtils.formatDayTime(state.first) + ": " + state.second);
-		}
 	}
 
 	//meta! sender="CarShopModelAgent", id="91", type="Request"

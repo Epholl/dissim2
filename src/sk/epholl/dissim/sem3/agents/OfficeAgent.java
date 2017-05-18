@@ -131,7 +131,7 @@ public class OfficeAgent extends BaseAgent {
 			} else if (!hasCarsToReturn()) {
 				prepareTakingOrder();
 			} else {
-				Worker1Decision decision = decider.evaluate();
+				Worker1Decision decision = Worker1Decision.ReturnCar;//decider.evaluate();
 
 				if (decision == Worker1Decision.TakeOrder && canTakeNewOrder()) {
 					prepareTakingOrder();
@@ -219,7 +219,7 @@ public class OfficeAgent extends BaseAgent {
 	}
 
 	public boolean hasWork() {
-		return hasCarsToReturn() || hasOrdersToTake();
+		return hasCarsToReturn() || (hasOrdersToTake() && lot1FreeParkingSpots.getFreeUnits() > 0);
 	}
 
 	public void setDecider(Worker1Decider decider) {

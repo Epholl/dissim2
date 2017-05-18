@@ -48,7 +48,7 @@ public class NewCustomerScheduler extends Scheduler {
 				vehicle.addFinsihedState(Vehicle.State.EnterSystem);
 				vehicle.setCurrentPlace(Place.Enterance);
 				copy.setVehicle(vehicle);
-				//hold(duration, message);
+				hold(duration, message);
 
 				assistantFinished(copy);
 		}
