@@ -99,6 +99,8 @@ public class MainForm extends JFrame {
     private GraphController graph1Controller;
     private GraphController graph2Controller;
 
+    private ResultTableController resultTableController;
+
     public MainForm() {
         super("Parking lot simulation");
         setContentPane(contentPanel);
@@ -116,11 +118,13 @@ public class MainForm extends JFrame {
         initConsolePanel();
         initWatchPanel();
         initGraphPanel();
+        initResultPanel();
 
         setState(State.Initial);
 
         mainTabbedPane.setSelectedIndex(3);
     }
+
 
     public void setState(State newState) {
         if (state != newState) {
@@ -188,6 +192,7 @@ public class MainForm extends JFrame {
             graph1Controller.clear();
             graph2Controller.clear();
             progressBarController.reset();
+            resultTableController.reset();
             setState(State.Initial);
         });
 
@@ -361,6 +366,12 @@ public class MainForm extends JFrame {
         new JLabelResultController("Balance: ", watchBalanceLabel, Rst.BALANCE, rm());
         initParkingTable();
         initWorkerTable();
+    }
+
+
+    private void initResultPanel() {
+        resultTableController = new ResultTableController(resultsTable);
+        resultTableController.init(simulationController.getResultManager());
     }
 
     private void initVehicleTable() {

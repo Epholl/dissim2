@@ -22,6 +22,8 @@ public class SurroundingsAgent extends BaseAgent {
 	private StatisticCounter finishedCustomersRatioCounter = new StatisticCounter();
 	private StatisticCounter refusedCustomersRatioCounter = new StatisticCounter();
 
+	private StatisticCounter totalTimeInSystemCounter = new StatisticCounter();
+
 
 	private int enteredVehicles;
 	private int finishedVehicles;
@@ -30,6 +32,8 @@ public class SurroundingsAgent extends BaseAgent {
 
 	private double profit;
 	private double balance;
+
+	private StatisticCounter totalTimeInSystem = new StatisticCounter();
 
 	public SurroundingsAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
@@ -49,6 +53,7 @@ public class SurroundingsAgent extends BaseAgent {
 		shopClosedVehicles = 0;
 		profit = 0;
 		balance = -getParams().getTotalPrice();
+		totalTimeInSystem.clear();
 		publishValueContinous(Rst.ENTERED_CUSTOMERS, enteredVehicles);
 		publishValueContinous(Rst.REFUSED_CUSTOMERS, refusedVehicles);
 		publishValueContinous(Rst.SHOP_CLOSED_CUSTOMERS, shopClosedVehicles);
@@ -79,6 +84,7 @@ public class SurroundingsAgent extends BaseAgent {
 			balance += vehicleProfit;
 			publishValueContinous(Rst.PROFIT, profit);
 			publishValueContinous(Rst.BALANCE, balance);
+			totalTimeInSystem.addValue(vehicle.getTotalTimeInSystem());
 		}
 	}
 
@@ -104,6 +110,8 @@ public class SurroundingsAgent extends BaseAgent {
 		refusedCustomersCounter.addValue(refusedVehicles + shopClosedVehicles);
 		finishedCustomersRatioCounter.addValue((double)finishedVehicles / (finishedVehicles + refusedVehicles + shopClosedVehicles));
 		refusedCustomersRatioCounter.addValue((double)(refusedVehicles+shopClosedVehicles) / (finishedVehicles + refusedVehicles + shopClosedVehicles));
+
+		totalTimeInSystemCounter.addValue(totalTimeInSystem.getMean());
 		publishValueIfAfterWarmup(Rst.R_ALL_CUSTOMERS,
 				new Rst.Result(rep(), totalCustomersCounter));
 		publishValueIfAfterWarmup(Rst.R_FINISHED_CUSTOMERS,
@@ -114,6 +122,9 @@ public class SurroundingsAgent extends BaseAgent {
 				new Rst.Result(rep(), finishedCustomersRatioCounter));
 		publishValueIfAfterWarmup(Rst.R_REFUSED_RATIO,
 				new Rst.Result(rep(), refusedCustomersRatioCounter));
+
+		publishValueIfAfterWarmup(Rst.R_CUSTOMER_TOTAL_TIME,
+				new Rst.Result(rep(), totalTimeInSystemCounter));
 	}
 
 

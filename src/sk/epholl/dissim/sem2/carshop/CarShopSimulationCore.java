@@ -65,10 +65,10 @@ public class CarShopSimulationCore extends SimulationCore<CarShopSimulationParam
         workshopQueue.clear();
         returnQueue.clear();
 
-        refusedCustomersCounter.clean();
-        timeInSystemCounter.clean();
-        timeFromAcquisitionToReturnCounter.clean();
-        timeInSystem2Counter.clean();
+        refusedCustomersCounter.clear();
+        timeInSystemCounter.clear();
+        timeFromAcquisitionToReturnCounter.clear();
+        timeInSystem2Counter.clear();
 
         addEvent(NewCarEvent.newInstance(this));
         addEvent(EndOfDayEvent.newInstance(this));

@@ -36,6 +36,11 @@ public class Rst {
                     new ResultType("Finished customers ratio", R_FINISHED_RATIO),
                     new ResultType("Refused customers ratio", R_REFUSED_RATIO),
 
+                    new ResultTimeType("Total time in system", R_CUSTOMER_TOTAL_TIME),
+                    new ResultTimeType("Waiting for repair time", R_CUSTOMER_REPAIR_TIME),
+                    new ResultTimeType("Order wait", R_CUSTOMER_ORDER_WAIT_TIME),
+                    new ResultTimeType("Repair wait", R_CUSTOMER_REPAIR_WAIT_TIME),
+                    new ResultTimeType("Return wait", R_CUSTOMER_RETURN_WAIT_TIME),
             };
     }
 
@@ -44,6 +49,12 @@ public class Rst {
     public static final ValueType<Result> R_REFUSED_CUSTOMERS = new ValueType<>(Result.class);
     public static final ValueType<Result> R_FINISHED_RATIO = new ValueType<>(Result.class);
     public static final ValueType<Result> R_REFUSED_RATIO = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_CUSTOMER_TOTAL_TIME = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_CUSTOMER_REPAIR_TIME = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_CUSTOMER_ORDER_WAIT_TIME = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_CUSTOMER_REPAIR_WAIT_TIME = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_CUSTOMER_RETURN_WAIT_TIME = new ValueType<>(Result.class);
 
 
     public static class VehicleUpdate {
@@ -88,6 +99,16 @@ public class Rst {
             this.resultName = name;
             this.valueType = valueType;
         }
+
+        public boolean isTime() {return false;}
+    }
+
+    public static class ResultTimeType extends ResultType {
+
+        public ResultTimeType(String name, ValueType<Result> valueType) {
+            super(name, valueType);
+        }
+        public boolean isTime() {return true;}
     }
 
     public static class Result {

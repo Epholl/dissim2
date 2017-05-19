@@ -51,7 +51,7 @@ public class StatisticCounter {
         return getMean() + (CONFIDENCE_INTERVAL_90_PERCENT * getDeviation()) / Math.sqrt(count-1);
     }
 
-    public void clean() {
+    public void clear() {
         sum = 0d;
         count = 0;
         sumSquared = 0d;

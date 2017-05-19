@@ -151,6 +151,21 @@ public class Vehicle extends Entity {
         return false;
     }
 
+    private Pair<Double, State> findState(State state) {
+        for (Pair<Double, State> pastState: history) {
+            if (pastState.second == state) {
+                return pastState;
+            }
+        }
+        return null;
+    }
+
+    public double getTotalTimeInSystem() {
+        double entryTime = findState(State.EnterSystem).first;
+        double exitTime = history.getLast().first;
+        return exitTime - entryTime;
+    }
+
     public int getRepairDuratioinInMinutes() {
         return repairDuratioinInMinutes;
     }

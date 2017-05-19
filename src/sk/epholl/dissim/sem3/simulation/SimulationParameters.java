@@ -10,9 +10,6 @@ import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
  */
 public class SimulationParameters {
 
-    enum Worker1Strategy {
-        DEFAULT;
-    }
 
     private int repliacationCount;
 
@@ -23,8 +20,6 @@ public class SimulationParameters {
     private int type1WorkerCount;
 
     private int type2WorkerCount;
-
-    private Worker1Strategy worker1Strategy;
 
     private double clientIncomeIncreasePercent;
 
@@ -94,14 +89,6 @@ public class SimulationParameters {
 
     public Generators getGenerators() {
         return generators;
-    }
-
-    public Worker1Strategy getWorker1Strategy() {
-        return worker1Strategy;
-    }
-
-    public void setWorker1Strategy(Worker1Strategy worker1Strategy) {
-        this.worker1Strategy = worker1Strategy;
     }
 
     public double getClientIncomeIncreasePercent() {

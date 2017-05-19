@@ -77,7 +77,7 @@ public class Sem2SimulationCore {
     }
 
     public void setVehicleVariant(int variantIndex) {
-        vehicles.clear();
+        vehicles.reset();
         for (int i: params.vehicleCombinations[variantIndex]) {
             vehicles.add(params.availableVehicles[i].newCopy());
         }
