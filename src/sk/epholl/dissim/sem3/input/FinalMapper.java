@@ -7,13 +7,14 @@ import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
 import sk.epholl.dissim.sem3.simulation.SimulationParameters;
 import sk.epholl.dissim.util.deciders.Comparator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 
 public abstract class FinalMapper {
+
+    public static Reader getDefaultConfigFileReader() throws IOException {
+        return new FileReader("./conf.txt");
+    }
 
     private final ConditionMapper conditionMapper = new ConditionMapper();
     private final SimulationLoader simulationLoader = new SimulationLoader();

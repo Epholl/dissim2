@@ -10,25 +10,6 @@ import java.util.List;
 
 public class SimulationLoader {
 
-    public static void main(String[] args) throws Exception {
-        System.out.println("Testing load !!!");
-
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
-
-        BufferedReader reader = new BufferedReader(new FileReader("./conf.txt"));
-
-        SimulationLoader loader = new SimulationLoader();
-        loader.load(reader);
-
-        ArrayList<ConfigurableSimulationParameters> paramsList = new ArrayList<>();
-        do {
-            ConfigurableSimulationParameters params = loader.createConfigurableSimulationParameters();
-            paramsList.add(params);
-        } while (loader.nextDataSet());
-
-            System.out.println(paramsList);
-    }
-
     private static final int
             TYPE_1_WORKER_COUNT_INDEX = 0,
             TYPE_2_WORKER_COUNT_INDEX = 1,
