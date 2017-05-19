@@ -10,29 +10,24 @@ import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
  */
 public class SimulationParameters {
 
-    enum Worker1Strategy {
-        DEFAULT;
-    }
 
-    private int repliacationCount; //
+    private int repliacationCount;
 
-    private double replicationDurationSeconds; //tuna treba nastavit 21 dni * 8 hodin na den
+    private double replicationDurationSeconds;
 
     private int warmupPercentage;
 
-    private int type1WorkerCount; //dolezite
+    private int type1WorkerCount;
 
-    private int type2WorkerCount; //dolezite
+    private int type2WorkerCount;
 
-    private Worker1Strategy worker1Strategy;
-
-    private double clientIncomeIncreasePercent; //
+    private double clientIncomeIncreasePercent;
 
     private Generators generators = new Generators(1.0);
 
     private RoadModel roadModel = new RoadModel();
 
-    private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar); //
+    private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar);
 
     public int getRepliacationCount() {
         return repliacationCount;
@@ -44,6 +39,12 @@ public class SimulationParameters {
 
     public int getWarmupPercentage() {
         return warmupPercentage;
+    }
+
+    public boolean isWarmupFinished(final int currentReplication) {
+        double multiplier = warmupPercentage * 0.01;
+        double warmupReplications = repliacationCount * multiplier;
+        return currentReplication > warmupReplications;
     }
 
     public void setWarmupPercentage(int warmupPercentage) {
@@ -88,14 +89,6 @@ public class SimulationParameters {
 
     public Generators getGenerators() {
         return generators;
-    }
-
-    public Worker1Strategy getWorker1Strategy() {
-        return worker1Strategy;
-    }
-
-    public void setWorker1Strategy(Worker1Strategy worker1Strategy) {
-        this.worker1Strategy = worker1Strategy;
     }
 
     public double getClientIncomeIncreasePercent() {

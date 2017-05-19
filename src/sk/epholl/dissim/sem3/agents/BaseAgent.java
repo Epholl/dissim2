@@ -34,7 +34,22 @@ public class BaseAgent extends Agent {
         });
     }
 
+    public <T> void publishValueIfAfterWarmup(final ValueType<T> type, final T value) {
+
+        if (getParams().isWarmupFinished(mySim().currentReplication())) {
+            getSimulation().getResultManager().addValue(type, value);
+        }
+    }
+
+    protected int rep() {
+        return mySim().currentReplication();
+    }
+
     public void onGuiUpdate() {
+
+    }
+
+    public void onReplicationFinished() {
 
     }
 }

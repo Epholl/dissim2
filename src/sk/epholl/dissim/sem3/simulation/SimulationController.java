@@ -77,15 +77,18 @@ public class SimulationController {
         });
 
         simulation.onRefreshUI(simulation1 -> {
-            simulation.agentGuiUpdate();
-            simulation.execIfContinous(() -> {
-                simulation.getResultManager().addValue(Rst.SIMULATION_TIME, simulation.currentTime());
+            MySimulation sim = (MySimulation) simulation1;
+            sim.agentGuiUpdate();
+            sim.execIfContinous(() -> {
+                sim.getResultManager().addValue(Rst.SIMULATION_TIME, sim.currentTime());
             });
-            simulation.getResultManager().swingFlush();
+            sim.getResultManager().swingFlush();
         });
 
-        simulation.onReplicationDidFinish(simulation -> {
-            resultManager.swingFlush();
+        simulation.onReplicationDidFinish(simulation1 -> {
+            MySimulation sim = (MySimulation) simulation1;
+            sim.agentReplicationFinishedUpdate();
+            sim.getResultManager().swingFlush();
         });
     }
 

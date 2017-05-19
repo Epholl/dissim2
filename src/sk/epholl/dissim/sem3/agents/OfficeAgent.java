@@ -13,6 +13,7 @@ import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
 import sk.epholl.dissim.sem3.managers.OfficeManager;
 import sk.epholl.dissim.sem3.simulation.*;
 import sk.epholl.dissim.util.Pair;
+import sk.epholl.dissim.util.StatisticCounter;
 import sk.epholl.dissim.util.StatisticQueue;
 
 import java.util.*;
@@ -20,9 +21,12 @@ import java.util.*;
 //meta! id="87"
 public class OfficeAgent extends BaseAgent {
 
+	private StatisticCounter avgFreeWorkersCounter = new StatisticCounter();
+	private StatisticCounter avgWorkerLoadCounter = new StatisticCounter();
+
 	private int worker1IdCounter;
 
-	private LinkedList<Worker1> type1FreeWorkers;
+	private StatisticQueue<Worker1> type1FreeWorkers;
 
 	private Worker1[] type1Workers;
 
@@ -42,7 +46,7 @@ public class OfficeAgent extends BaseAgent {
 		super(id, mySim, parent);
 		init();
 
-		type1FreeWorkers = new LinkedList<>();
+		type1FreeWorkers = new StatisticQueue<>(getSimulation());
 		vehiclesWaitingForOrder = new StatisticQueue<>(getSimulation());
 		vehiclesOrdering = new HashSet<>();
 		vehiclesToBeReturned = new StatisticQueue<>(getSimulation());
@@ -56,12 +60,12 @@ public class OfficeAgent extends BaseAgent {
 		worker1IdCounter = 0;
 		final int type1Count = getParams().getType1WorkerCount();
 		type1Workers = new Worker1[type1Count];
+		type1FreeWorkers.clear();
 		for (int i = 0; i < type1Workers.length; i++) {
 			type1Workers[i] = new Worker1(getSimulation(), worker1IdCounter++);
+			type1FreeWorkers.enqueue(type1Workers[i]);
 		}
 		setDecider(getParams().getWorker1Decider());
-		type1FreeWorkers.clear();
-		type1FreeWorkers.addAll(Arrays.asList(type1Workers));
 		vehiclesWaitingForOrder.clear();
 		vehiclesOrdering.clear();
 		vehiclesToBeReturned.clear();
@@ -95,6 +99,17 @@ public class OfficeAgent extends BaseAgent {
 		Rst.WorkerUpdate update = new Rst.WorkerUpdate();
 		update.states = states;
 		publishValueContinous(Rst.WORKER1_STATE, update);
+
+	}
+
+	@Override
+	public void onReplicationFinished() {
+		super.onReplicationFinished();
+
+		avgFreeWorkersCounter.addValue(type1FreeWorkers.getAverageQueueLength());
+		for (Worker1 worker: type1Workers) {
+			System.out.println(worker.getCoeficientBusy());
+		}
 
 	}
 
@@ -205,7 +220,7 @@ public class OfficeAgent extends BaseAgent {
 	}
 
 	private Worker1 assignWorker() {
-		Worker1 worker = type1FreeWorkers.removeLast();
+		Worker1 worker = type1FreeWorkers.dequeue();
 		return worker;
 	}
 
@@ -215,7 +230,7 @@ public class OfficeAgent extends BaseAgent {
 		}
 		worker.setState(Worker1.State.Idle);
 		worker.setVehicle(null);
-		type1FreeWorkers.add(worker);
+		type1FreeWorkers.enqueue(worker);
 		findWork();
 	}
 

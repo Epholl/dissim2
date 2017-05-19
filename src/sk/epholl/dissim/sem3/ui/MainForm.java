@@ -79,6 +79,12 @@ public class MainForm extends JFrame {
     private JLabel watchEnteredLabel;
     private JTable parkingTable;
     private JTable workerTable;
+    private JPanel graphsPanel;
+    private JPanel graph1Panel;
+    private JPanel graph2Panel;
+    private JComboBox graph1ComboBox;
+    private JComboBox graph2ComboBox;
+    private JTable resultsTable;
 
     private State state;
 
@@ -89,6 +95,11 @@ public class MainForm extends JFrame {
     private VehicleTableModel vehicleTableModel;
     private ParkingTableModel parkingTableModel;
     private WorkerTableModel workerTableModel;
+
+    private GraphController graph1Controller;
+    private GraphController graph2Controller;
+
+    private ResultTableController resultTableController;
 
     public MainForm() {
         super("Parking lot simulation");
@@ -106,11 +117,14 @@ public class MainForm extends JFrame {
         initWorker1Model();
         initConsolePanel();
         initWatchPanel();
+        initGraphPanel();
+        initResultPanel();
 
         setState(State.Initial);
 
         mainTabbedPane.setSelectedIndex(3);
     }
+
 
     public void setState(State newState) {
         if (state != newState) {
@@ -175,6 +189,10 @@ public class MainForm extends JFrame {
 
         resetButton.addActionListener(e -> {
             simulationController.resetSimulation();
+            graph1Controller.clear();
+            graph2Controller.clear();
+            progressBarController.reset();
+            resultTableController.reset();
             setState(State.Initial);
         });
 
@@ -331,6 +349,12 @@ public class MainForm extends JFrame {
         simSpeedExplanationLabel.setText(SimulationSpeed.getLabel(value));
     }
 
+    private void initGraphPanel() {
+        graph1Controller = new GraphController(graph1Panel, graph1ComboBox);
+        graph2Controller = new GraphController(graph2Panel, graph2ComboBox);
+        graph1Controller.init(rm());
+        graph2Controller.init(rm());
+    }
 
     private void initWatchPanel() {
 
@@ -342,6 +366,12 @@ public class MainForm extends JFrame {
         new JLabelResultController("Balance: ", watchBalanceLabel, Rst.BALANCE, rm());
         initParkingTable();
         initWorkerTable();
+    }
+
+
+    private void initResultPanel() {
+        resultTableController = new ResultTableController(resultsTable);
+        resultTableController.init(simulationController.getResultManager());
     }
 
     private void initVehicleTable() {
@@ -375,6 +405,12 @@ public class MainForm extends JFrame {
             @Override
             public void onValueEmitted(Rst.WorkerUpdate value) {
                 workerTableModel.setNewWorker1Data(value);
+            }
+        });
+        simulationController.getResultManager().addSubscriber(Rst.WORKER2_STATE, new Subscriber<Rst.WorkerUpdate>() {
+            @Override
+            public void onValueEmitted(Rst.WorkerUpdate value) {
+                workerTableModel.setNewWorker2Data(value);
             }
         });
     }

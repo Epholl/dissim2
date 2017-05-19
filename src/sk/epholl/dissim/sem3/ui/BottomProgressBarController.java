@@ -46,6 +46,7 @@ public class BottomProgressBarController {
     public void reset() {
         currentReplication = 0;
         currentTime = 0;
+        refresh();
     }
 
     private void refresh() {

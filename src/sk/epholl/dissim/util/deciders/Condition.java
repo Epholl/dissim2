@@ -45,7 +45,7 @@ public abstract class Condition<T> {
 
     @Override
     public String toString() {
-        return "If " + arg1Provider +
+        return arg1Provider +
                 " " + comparator.toString() +
                 " " + arg2Provider +
                 ": " + getReturnValue();

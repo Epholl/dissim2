@@ -9,7 +9,7 @@ public class SimulationParameters {
     public static final long DEFAULT_GUI_UPDATE_INTERVAL = 1000;
 
     private final long replicationCount;
-    private long warmupReplicationCount; // the amount of replications that will not yield intermediate results
+    private long warmupReplicationCount; // the amount of replications that will not yield intermediate resultTypes
 
     private long guiUpdateInterval;
 

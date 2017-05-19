@@ -25,17 +25,17 @@ public class Worker1 {
         this.id = id;
         this.sim = sim;
         this.stateCounter = new StatisticStateCounter<>(sim);
-        this.stateCounter.setState(State.Idle);
+        this.stateCounter.setCurrentState(State.Idle);
     }
 
     public void setState(State newState) {
-        stateCounter.setState(newState);
+        stateCounter.setCurrentState(newState);
     }
 
     public Rst.WorkerState getWorkerState() {
         Rst.WorkerState state = new Rst.WorkerState();
         state.name = "Worker1 " + id;
-        state.state = stateCounter.getState().toString();
+        state.state = stateCounter.getCurrentState().toString();
         state.vehicle = vehicle == null? " - " : vehicle.getName();
         return state;
     }
@@ -46,6 +46,10 @@ public class Worker1 {
 
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
+    }
+
+    public double getCoeficientBusy() {
+        return stateCounter.getNotStateCoeficient(State.Idle);
     }
 
     @Override

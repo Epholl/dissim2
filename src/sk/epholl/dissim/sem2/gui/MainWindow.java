@@ -188,20 +188,20 @@ public class MainWindow extends JFrame {
 
             @Override
             public void onContinousUpdate(Sem2Results results) {
-                /*finishedCargoLabel.setText("" + results.unloader.cargoAmount);
-                loaderCargoLabel.setText("" + results.loader.cargoAmount);
+                /*finishedCargoLabel.setText("" + resultTypes.unloader.cargoAmount);
+                loaderCargoLabel.setText("" + resultTypes.loader.cargoAmount);
                 double hauledCargo = 0;
 
-                for (int i = 0; i < results.vehicles.size(); i++) {
-                    Vehicle v = results.vehicles.get(i);
+                for (int i = 0; i < resultTypes.vehicles.size(); i++) {
+                    Vehicle v = resultTypes.vehicles.get(i);
                     hauledCargo += v.getCurrentLoad();
-                    stateLabels[i].setText(v.getState());
+                    stateLabels[i].setText(v.getCurrentState());
                     cargoLabels[i].setText(v.getCurrentLoad() + "/" + v.getCapacity());
                     runLabels[i].setText("" + v.getFinishedLoadsCount());
                 }
 
                 hauledCargoLabel.setText("" + hauledCargo);
-                simTimeLabel.setText(String.format("%2f", Utils.secondsToHours(results.simTime)));
+                simTimeLabel.setText(String.format("%2f", Utils.secondsToHours(resultTypes.simTime)));
             */}
         });
     }

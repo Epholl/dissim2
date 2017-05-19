@@ -7,15 +7,10 @@ import sk.epholl.dissim.sem3.entity.Place;
 import sk.epholl.dissim.sem3.entity.Worker2;
 import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.managers.RepairManager;
-import sk.epholl.dissim.sem3.simulation.Id;
-import sk.epholl.dissim.sem3.simulation.Mc;
-import sk.epholl.dissim.sem3.simulation.MyMessage;
-import sk.epholl.dissim.sem3.simulation.MySimulation;
+import sk.epholl.dissim.sem3.simulation.*;
 import sk.epholl.dissim.util.StatisticQueue;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 //meta! id="88"
 public class RepairAgent extends BaseAgent {
@@ -53,13 +48,25 @@ public class RepairAgent extends BaseAgent {
 		final int type2Count = getParams().getType2WorkerCount();
 		type2Workers = new Worker2[type2Count];
 		for (int i = 0; i < type2Count; i++) {
-			type2Workers[i] = new Worker2(worker2IdCounter++);
+			type2Workers[i] = new Worker2(getSimulation(), worker2IdCounter++);
 		}
 		type2FreeWorkers.clear();
 		type2FreeWorkers.addAll(Arrays.asList(type2Workers));
 		vehiclesWaitingOnParkingLot.clear();
 		vehiclesRepairing.clear();
 		vehiclesRepaired.clear();
+	}
+
+	@Override
+	public void onGuiUpdate() {
+		super.onGuiUpdate();
+		List<Rst.WorkerState> states = new ArrayList<>();
+		for (Worker2 worker: type2Workers) {
+			states.add(worker.getWorkerState());
+		}
+		Rst.WorkerUpdate update = new Rst.WorkerUpdate();
+		update.states = states;
+		publishValueContinous(Rst.WORKER2_STATE, update);
 	}
 
 	public FreeCapacity getLot2FreeParkingSpots() {
@@ -81,7 +88,9 @@ public class RepairAgent extends BaseAgent {
 
 	public void repairFinished(MyMessage message) {
 		vehiclesRepairing.remove(message);
-		message.getVehicle().setCurrentState(Vehicle.State.WaitingForLot2Spot);
+		final Vehicle vehicle = message.getVehicle();
+		vehicle.setCurrentState(Vehicle.State.WaitingForLot2Spot);
+		vehicle.getWorker2().setState(Worker2.State.WaitingToReturnCar);
 		vehiclesRepaired.enqueue(message);
 		findWork();
 	}
@@ -104,6 +113,8 @@ public class RepairAgent extends BaseAgent {
 			vehiclesRepairing.add(message);
 			Worker2 worker = assignWorker();
 			Vehicle vehicle = message.getVehicle();
+			worker.setState(Worker2.State.Repairing);
+			worker.setVehicle(vehicle);
 			vehicle.persistCurrentState();
 			vehicle.setWorker2(worker);
 			MyMessage copy = (MyMessage) message.createCopy();
@@ -139,6 +150,8 @@ public class RepairAgent extends BaseAgent {
 
 	public void freeWorker(Worker2 worker) {
 		type2FreeWorkers.add(worker);
+		worker.setState(Worker2.State.Idle);
+		worker.setVehicle(null);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
