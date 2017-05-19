@@ -5,6 +5,8 @@ import sk.epholl.dissim.sem3.entity.*;
 import sk.epholl.dissim.sem3.managers.ParkingManager;
 import sk.epholl.dissim.sem3.simulation.*;
 import sk.epholl.dissim.sem3.simulation.Rst.ParkingSpotState;
+import sk.epholl.dissim.util.StatisticCounter;
+import sk.epholl.dissim.util.StatisticNumberCounter;
 import sk.epholl.dissim.util.subscribers.ValueType;
 
 import java.util.HashSet;
@@ -18,6 +20,10 @@ public class ParkingAgent extends BaseAgent {
 	private ParkingLot lot1;
 
 	private ParkingLot lot2;
+
+	private StatisticNumberCounter mainLotStatisticCounter = new StatisticNumberCounter(getSimulation());
+    private StatisticNumberCounter lot1StatisticCounter = new StatisticNumberCounter(getSimulation());
+    private StatisticNumberCounter lot2StatisticCounter = new StatisticNumberCounter(getSimulation());
 
 	public ParkingAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
@@ -37,6 +43,9 @@ public class ParkingAgent extends BaseAgent {
 		mainLot.clear();
 		lot1.clear();
 		lot2.clear();
+		mainLotStatisticCounter.clear();
+		lot1StatisticCounter.clear();
+		lot2StatisticCounter.clear();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -58,6 +67,12 @@ public class ParkingAgent extends BaseAgent {
         Rst.ParkingUpdate update = new Rst.ParkingUpdate();
         update.spots = states;
         publishValueContinous(Rst.PARKING_STATE, update);
+    }
+
+    @Override
+    public void onReplicationFinished() {
+        super.onReplicationFinished();
+
     }
 
     public void reserveSpot(MyMessage message) {

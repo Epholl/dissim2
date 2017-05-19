@@ -107,10 +107,18 @@ public class OfficeAgent extends BaseAgent {
 		super.onReplicationFinished();
 
 		avgFreeWorkersCounter.addValue(type1FreeWorkers.getAverageQueueLength());
+		double workerLoad = 0d;
 		for (Worker1 worker: type1Workers) {
-			System.out.println(worker.getCoeficientBusy());
+			workerLoad += worker.getWorkLoadCoeficient();
 		}
+		workerLoad /= type1Workers.length;
+		avgWorkerLoadCounter.addValue(workerLoad);
 
+
+		publishValueIfAfterWarmup(Rst.R_AVERAGE_FREE_WORKERS_1,
+				new Rst.Result(rep(), avgFreeWorkersCounter));
+		publishValueIfAfterWarmup(Rst.R_AVERAGE_LOAD_WORKERS_1,
+				new Rst.Result(rep(), avgWorkerLoadCounter));
 	}
 
 	public void onNewCarArrived(MyMessage message) {

@@ -36,17 +36,17 @@ public class Rst {
                     new ResultType("Finished customers ratio", R_FINISHED_RATIO),
                     new ResultType("Refused customers ratio", R_REFUSED_RATIO),
 
-                    new ResultTimeType("Total time in system", R_CUSTOMER_TOTAL_TIME),
-                    new ResultTimeType("Waiting for repair time", R_CUSTOMER_WAIT_FOR_REPAIR_TIME),
-                    new ResultTimeType("Order wait", R_CUSTOMER_ORDER_WAIT_TIME),
-                    new ResultTimeType("Repair wait", R_CUSTOMER_REPAIR_WAIT_TIME),
-                    new ResultTimeType("Return wait", R_CUSTOMER_RETURN_WAIT_TIME),
+                    new ResultTimeType("Total time in system (f)", R_CUSTOMER_TOTAL_TIME),
+                    new ResultTimeType("Waiting for repair time (f)", R_CUSTOMER_WAIT_FOR_REPAIR_TIME),
+                    new ResultTimeType("Order wait (f)", R_CUSTOMER_ORDER_WAIT_TIME),
+                    new ResultTimeType("Repair wait (f)", R_CUSTOMER_REPAIR_WAIT_TIME),
+                    new ResultTimeType("Return wait (f)", R_CUSTOMER_RETURN_WAIT_TIME),
 
                     new ResultType("Money earned", R_MONEY_EARNED),
                     new ResultType("Money balance", R_MONEY_BALANCE),
 
-                    new ResultType("Balance per all customers", R_MONEY_PER_ALL_CUSTOMERS),
-                    new ResultType("Balance per finished customers", R_MONEY_PER_FINISHED_CUSTOMERS),
+                    new ResultType("Balance per any customer", R_MONEY_PER_ALL_CUSTOMERS),
+                    new ResultType("Balance per finished customer (f)", R_MONEY_PER_FINISHED_CUSTOMERS),
 
                     new ResultType("Average free type 1 workers", R_AVERAGE_FREE_WORKERS_1),
                     new ResultType("Average load per type 1 worker", R_AVERAGE_LOAD_WORKERS_1),
