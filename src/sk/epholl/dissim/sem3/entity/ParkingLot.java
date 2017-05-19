@@ -73,6 +73,10 @@ public class ParkingLot {
         return spots;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
     private int getFreeSpot() {
         int i = 0;
         for (;i<spots.length; i++) {

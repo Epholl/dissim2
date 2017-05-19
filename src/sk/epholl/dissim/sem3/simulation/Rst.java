@@ -53,6 +53,12 @@ public class Rst {
 
                     new ResultType("Average free type 2 workers", R_AVERAGE_FREE_WORKERS_2),
                     new ResultType("Average load per type 2 worker", R_AVERAGE_LOAD_WORKERS_2),
+
+                    new ResultType("Average vehicles on main lot", R_MAIN_LOT_VEHICLES),
+                    new ResultType("Average vehicles on lot 1", R_LOT1_TAKEN_SPOTS),
+                    new ResultType("Average vehicles on lot 2", R_LOT2_TAKEN_SPOTS),
+                    new ResultType("Lot 1 load index", R_LOT1_LOAD),
+                    new ResultType("Lot 2 load index", R_LOT2_LOAD),
             };
     }
 
@@ -79,6 +85,13 @@ public class Rst {
 
     public static final ValueType<Result> R_AVERAGE_FREE_WORKERS_2 = new ValueType<>(Result.class);
     public static final ValueType<Result> R_AVERAGE_LOAD_WORKERS_2 = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_MAIN_LOT_VEHICLES = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_LOT1_TAKEN_SPOTS = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_LOT2_TAKEN_SPOTS = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_LOT1_LOAD = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_LOT2_LOAD = new ValueType<>(Result.class);
+
 
 
 

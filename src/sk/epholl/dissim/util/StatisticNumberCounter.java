@@ -21,7 +21,7 @@ public class StatisticNumberCounter {
         statesDurations = new HashMap<>();
     }
 
-    public void setCurrentState(final int newState) {
+    public void addValue(final int newState) {
 
         final double duration = simulation.getSimulationTime() - lastUpdate;
         statesDurations.compute(lastState, (state, totalDuration) -> totalDuration == null? duration : totalDuration + duration);
@@ -40,6 +40,6 @@ public class StatisticNumberCounter {
         for (Integer i: statesDurations.keySet()) {
             sum += i * statesDurations.get(i);
         }
-        return sum;
+        return sum / simulation.getSimulationTime();
     }
 }
