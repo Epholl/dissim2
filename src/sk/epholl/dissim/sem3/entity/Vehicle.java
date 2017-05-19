@@ -161,9 +161,27 @@ public class Vehicle extends Entity {
     }
 
     public double getTotalTimeInSystem() {
-        double entryTime = findState(State.EnterSystem).first;
-        double exitTime = history.getLast().first;
-        return exitTime - entryTime;
+        return getTimeDifference(State.EnterSystem, State.LeaveSystem);
+    }
+
+    public double getTimeCustomerWaitForRepair() {
+        return getTimeDifference(State.TakeOrderAndRetrieve, State.RetrieveCar);
+    }
+
+    public double getTimeWaitForOrder() {
+        return getTimeDifference(State.MoveToOfficeLot, State.WaitForOrder);
+    }
+
+    public double getTimeWaitForRepair() {
+        return getTimeDifference(State.WaitForOrder, State.MoveToLot1);
+    }
+
+    public double getTimeWaitForLot2Spot() {
+        return getTimeDifference(State.Repair, State.WaitingForLot2Spot);
+    }
+
+    public double getTimeWaitForReturn() {
+        return getTimeDifference(State.WaitingForLot2Spot, State.WaitingOnLot2);
     }
 
     public int getRepairDuratioinInMinutes() {
@@ -196,6 +214,12 @@ public class Vehicle extends Entity {
         state.timeStateStarted = lastEventTime();
         state.timeStateEnds = currentStateFinishTime;
         return state;
+    }
+
+    private double getTimeDifference(State first, State second) {
+        double firstTime = findState(first).first;
+        double secondTime = findState(second).first;
+        return Math.abs(secondTime - firstTime);
     }
 
     private double lastEventTime() {

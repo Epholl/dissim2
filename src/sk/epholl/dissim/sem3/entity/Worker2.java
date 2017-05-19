@@ -27,17 +27,17 @@ public class Worker2 {
         this.id = id;
         this.sim = sim;
         this.stateCounter = new StatisticStateCounter<>(sim);
-        this.stateCounter.setState(Idle);
+        this.stateCounter.setCurrentState(Idle);
     }
 
     public void setState(State newState) {
-        stateCounter.setState(newState);
+        stateCounter.setCurrentState(newState);
     }
 
     public Rst.WorkerState getWorkerState() {
         Rst.WorkerState state = new Rst.WorkerState();
         state.name = "Worker2 " + id;
-        state.state = stateCounter.getState().toString();
+        state.state = stateCounter.getCurrentState().toString();
         state.vehicle = vehicle == null? " - " : vehicle.getName();
         return state;
     }

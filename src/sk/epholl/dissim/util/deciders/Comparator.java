@@ -20,7 +20,7 @@ public abstract class Comparator {
 
         @Override
         public String toString() {
-            return "is less than";
+            return "<";
         }
     };
 
@@ -32,7 +32,7 @@ public abstract class Comparator {
 
         @Override
         public String toString() {
-            return "is mre or equals";
+            return ">=";
         }
     };
 
@@ -44,7 +44,7 @@ public abstract class Comparator {
 
         @Override
         public String toString() {
-            return "is more than";
+            return ">";
         }
     };
 
@@ -56,7 +56,7 @@ public abstract class Comparator {
 
         @Override
         public String toString() {
-            return "is less or equals";
+            return "<=";
         }
     };
 
@@ -68,7 +68,7 @@ public abstract class Comparator {
 
         @Override
         public String toString() {
-            return "equals";
+            return "==";
         }
     };
 
@@ -80,7 +80,7 @@ public abstract class Comparator {
 
         @Override
         public String toString() {
-            return null;
+            return "!=";
         }
     };
 

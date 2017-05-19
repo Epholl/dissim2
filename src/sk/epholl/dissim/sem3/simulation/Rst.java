@@ -37,10 +37,22 @@ public class Rst {
                     new ResultType("Refused customers ratio", R_REFUSED_RATIO),
 
                     new ResultTimeType("Total time in system", R_CUSTOMER_TOTAL_TIME),
-                    new ResultTimeType("Waiting for repair time", R_CUSTOMER_REPAIR_TIME),
+                    new ResultTimeType("Waiting for repair time", R_CUSTOMER_WAIT_FOR_REPAIR_TIME),
                     new ResultTimeType("Order wait", R_CUSTOMER_ORDER_WAIT_TIME),
                     new ResultTimeType("Repair wait", R_CUSTOMER_REPAIR_WAIT_TIME),
                     new ResultTimeType("Return wait", R_CUSTOMER_RETURN_WAIT_TIME),
+
+                    new ResultType("Money earned", R_MONEY_EARNED),
+                    new ResultType("Money balance", R_MONEY_BALANCE),
+
+                    new ResultType("Balance per all customers", R_MONEY_PER_ALL_CUSTOMERS),
+                    new ResultType("Balance per finished customers", R_MONEY_PER_FINISHED_CUSTOMERS),
+
+                    new ResultType("Average free type 1 workers", R_AVERAGE_FREE_WORKERS_1),
+                    new ResultType("Average load per type 1 worker", R_AVERAGE_LOAD_WORKERS_1),
+
+                    new ResultType("Average free type 2 workers", R_AVERAGE_FREE_WORKERS_2),
+                    new ResultType("Average load per type 2 worker", R_AVERAGE_LOAD_WORKERS_2),
             };
     }
 
@@ -51,10 +63,23 @@ public class Rst {
     public static final ValueType<Result> R_REFUSED_RATIO = new ValueType<>(Result.class);
 
     public static final ValueType<Result> R_CUSTOMER_TOTAL_TIME = new ValueType<>(Result.class);
-    public static final ValueType<Result> R_CUSTOMER_REPAIR_TIME = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_CUSTOMER_WAIT_FOR_REPAIR_TIME = new ValueType<>(Result.class);
     public static final ValueType<Result> R_CUSTOMER_ORDER_WAIT_TIME = new ValueType<>(Result.class);
     public static final ValueType<Result> R_CUSTOMER_REPAIR_WAIT_TIME = new ValueType<>(Result.class);
     public static final ValueType<Result> R_CUSTOMER_RETURN_WAIT_TIME = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_MONEY_EARNED = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_MONEY_BALANCE = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_MONEY_PER_ALL_CUSTOMERS = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_MONEY_PER_FINISHED_CUSTOMERS = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_AVERAGE_FREE_WORKERS_1 = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_AVERAGE_LOAD_WORKERS_1 = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_AVERAGE_FREE_WORKERS_2 = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_AVERAGE_LOAD_WORKERS_2 = new ValueType<>(Result.class);
+
 
 
     public static class VehicleUpdate {

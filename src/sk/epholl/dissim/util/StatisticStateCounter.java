@@ -23,23 +23,30 @@ public class StatisticStateCounter<T> {
         this.statesHistogram = new HashMap<>();
     }
 
-    public void setState(final T newState) {
+    public void setCurrentState(final T newState) {
         if (lastState == null) {
-            lastUpdate = simulation.getSimulationTime();
             lastState = newState;
             statesHistogram.put(newState, 1L);
+            lastUpdate = simulation.getSimulationTime();
 
         } else if (!newState.equals(lastState)) {
             final double duration = simulation.getSimulationTime() - lastUpdate;
             statesTotalDuration.compute(lastState, (state, totalDuration) -> totalDuration == null? duration : totalDuration + duration);
             statesHistogram.compute(newState, (state, occurCount) -> occurCount == null? 1 : occurCount +1 );
             lastState = newState;
+            lastUpdate = simulation.getSimulationTime();
         }
     }
 
-    public T getState() {
+    public T getCurrentState() {
         return lastState;
     }
 
-    //TODO gettery na pocenotsti
+    public double getStateCoeficient(T state) {
+        return statesTotalDuration.get(state) / simulation.getSimulationTime();
+    }
+
+    public double getNotStateCoeficient(T state) {
+        return 1 - getStateCoeficient(state);
+    }
 }

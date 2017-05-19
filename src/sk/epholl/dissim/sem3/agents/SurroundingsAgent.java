@@ -23,7 +23,16 @@ public class SurroundingsAgent extends BaseAgent {
 	private StatisticCounter refusedCustomersRatioCounter = new StatisticCounter();
 
 	private StatisticCounter totalTimeInSystemCounter = new StatisticCounter();
+	private StatisticCounter timeCustomerWaitingForRepairCounter = new StatisticCounter();
+	private StatisticCounter timeWaitingforOrderCounter = new StatisticCounter();
+	private StatisticCounter timeWaitingForRepairCounter = new StatisticCounter();
+	private StatisticCounter timeWaitiingForReturnCounter = new StatisticCounter();
 
+	private StatisticCounter balanceCounter = new StatisticCounter();
+	private StatisticCounter profitCounter = new StatisticCounter();
+
+	private StatisticCounter balancePerFinishedCustomerCounter = new StatisticCounter();
+	private StatisticCounter balancePerAllCustomersCounter = new StatisticCounter();
 
 	private int enteredVehicles;
 	private int finishedVehicles;
@@ -34,6 +43,11 @@ public class SurroundingsAgent extends BaseAgent {
 	private double balance;
 
 	private StatisticCounter totalTimeInSystem = new StatisticCounter();
+	private StatisticCounter timeCustomerWaitingForRepair = new StatisticCounter();
+	private StatisticCounter timeWaitingForRepair = new StatisticCounter();
+	private StatisticCounter timeWaitingForOrder = new StatisticCounter();
+	private StatisticCounter timeWaitingForReturn = new StatisticCounter();
+
 
 	public SurroundingsAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
@@ -53,7 +67,13 @@ public class SurroundingsAgent extends BaseAgent {
 		shopClosedVehicles = 0;
 		profit = 0;
 		balance = -getParams().getTotalPrice();
+
 		totalTimeInSystem.clear();
+		timeCustomerWaitingForRepair.clear();
+		timeWaitingForRepair.clear();
+		timeWaitingForOrder.clear();
+		timeWaitingForReturn.clear();
+
 		publishValueContinous(Rst.ENTERED_CUSTOMERS, enteredVehicles);
 		publishValueContinous(Rst.REFUSED_CUSTOMERS, refusedVehicles);
 		publishValueContinous(Rst.SHOP_CLOSED_CUSTOMERS, shopClosedVehicles);
@@ -85,6 +105,10 @@ public class SurroundingsAgent extends BaseAgent {
 			publishValueContinous(Rst.PROFIT, profit);
 			publishValueContinous(Rst.BALANCE, balance);
 			totalTimeInSystem.addValue(vehicle.getTotalTimeInSystem());
+			timeCustomerWaitingForRepair.addValue(vehicle.getTimeCustomerWaitForRepair());
+			timeWaitingForOrder.addValue(vehicle.getTimeWaitForOrder());
+			timeWaitingForRepair.addValue(vehicle.getTimeWaitForRepair());
+			timeWaitingForReturn.addValue(vehicle.getTimeWaitForLot2Spot() + vehicle.getTimeWaitForReturn());
 		}
 	}
 
@@ -112,6 +136,17 @@ public class SurroundingsAgent extends BaseAgent {
 		refusedCustomersRatioCounter.addValue((double)(refusedVehicles+shopClosedVehicles) / (finishedVehicles + refusedVehicles + shopClosedVehicles));
 
 		totalTimeInSystemCounter.addValue(totalTimeInSystem.getMean());
+		timeCustomerWaitingForRepairCounter.addValue(timeCustomerWaitingForRepair.getMean());
+		timeWaitingforOrderCounter.addValue(timeWaitingForOrder.getMean());
+		timeWaitingForRepairCounter.addValue(timeWaitingForRepair.getMean());
+		timeWaitiingForReturnCounter.addValue(timeWaitingForReturn.getMean());
+
+		profitCounter.addValue(profit);
+		balanceCounter.addValue(balance);
+
+		balancePerAllCustomersCounter.addValue(balance / (finishedVehicles + refusedVehicles + shopClosedVehicles));
+		balancePerFinishedCustomerCounter.addValue(balance / finishedVehicles);
+
 		publishValueIfAfterWarmup(Rst.R_ALL_CUSTOMERS,
 				new Rst.Result(rep(), totalCustomersCounter));
 		publishValueIfAfterWarmup(Rst.R_FINISHED_CUSTOMERS,
@@ -125,6 +160,24 @@ public class SurroundingsAgent extends BaseAgent {
 
 		publishValueIfAfterWarmup(Rst.R_CUSTOMER_TOTAL_TIME,
 				new Rst.Result(rep(), totalTimeInSystemCounter));
+		publishValueIfAfterWarmup(Rst.R_CUSTOMER_WAIT_FOR_REPAIR_TIME,
+				new Rst.Result(rep(), timeCustomerWaitingForRepairCounter));
+		publishValueIfAfterWarmup(Rst.R_CUSTOMER_ORDER_WAIT_TIME,
+				new Rst.Result(rep(), timeWaitingforOrderCounter));
+		publishValueIfAfterWarmup(Rst.R_CUSTOMER_REPAIR_WAIT_TIME,
+				new Rst.Result(rep(), timeWaitingForRepairCounter));
+		publishValueIfAfterWarmup(Rst.R_CUSTOMER_RETURN_WAIT_TIME,
+				new Rst.Result(rep(), timeWaitiingForReturnCounter));
+
+		publishValueIfAfterWarmup(Rst.R_MONEY_BALANCE,
+				new Rst.Result(rep(), balanceCounter));
+		publishValueIfAfterWarmup(Rst.R_MONEY_EARNED,
+				new Rst.Result(rep(), profitCounter));
+
+		publishValueIfAfterWarmup(Rst.R_MONEY_PER_ALL_CUSTOMERS,
+				new Rst.Result(rep(), balancePerAllCustomersCounter));
+		publishValueIfAfterWarmup(Rst.R_MONEY_PER_FINISHED_CUSTOMERS,
+				new Rst.Result(rep(), balancePerFinishedCustomerCounter));
 	}
 
 

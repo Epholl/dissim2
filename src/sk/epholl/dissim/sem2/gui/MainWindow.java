@@ -195,7 +195,7 @@ public class MainWindow extends JFrame {
                 for (int i = 0; i < resultTypes.vehicles.size(); i++) {
                     Vehicle v = resultTypes.vehicles.get(i);
                     hauledCargo += v.getCurrentLoad();
-                    stateLabels[i].setText(v.getState());
+                    stateLabels[i].setText(v.getCurrentState());
                     cargoLabels[i].setText(v.getCurrentLoad() + "/" + v.getCapacity());
                     runLabels[i].setText("" + v.getFinishedLoadsCount());
                 }

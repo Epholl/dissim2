@@ -103,8 +103,8 @@ public class Sem2SimulationCore {
         for (Vehicle v: vehicles) {
             vehicleClones.add(v.clone());
         }
-        Loader.State loaderState = loader.getState();
-        Unloader.State unloaderState = unloader.getState();
+        Loader.State loaderState = loader.getCurrentState();
+        Unloader.State unloaderState = unloader.getCurrentState();
 
         return new Sem2Results(getSimulationTime(), vehicleClones, loaderState, unloaderState);
     }
