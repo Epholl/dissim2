@@ -14,25 +14,25 @@ public class SimulationParameters {
         DEFAULT;
     }
 
-    private int repliacationCount;
+    private int repliacationCount; //
 
-    private double replicationDurationSeconds;
+    private double replicationDurationSeconds; //tuna treba nastavit 21 dni * 8 hodin na den
 
     private int warmupPercentage;
 
-    private int type1WorkerCount;
+    private int type1WorkerCount; //dolezite
 
-    private int type2WorkerCount;
+    private int type2WorkerCount; //dolezite
 
     private Worker1Strategy worker1Strategy;
 
-    private double clientIncomeIncreasePercent;
+    private double clientIncomeIncreasePercent; //
 
     private Generators generators = new Generators(1.0);
 
     private RoadModel roadModel = new RoadModel();
 
-    private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar);
+    private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar); //
 
     public int getRepliacationCount() {
         return repliacationCount;
