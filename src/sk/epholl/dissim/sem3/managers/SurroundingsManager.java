@@ -33,6 +33,7 @@ public class SurroundingsManager extends Manager {
 	public void processFinish(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "New customer entry: " + msg.getVehicle());
+		myAgent().onVehicleArrived(msg.getVehicle());
 		msg.setCode(Mc.customerEntry);
 		msg.setAddressee(mySim().findAgent(Id.modelAgent));
 		notice(msg);
@@ -48,11 +49,7 @@ public class SurroundingsManager extends Manager {
 	public void processCustomerExit(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Customer exit: " + msg.getVehicle());
-		List<Pair<Double, Vehicle.State>> history = msg.getVehicle().getHistory();
-		System.out.println("\n" + msg.getVehicle());
-		for (Pair<Double, Vehicle.State> state: history) {
-			System.out.println(TimeUtils.formatDayTime(state.first) + ": " + state.second);
-		}
+		myAgent().onVehicleLeaving(msg.getVehicle());
 	}
 
 	//meta! sender="ModelAgent", id="139", type="Notice"

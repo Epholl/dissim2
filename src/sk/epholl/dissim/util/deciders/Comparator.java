@@ -1,46 +1,88 @@
 package sk.epholl.dissim.util.deciders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Tomáš on 16.05.2017.
  */
-public interface Comparator {
+public abstract class Comparator {
 
-    Comparator lessThan = new Comparator() {
+    public static final Comparator[] values() {
+        return new Comparator[] {lessThan, lessThanOrEquals, moreThan, moreThanOrEquals, equals, not};
+    }
+
+    public static final Comparator lessThan = new Comparator() {
         @Override
         public boolean compare(double arg1, double arg2) {
             return arg1 < arg2;
         }
 
         @Override
-        public String getName() {
+        public String toString() {
             return "is less than";
         }
     };
 
-    Comparator lessThanOrEquals = new Comparator() {
+    public static final Comparator moreThanOrEquals = new Comparator() {
+        @Override
+        public boolean compare(double arg1, double arg2) {
+            return arg1 > arg2 || Math.abs(arg1 - arg2) < 0.000001d;
+        }
+
+        @Override
+        public String toString() {
+            return "is mre or equals";
+        }
+    };
+
+    public static final Comparator moreThan = new Comparator() {
+        @Override
+        public boolean compare(double arg1, double arg2) {
+            return arg1 > arg2;
+        }
+
+        @Override
+        public String toString() {
+            return "is more than";
+        }
+    };
+
+    public static final Comparator lessThanOrEquals = new Comparator() {
         @Override
         public boolean compare(double arg1, double arg2) {
             return arg1 < arg2 || Math.abs(arg1 - arg2) < 0.000001d;
         }
 
         @Override
-        public String getName() {
+        public String toString() {
             return "is less or equals";
         }
     };
 
-    Comparator equals = new Comparator() {
+    public static final Comparator equals = new Comparator() {
         @Override
         public boolean compare(double arg1, double arg2) {
             return Math.abs(arg1 - arg2) < 0.000001d;
         }
 
         @Override
-        public String getName() {
+        public String toString() {
             return "equals";
         }
     };
 
-    public boolean compare(double arg1, double arg2);
-    public String getName();
+    public static final Comparator not = new Comparator() {
+        @Override
+        public boolean compare(double arg1, double arg2) {
+            return !(Math.abs(arg1 - arg2) < 0.000001d);
+        }
+
+        @Override
+        public String toString() {
+            return null;
+        }
+    };
+
+    public abstract boolean compare(double arg1, double arg2);
 }

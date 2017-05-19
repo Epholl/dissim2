@@ -9,10 +9,6 @@ import java.util.List;
  */
 public abstract class Decider<T> {
 
-    public enum Direction {
-        Up, Down
-    }
-
     protected List<Condition<T>> conditions;
 
     protected T defaultValue;
@@ -22,9 +18,6 @@ public abstract class Decider<T> {
         this.defaultValue = defaultValue;
     }
 
-    public List<Condition<T>> getConditions() {
-        return Collections.unmodifiableList(conditions);
-    }
 
     public T evaluate() {
         for (Condition<T> condition: conditions) {
@@ -35,27 +28,13 @@ public abstract class Decider<T> {
         return defaultValue;
     }
 
+    public void clear() {
+        conditions.clear();
+    }
+
     public void addCondition(Condition<T> condition) {
         conditions.add(condition);
     }
 
-    public void removeCondition(Condition<T> condition) {
-        conditions.remove(condition);
-    }
 
-    public void moveCondition(Condition<T> condition, Direction direction) {
-        int index = conditions.indexOf(condition);
-        switch (direction) {
-            case Up:
-                if (index > 0) {
-                    Collections.swap(conditions, index, index-1);
-                }
-                break;
-            case Down:
-                if (index < conditions.size()-1) {
-                    Collections.swap(conditions, index, index+1);
-                }
-                break;
-        }
-    }
 }

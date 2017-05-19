@@ -28,7 +28,7 @@ public class Worker1DeciderTest {
             }
 
             @Override
-            public String getName() {
+            public String toString() {
                 return "one";
             }
         }, Comparator.lessThan,
@@ -39,7 +39,7 @@ public class Worker1DeciderTest {
             }
 
             @Override
-            public String getName() {
+            public String toString() {
                 return "two";
             }
         }, Worker1Decision.TakeOrder));
@@ -52,7 +52,7 @@ public class Worker1DeciderTest {
             }
 
             @Override
-            public String getName() {
+            public String toString() {
                 return "one";
             }
         }, Comparator.lessThan, new OfficeAgentValueProvider() {
@@ -62,12 +62,11 @@ public class Worker1DeciderTest {
             }
 
             @Override
-            public String getName() {
+            public String toString() {
                 return "zero";
             }
         }, Worker1Decision.ReturnCar));
 
-        d.moveCondition(d.getConditions().get(1), Decider.Direction.Up);
 
         Assert.assertEquals(d.evaluate(), Worker1Decision.TakeOrder);
     }

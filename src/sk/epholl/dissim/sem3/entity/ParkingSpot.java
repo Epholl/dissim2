@@ -1,6 +1,6 @@
 package sk.epholl.dissim.sem3.entity;
 
-import sk.epholl.dissim.sem3.entity.Vehicle;
+import sk.epholl.dissim.sem3.simulation.Rst;
 
 /**
  * Created by Tomáš on 12.05.2017.
@@ -11,10 +11,12 @@ public class ParkingSpot {
         Free, Reserved, Occupied
     }
 
+    private String name;
     private State state;
     private Vehicle vehicle;
 
-    public ParkingSpot() {
+    public ParkingSpot(String name) {
+        this.name = name;
         this.state = State.Free;
         this.vehicle = null;
     }
@@ -38,5 +40,18 @@ public class ParkingSpot {
     public void clear() {
         state = State.Free;
         vehicle = null;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public Rst.ParkingSpotState getSpotState() {
+        Rst.ParkingSpotState state = new Rst.ParkingSpotState();
+        state.name = name;
+        state.state = this.state.toString();
+        state.vehicle = this.vehicle == null? " - " : this.vehicle.getName();
+        return state;
     }
 }

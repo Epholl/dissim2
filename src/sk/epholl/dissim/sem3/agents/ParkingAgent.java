@@ -4,8 +4,11 @@ import OSPABA.*;
 import sk.epholl.dissim.sem3.entity.*;
 import sk.epholl.dissim.sem3.managers.ParkingManager;
 import sk.epholl.dissim.sem3.simulation.*;
+import sk.epholl.dissim.sem3.simulation.Rst.ParkingSpotState;
+import sk.epholl.dissim.util.subscribers.ValueType;
 
 import java.util.HashSet;
+import java.util.List;
 
 //meta! id="92"
 public class ParkingAgent extends BaseAgent {
@@ -22,9 +25,9 @@ public class ParkingAgent extends BaseAgent {
 
 		mainLot = new HashSet<>();
 
-		lot1 = new ParkingLot(Const.parkingLot1Capacity);
+		lot1 = new ParkingLot(Const.parkingLot1Capacity, "Lot1");
 
-		lot2 = new ParkingLot(Const.parkingLot2Capacity);
+		lot2 = new ParkingLot(Const.parkingLot2Capacity, "Lot2");
 	}
 
 	@Override
@@ -46,7 +49,18 @@ public class ParkingAgent extends BaseAgent {
 	}
 	//meta! tag="end"
 
-	public void reserveSpot(MyMessage message) {
+
+    @Override
+    public void onGuiUpdate() {
+        super.onGuiUpdate();
+        List<ParkingSpotState> states = lot1.getSpotsStatus();
+        states.addAll(lot2.getSpotsStatus());
+        Rst.ParkingUpdate update = new Rst.ParkingUpdate();
+        update.spots = states;
+        publishValueContinous(Rst.PARKING_STATE, update);
+    }
+
+    public void reserveSpot(MyMessage message) {
 	    final Place parkingLot = message.getPlace();
 	    final Vehicle vehicle = message.getVehicle();
 		if (parkingLot == Place.ParkingLot1) {;

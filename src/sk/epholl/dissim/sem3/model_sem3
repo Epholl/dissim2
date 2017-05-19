@@ -393,6 +393,14 @@
       <Destination>120</Destination>
     </Message>
     <Message>
+      <SimId>1040</SimId>
+      <InternalId>186</InternalId>
+      <Name>EndOfDay</Name>
+      <Type>Notice</Type>
+      <Source>83</Source>
+      <Destination>87</Destination>
+    </Message>
+    <Message>
       <InternalId>123</InternalId>
       <Type>StartFinish</Type>
       <Source>87</Source>
@@ -405,5 +413,5 @@
       <Destination>125</Destination>
     </Message>
   </Messages>
-  <IID>185</IID>
+  <IID>188</IID>
 </ABAsim>

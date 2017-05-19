@@ -89,11 +89,12 @@ public class OfficeManager extends Manager {
 		Place parkingLot = msg.getPlace();
 		if (parkingLot == Place.ParkingLot1) {
 			myAgent().setLot1FreeParkingSpots(capacity);
+			myAgent().findWork();
 		} else if (parkingLot == Place.ParkingLot2) {
 			myAgent().setLot2FreeParkingSpots(capacity);
+			myAgent().findWork();
 		}
 
-		myAgent().findWork();
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Parking spot capacity notice: " + msg.getPlace() + ": " + capacity);
 	}
 
@@ -108,6 +109,12 @@ public class OfficeManager extends Manager {
 	//meta! sender="CarShopModelAgent", id="183", type="Response"
 	public void processTransferVehicle(MessageForm message) {
 		myAgent().onReadyToRetrieveCar((MyMessage) message);
+	}
+
+	//meta! sender="CarShopModelAgent", id="186", type="Notice"
+	public void processEndOfDay(MessageForm message) {
+		MyMessage msg = (MyMessage) message;
+		myAgent().onEndOfDay(msg);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -147,6 +154,10 @@ public class OfficeManager extends Manager {
 
 		case Mc.parkingSpotsUpdate:
 			processParkingSpotsUpdate(message);
+		break;
+
+		case Mc.endOfDay:
+			processEndOfDay(message);
 		break;
 
 		case Mc.returnCar:

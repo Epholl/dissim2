@@ -33,4 +33,8 @@ public class BaseAgent extends Agent {
             getSimulation().getResultManager().addValue(type, value);
         });
     }
+
+    public void onGuiUpdate() {
+
+    }
 }

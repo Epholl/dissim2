@@ -327,6 +327,8 @@
                     <rowspec value="center:28px:noGrow"/>
                     <rowspec value="top:4dlu:noGrow"/>
                     <rowspec value="center:max(d;4px):noGrow"/>
+                    <rowspec value="top:5dlu:noGrow"/>
+                    <rowspec value="center:28px:noGrow"/>
                     <colspec value="fill:100px:noGrow"/>
                     <colspec value="left:4dlu:noGrow"/>
                     <colspec value="fill:100px:noGrow"/>
@@ -339,7 +341,7 @@
                     <colspec value="left:4dlu:noGrow"/>
                     <colspec value="fill:d:grow"/>
                     <constraints>
-                      <grid row="0" column="6" row-span="13" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="6" row-span="16" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <forms/>
                     </constraints>
                     <properties/>
@@ -451,16 +453,36 @@
                           <text value="Add  condition"/>
                         </properties>
                       </component>
-                      <component id="53035" class="javax.swing.JSpinner" binding="worker1ConditionArg1Spinner">
+                      <component id="c1775" class="javax.swing.JComboBox" binding="worker1DefaultReturnValueCombo">
                         <constraints>
-                          <grid row="2" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="12" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-vert="false"/>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="e6de5" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="12" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-vert="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Default"/>
+                        </properties>
+                      </component>
+                      <component id="acbab" class="javax.swing.JTextField" binding="worker1Arg1ConstantTextField">
+                        <constraints>
+                          <grid row="2" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
                           <forms defaultalign-horz="false" defaultalign-vert="false"/>
                         </constraints>
                         <properties/>
                       </component>
-                      <component id="f2d73" class="javax.swing.JSpinner" binding="worker1ConditionArg2Spinner">
+                      <component id="11aa8" class="javax.swing.JTextField" binding="worker1Arg2ConstantTextField">
                         <constraints>
-                          <grid row="6" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
                           <forms defaultalign-horz="false" defaultalign-vert="false"/>
                         </constraints>
                         <properties/>
@@ -490,14 +512,141 @@
                 <border type="none"/>
                 <children/>
               </grid>
-              <grid id="1cadb" binding="entriesPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+              <grid id="1cadb" binding="WatchPanel" layout-manager="FormLayout">
+                <rowspec value="center:18px:noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:d:noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:180px:grow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:22px:noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:20px:noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:20px:noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:20px:noGrow"/>
+                <colspec value="fill:120px:noGrow"/>
+                <colspec value="left:4dlu:noGrow"/>
+                <colspec value="fill:120px:noGrow"/>
+                <colspec value="left:5dlu:noGrow"/>
+                <colspec value="fill:120px:noGrow"/>
+                <colspec value="left:4dlu:noGrow"/>
+                <colspec value="fill:120px:noGrow"/>
+                <colspec value="left:4dlu:noGrow"/>
+                <colspec value="fill:d:grow"/>
                 <constraints>
-                  <tabbedpane title="Untitled"/>
+                  <tabbedpane title="Watch"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
-                <children/>
+                <children>
+                  <component id="3f510" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Vehicles"/>
+                    </properties>
+                  </component>
+                  <scrollpane id="3b8e8">
+                    <constraints>
+                      <grid row="2" column="0" row-span="4" col-span="7" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="b82db" class="javax.swing.JTable" binding="vehiclesTable">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="4d42d" class="javax.swing.JLabel" binding="watchFinishedCustomersLabel">
+                    <constraints>
+                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Finished: 0"/>
+                    </properties>
+                  </component>
+                  <component id="5ab04" class="javax.swing.JLabel" binding="watchRefusedCustomersLabel">
+                    <constraints>
+                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Refused: 0"/>
+                    </properties>
+                  </component>
+                  <component id="ad06f" class="javax.swing.JLabel" binding="watchShopClosedCustomersLabel">
+                    <constraints>
+                      <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Day end: 0"/>
+                    </properties>
+                  </component>
+                  <component id="2c51" class="javax.swing.JLabel" binding="watchProfitLabel">
+                    <constraints>
+                      <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Profit:"/>
+                    </properties>
+                  </component>
+                  <component id="dc8d8" class="javax.swing.JLabel" binding="watchBalanceLabel">
+                    <constraints>
+                      <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Balance:"/>
+                    </properties>
+                  </component>
+                  <component id="286a7" class="javax.swing.JLabel" binding="watchEnteredLabel">
+                    <constraints>
+                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Entered: 0"/>
+                    </properties>
+                  </component>
+                  <scrollpane id="81f">
+                    <constraints>
+                      <grid row="2" column="8" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="91a0" class="javax.swing.JTable" binding="parkingTable">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="79482">
+                    <constraints>
+                      <grid row="3" column="8" row-span="3" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="9be0c" class="javax.swing.JTable" binding="workerTable">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                </children>
               </grid>
               <grid id="4bdb4" binding="consolePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>

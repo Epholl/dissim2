@@ -77,6 +77,7 @@ public class SimulationController {
         });
 
         simulation.onRefreshUI(simulation1 -> {
+            simulation.agentGuiUpdate();
             simulation.execIfContinous(() -> {
                 simulation.getResultManager().addValue(Rst.SIMULATION_TIME, simulation.currentTime());
             });

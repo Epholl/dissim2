@@ -19,11 +19,19 @@ public class DayEndProcess extends Process {
 
 	//meta! sender="CarShopModelAgent", id="126", type="Start"
 	public void processStart(MessageForm message) {
+		double duration = 8 * 60 * 60;
+		message.setCode(Mc.finish);
+		hold(duration, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message) {
 		switch (message.code()) {
+			case Mc.finish:
+				MessageForm copy = message.createCopy();
+				processStart(message);
+				assistantFinished(copy);
+				break;
 		}
 	}
 

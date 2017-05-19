@@ -83,6 +83,16 @@ public class MySimulation extends Simulation implements SimTimeProvider {
 		}
 	}
 
+	public void agentGuiUpdate() {
+		surroundingsAgent().onGuiUpdate();
+		modelAgent().onGuiUpdate();
+		carShopModelAgent().onGuiUpdate();
+		transportationAgent().onGuiUpdate();
+		parkingAgent().onGuiUpdate();
+		officeAgent().onGuiUpdate();
+		repairAgent().onGuiUpdate();
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		setModelAgent(new ModelAgent(Id.modelAgent, this, null));

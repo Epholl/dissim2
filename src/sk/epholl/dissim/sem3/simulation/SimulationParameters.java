@@ -2,6 +2,8 @@ package sk.epholl.dissim.sem3.simulation;
 
 import sk.epholl.dissim.sem3.Generators;
 import sk.epholl.dissim.sem3.entity.RoadModel;
+import sk.epholl.dissim.sem3.entity.deciders.Worker1Decider;
+import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
 
 /**
  * Created by Tomáš on 10.05.2017.
@@ -29,6 +31,8 @@ public class SimulationParameters {
     private Generators generators = new Generators(1.0);
 
     private RoadModel roadModel = new RoadModel();
+
+    private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar);
 
     public int getRepliacationCount() {
         return repliacationCount;
@@ -121,5 +125,13 @@ public class SimulationParameters {
 
     public void setRoadModel(RoadModel roadModel) {
         this.roadModel = roadModel;
+    }
+
+    public Worker1Decider getWorker1Decider() {
+        return worker1Decider;
+    }
+
+    public void setWorker1Decider(Worker1Decider worker1Decider) {
+        this.worker1Decider = worker1Decider;
     }
 }

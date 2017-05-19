@@ -5,5 +5,4 @@ package sk.epholl.dissim.util.deciders;
  */
 public interface ValueProvider {
     public double getValue();
-    public String getName();
 }

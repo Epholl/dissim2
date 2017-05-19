@@ -77,7 +77,10 @@ public class CarShopModelManager extends Manager {
 	//meta! sender="DayEndProcess", id="126", type="Finish"
 	public void processFinish(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
-
+		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "End day message: " + myAgent().mySim().currentTime());
+		msg.setCode(Mc.endOfDay);
+		msg.setAddressee(Id.officeAgent);
+		notice(msg);
 	}
 
 	//meta! sender="ModelAgent", id="134", type="Notice"
@@ -93,7 +96,7 @@ public class CarShopModelManager extends Manager {
 	public void processTakeOrder(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
 		final Vehicle vehicle = msg.getVehicle();
-		if (vehicle.isOrderCancelled()) {
+		if (vehicle.isOrderCancelled() || vehicle.isShopClosed()) {
 			msg.setCode(Mc.transferVehicle);
 			msg.setPlace(Place.Enterance);
 			msg.setAddressee(Id.transportationAgent);
@@ -161,6 +164,9 @@ public class CarShopModelManager extends Manager {
 		officeAgentInit.setAddressee(Id.officeAgent);
 		notice(officeAgentInit);
 
+		MessageForm dayEndInit = message.createCopy();
+		dayEndInit.setAddressee(myAgent().findAssistant(Id.dayEndProcess));
+		startContinualAssistant(dayEndInit);
 	}
 
 	//meta! sender="ParkingAgent", id="160", type="Response"

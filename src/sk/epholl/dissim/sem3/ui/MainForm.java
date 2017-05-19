@@ -1,10 +1,22 @@
 package sk.epholl.dissim.sem3.ui;
 
+import sk.epholl.dissim.sem3.entity.deciders.OfficeAgentValueProvider;
+import sk.epholl.dissim.sem3.entity.deciders.Worker1Condition;
+import sk.epholl.dissim.sem3.entity.deciders.Worker1Decider;
+import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
 import sk.epholl.dissim.sem3.simulation.Rst;
 import sk.epholl.dissim.sem3.simulation.SimulationController;
+import sk.epholl.dissim.util.deciders.Comparator;
+import sk.epholl.dissim.util.subscribers.ResultManager;
+import sk.epholl.dissim.util.subscribers.Subscriber;
 
 import javax.swing.*;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,7 +55,7 @@ public class MainForm extends JFrame {
     private JLabel totalMonthlyCostsLabel;
     private JPanel configurationPanel;
     private JPanel resultsPanel;
-    private JPanel entriesPanel;
+    private JPanel WatchPanel;
     private JPanel consolePanel;
     private JList worker1ConditionsList;
     private JPanel worker1StrategyPanel;
@@ -55,13 +67,28 @@ public class MainForm extends JFrame {
     private JComboBox worker1ConditionArg2Combo;
     private JComboBox worker1ConditionReturnValueCombo;
     private JButton worker1AddButton;
-    private JSpinner worker1ConditionArg1Spinner;
-    private JSpinner worker1ConditionArg2Spinner;
+    private JComboBox worker1DefaultReturnValueCombo;
+    private JTextField worker1Arg1ConstantTextField;
+    private JTextField worker1Arg2ConstantTextField;
+    private JTable vehiclesTable;
+    private JLabel watchRefusedCustomersLabel;
+    private JLabel watchFinishedCustomersLabel;
+    private JLabel watchShopClosedCustomersLabel;
+    private JLabel watchProfitLabel;
+    private JLabel watchBalanceLabel;
+    private JLabel watchEnteredLabel;
+    private JTable parkingTable;
+    private JTable workerTable;
 
     private State state;
 
     private SimulationController simulationController;
     private BottomProgressBarController progressBarController;
+
+    private ConditionLogicModel worker1Model;
+    private VehicleTableModel vehicleTableModel;
+    private ParkingTableModel parkingTableModel;
+    private WorkerTableModel workerTableModel;
 
     public MainForm() {
         super("Parking lot simulation");
@@ -76,11 +103,13 @@ public class MainForm extends JFrame {
 
         initTopPanel();
         initConfigurationPanel();
+        initWorker1Model();
         initConsolePanel();
+        initWatchPanel();
 
         setState(State.Initial);
 
-        mainTabbedPane.setSelectedIndex(2);
+        mainTabbedPane.setSelectedIndex(3);
     }
 
     public void setState(State newState) {
@@ -231,6 +260,64 @@ public class MainForm extends JFrame {
         progressBarController.setContinous(continousRunCheckBox.isSelected());
     }
 
+    private void initWorker1Model() {
+        DefaultListModel<Worker1Condition> listModel = new DefaultListModel<>();
+        //listModel.addElement(new Worker1Condition(OfficeAgentValueProvider.lot2FreeSpace, Comparator.lessThan, OfficeAgentValueProvider.constant(3), Worker1Decision.ReturnCar));
+        //listModel.addElement(new Worker1Condition(OfficeAgentValueProvider.lot1FreeSpace, Comparator.lessThan, OfficeAgentValueProvider.constant(3), Worker1Decision.TakeOrder));
+        worker1ConditionsList.setModel(listModel);
+
+        worker1DefaultReturnValueCombo.setModel(new DefaultComboBoxModel(Worker1Decision.values()));
+        worker1ConditionReturnValueCombo.setModel(new DefaultComboBoxModel(Worker1Decision.values()));
+        worker1ConditionArg1Combo.setModel(new DefaultComboBoxModel(OfficeAgentValueProvider.values()));
+        worker1ConditionComparatorCombo.setModel(new DefaultComboBoxModel(Comparator.values()));
+        worker1ConditionArg2Combo.setModel(new DefaultComboBoxModel(OfficeAgentValueProvider.values()));
+
+        worker1Arg1ConstantTextField.setEditable(false);
+        worker1Arg2ConstantTextField.setEditable(false);
+
+        worker1Model = new ConditionLogicModel(
+                worker1ConditionsList,
+                listModel,
+                worker1MoveUpButton,
+                worker1MoveDownButton,
+                worker1DeleteButton,
+                worker1ConditionArg1Combo,
+                worker1ConditionComparatorCombo,
+                worker1ConditionArg2Combo,
+                worker1Arg1ConstantTextField,
+                worker1Arg2ConstantTextField,
+                worker1ConditionReturnValueCombo,
+                worker1DefaultReturnValueCombo,
+                worker1AddButton);
+
+        listModel.addListDataListener(new ListDataListener() {
+            @Override
+            public void intervalAdded(ListDataEvent e) {
+                resetDecider();
+            }
+
+            @Override
+            public void intervalRemoved(ListDataEvent e) {
+                resetDecider();
+
+            }
+
+            @Override
+            public void contentsChanged(ListDataEvent e) {
+                resetDecider();
+            }
+
+            private void resetDecider() {
+                Worker1Decider decider = simulationController.getParameters().getWorker1Decider();
+                decider.clear();
+                int size = listModel.size();
+                for (int i = 0; i < size; i++) {
+                    decider.addCondition(listModel.elementAt(i));
+                }
+            }
+        });
+    }
+
     private void figureSimSpeed() {
         final int value = simSpeedSlider.getValue();
         final double speedSeconds = SimulationSpeed.SPEEDS[value];
@@ -242,5 +329,224 @@ public class MainForm extends JFrame {
 
         progressBarController.setContinous(continousRunCheckBox.isSelected());
         simSpeedExplanationLabel.setText(SimulationSpeed.getLabel(value));
+    }
+
+
+    private void initWatchPanel() {
+
+        initVehicleTable();
+        new JLabelResultController("Finished: ", watchFinishedCustomersLabel, Rst.FINISHED_CUSTOMERS, rm());
+        new JLabelResultController("Refused: ", watchRefusedCustomersLabel, Rst.REFUSED_CUSTOMERS, rm());
+        new JLabelResultController("Day end: ", watchShopClosedCustomersLabel, Rst.SHOP_CLOSED_CUSTOMERS, rm());
+        new JLabelResultController("Profit: ", watchProfitLabel, Rst.PROFIT, rm());
+        new JLabelResultController("Balance: ", watchBalanceLabel, Rst.BALANCE, rm());
+        initParkingTable();
+        initWorkerTable();
+    }
+
+    private void initVehicleTable() {
+        vehicleTableModel = new VehicleTableModel();
+        vehiclesTable.setModel(vehicleTableModel);
+        simulationController.getResultManager().addSubscriber(Rst.VEHICLE_STATE, new Subscriber<Rst.VehicleUpdate>() {
+            @Override
+            public void onValueEmitted(Rst.VehicleUpdate value) {
+                vehicleTableModel.setNewData(value);
+            }
+        });
+        vehiclesTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        vehiclesTable.getColumnModel().getColumn(4).setPreferredWidth(12);
+    }
+
+    private void initParkingTable() {
+        parkingTableModel = new ParkingTableModel();
+        parkingTable.setModel(parkingTableModel);
+        simulationController.getResultManager().addSubscriber(Rst.PARKING_STATE, new Subscriber<Rst.ParkingUpdate>() {
+            @Override
+            public void onValueEmitted(Rst.ParkingUpdate value) {
+                parkingTableModel.setNewData(value);
+            }
+        });
+    }
+
+    private void initWorkerTable() {
+        workerTableModel = new WorkerTableModel();
+        workerTable.setModel(workerTableModel);
+        simulationController.getResultManager().addSubscriber(Rst.WORKER1_STATE, new Subscriber<Rst.WorkerUpdate>() {
+            @Override
+            public void onValueEmitted(Rst.WorkerUpdate value) {
+                workerTableModel.setNewWorker1Data(value);
+            }
+        });
+    }
+
+    private static class VehicleTableModel extends AbstractTableModel {
+
+        private String[] columnNames = new String[] {"Vehicle", "Place", "Worker", "Activity", "State"};
+
+        private Rst.VehicleUpdate vehicles;
+
+        {
+            vehicles = new Rst.VehicleUpdate();
+            vehicles.states = Collections.EMPTY_LIST;
+        }
+
+        @Override
+        public int getRowCount() {
+            return vehicles.states.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Rst.VehicleState state = vehicles.states.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return state.name;
+                case 1:
+                    return state.position;
+                case 2:
+                    return state.state;
+                case 3:
+                    return state.worker;
+                case 4:
+                    if (state.timeStateStarted >= state.timeStateEnds) {
+                        return " - ";
+                    } else {
+                        return getStatePercentage(state);
+                    }
+            }
+            return " - ";
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
+
+        public void setNewData(Rst.VehicleUpdate vehicles) {
+            this.vehicles = vehicles;
+            fireTableDataChanged();
+        }
+
+        private String getStatePercentage(Rst.VehicleState state) {
+            double difference = state.timeStateEnds - state.timeStateStarted;
+            double progress = vehicles.simTime - state.timeStateStarted;
+            double percent = (progress / difference)*100;
+            return String.format("%.1f%%", percent);
+        }
+    }
+
+    private static class ParkingTableModel extends AbstractTableModel {
+
+        private String[] columnNames = new String[] {"Spot", "State", "Vehicle"};
+
+        private Rst.ParkingUpdate spots;
+
+        {
+            spots = new Rst.ParkingUpdate();
+            spots.spots = Collections.EMPTY_LIST;
+        }
+
+        @Override
+        public int getRowCount() {
+            return spots.spots.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Rst.ParkingSpotState state = spots.spots.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return state.name;
+                case 1:
+                    return state.state;
+                case 2:
+                    return state.vehicle;
+            }
+            return " - ";
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
+
+        public void setNewData(Rst.ParkingUpdate spots) {
+            this.spots = spots;
+            fireTableDataChanged();
+        }
+    }
+
+    private static class WorkerTableModel extends AbstractTableModel {
+
+        private String[] columnNames = new String[] {"Worker", "State", "Vehicle"};
+
+        private List<Rst.WorkerState> workers1;
+        private List<Rst.WorkerState> workers2;
+        private List<Rst.WorkerState> allWorkers;
+
+        {
+            allWorkers = new ArrayList<>();
+            workers1 = Collections.EMPTY_LIST;
+            workers2 = Collections.EMPTY_LIST;
+        }
+
+        @Override
+        public int getRowCount() {
+            return allWorkers.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Rst.WorkerState state =allWorkers.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return state.name;
+                case 1:
+                    return state.state;
+                case 2:
+                    return state.vehicle;
+            }
+            return " - ";
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
+
+        public void setNewWorker1Data(Rst.WorkerUpdate spots) {
+            allWorkers.clear();
+            this.workers1 = spots.states;
+            allWorkers.addAll(this.workers1);
+            allWorkers.addAll(this.workers2);
+            fireTableDataChanged();
+        }
+
+        public void setNewWorker2Data(Rst.WorkerUpdate spots) {
+            allWorkers.clear();
+            this.workers2 = spots.states;
+            allWorkers.addAll(this.workers1);
+            allWorkers.addAll(this.workers2);
+            fireTableDataChanged();
+        }
+    }
+
+    private ResultManager rm() {
+        return simulationController.getResultManager();
     }
 }

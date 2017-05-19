@@ -10,6 +10,26 @@ import sk.epholl.dissim.util.deciders.ValueProvider;
  */
 public class Worker1Condition extends Condition<Worker1Decision> {
 
+    public static class Default extends Worker1Condition {
+
+        public Default(Worker1Decision returnValue) {
+            super(null, null, null, returnValue);
+        }
+
+        @Override
+        public boolean evaluate() {
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "Default: " + returnValue;
+        }
+
+        @Override
+        public void setAgent(OfficeAgent agent) {}
+    }
+
     private OfficeAgent agent;
 
     public Worker1Condition(OfficeAgentValueProvider arg1Provider, Comparator comparator, OfficeAgentValueProvider arg2Provider, Worker1Decision returnValue) {

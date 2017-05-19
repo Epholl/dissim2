@@ -2,6 +2,7 @@ package sk.epholl.dissim.sem3.entity;
 
 import OSPABA.Entity;
 import sk.epholl.dissim.sem3.simulation.MySimulation;
+import sk.epholl.dissim.sem3.simulation.Rst;
 import sk.epholl.dissim.util.Pair;
 
 import java.util.Collections;
@@ -16,15 +17,18 @@ public class Vehicle extends Entity {
     public enum State {
         EnterSystem,
         MoveToOfficeLot,
+        WaitForOrder,
         CancelOrder,
+        ShopClosed,
         LeaveFromOfficeLot,
         StartTakingOrder,
         TakeOrderAndRetrieve,
         MoveToLot1,
-        StartRepairing,
+        WaitForRepair,
         Repair,
+        WaitingForLot2Spot,
+        WaitingOnLot2,
         LeaveFromLot2,
-        MoveToLot2,
         ReturnToOfficeLot,
         RetrieveCar,
         LeaveSystem
@@ -66,11 +70,15 @@ public class Vehicle extends Entity {
         this.currentStateFinishTime = timeFinnished;
     }
 
+    public void setCurrentState(final State currentState) {
+        this.currentState = currentState;
+    }
+
     public void persistCurrentState() {
         if (currentState == null) {
             throw new AssertionError("Attempted to persist a null currentState");
         }
-        history.add(new Pair<>(currentStateFinishTime, currentState));
+        history.add(new Pair<>(mySim().currentTime(), currentState));
     }
 
     public List<Pair<Double, State>> getHistory() {
@@ -109,6 +117,9 @@ public class Vehicle extends Entity {
 
     public void setWorker1(Worker1 worker1) {
         this.worker1 = worker1;
+        if (worker1 != null) {
+            worker1.setVehicle(this);
+        }
     }
 
     public Worker2 getWorker2() {
@@ -125,6 +136,10 @@ public class Vehicle extends Entity {
 
     public boolean isOrderCancelled() {
         return isStateFinished(State.CancelOrder);
+    }
+
+    public boolean isShopClosed() {
+        return isStateFinished(State.ShopClosed);
     }
 
     public boolean isStateFinished(State state) {
@@ -144,6 +159,10 @@ public class Vehicle extends Entity {
         this.repairDuratioinInMinutes = repairDuratioinInMinutes;
     }
 
+    public String getName() {
+        return "Vehicle " + id;
+    }
+
     @Override
     public String toString() {
         Pair<Double, State> lastState = history.getLast();
@@ -153,5 +172,22 @@ public class Vehicle extends Entity {
         return "Vehicle " + id + ": " + position + ", " + lastState.second + ", " + lastState.first + ", " + workers + ", " + parkingSpot;
     }
 
+    public Rst.VehicleState getVehicleState() {
+        Rst.VehicleState state = new Rst.VehicleState();
+        state.name = "Vehicle " + id;
+        state.position = currentPlace == null? currentRoad.toString() : currentPlace.toString();
+        state.state = "" + currentState;
+        state.worker = worker1 != null? worker1.toString() : worker2 != null? worker2.toString() : " - ";
+        state.timeStateStarted = lastEventTime();
+        state.timeStateEnds = currentStateFinishTime;
+        return state;
+    }
 
+    private double lastEventTime() {
+        if (history.isEmpty()) {
+            return mySim().currentTime();
+        } else {
+            return history.peekLast().first;
+        }
+    }
 }

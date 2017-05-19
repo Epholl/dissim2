@@ -3,22 +3,89 @@ package sk.epholl.dissim.sem3.agents;
 import OSPABA.*;
 import sk.epholl.dissim.sem3.continualAssistants.NewCustomerScheduler;
 import sk.epholl.dissim.sem3.managers.SurroundingsManager;
-import sk.epholl.dissim.sem3.simulation.Id;
-import sk.epholl.dissim.sem3.simulation.Mc;
-import sk.epholl.dissim.sem3.simulation.MySimulation;
+import sk.epholl.dissim.sem3.entity.Vehicle;
+import sk.epholl.dissim.sem3.simulation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //meta! id="85"
 public class SurroundingsAgent extends BaseAgent {
+
+	private List<Vehicle> vehicles;
+
+	private int enteredVehicles;
+	private int finishedVehicles;
+	private int refusedVehicles;
+	private int shopClosedVehicles;
+
+	private double profit;
+	private double balance;
+
 	public SurroundingsAgent(int id, MySimulation mySim, Agent parent) {
 		super(id, mySim, parent);
 		init();
 		addOwnMessage(Mc.customerEntry);
+		vehicles = new ArrayList<>();
 	}
 
 	@Override
 	public void prepareReplication() {
 		super.prepareReplication();
 		// Setup component for the next replication
+		vehicles.clear();
+		enteredVehicles = 0;
+		finishedVehicles = 0;
+		refusedVehicles = 0;
+		shopClosedVehicles = 0;
+		profit = 0;
+		balance = -getParams().getTotalPrice();
+		publishValueContinous(Rst.ENTERED_CUSTOMERS, enteredVehicles);
+		publishValueContinous(Rst.REFUSED_CUSTOMERS, refusedVehicles);
+		publishValueContinous(Rst.SHOP_CLOSED_CUSTOMERS, shopClosedVehicles);
+		publishValueContinous(Rst.FINISHED_CUSTOMERS, finishedVehicles);
+		publishValueContinous(Rst.PROFIT, profit);
+		publishValueContinous(Rst.BALANCE, balance);
+	}
+
+
+	public void onVehicleArrived(Vehicle vehicle) {
+		enteredVehicles++;
+		publishValueContinous(Rst.ENTERED_CUSTOMERS, enteredVehicles);
+		vehicles.add(vehicle);
+	}
+
+	public void onVehicleLeaving(Vehicle vehicle) {
+		vehicles.remove(vehicle);
+		if (vehicle.isOrderCancelled()) {
+			refusedVehicles++;
+			publishValueContinous(Rst.REFUSED_CUSTOMERS, refusedVehicles);
+		} else if (vehicle.isShopClosed()) {
+			shopClosedVehicles++;
+			publishValueContinous(Rst.SHOP_CLOSED_CUSTOMERS, shopClosedVehicles);
+		} else if (vehicle.isRepaired()) {
+			finishedVehicles++;
+			publishValueContinous(Rst.FINISHED_CUSTOMERS, finishedVehicles);
+			double vehicleProfit = (vehicle.getRepairDuratioinInMinutes() / 60.0) * Const.repairShopHourlyRate;
+			profit += vehicleProfit;
+			balance += vehicleProfit;
+			publishValueContinous(Rst.PROFIT, profit);
+			publishValueContinous(Rst.BALANCE, balance);
+		}
+	}
+
+	@Override
+	public void onGuiUpdate() {
+		super.onGuiUpdate();
+		List<Rst.VehicleState> states = new ArrayList<>();
+		for (Vehicle vehicle: this.vehicles) {
+			states.add(vehicle.getVehicleState());
+		}
+		Rst.VehicleUpdate update = new Rst.VehicleUpdate();
+		update.simTime = mySim().currentTime();
+		update.states = states;
+
+		publishValueContinous(Rst.VEHICLE_STATE, update);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

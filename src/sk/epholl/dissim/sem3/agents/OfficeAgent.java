@@ -15,9 +15,7 @@ import sk.epholl.dissim.sem3.simulation.*;
 import sk.epholl.dissim.util.Pair;
 import sk.epholl.dissim.util.StatisticQueue;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 //meta! id="87"
 public class OfficeAgent extends BaseAgent {
@@ -59,14 +57,14 @@ public class OfficeAgent extends BaseAgent {
 		final int type1Count = getParams().getType1WorkerCount();
 		type1Workers = new Worker1[type1Count];
 		for (int i = 0; i < type1Workers.length; i++) {
-			type1Workers[i] = new Worker1(worker1IdCounter++);
+			type1Workers[i] = new Worker1(getSimulation(), worker1IdCounter++);
 		}
+		setDecider(getParams().getWorker1Decider());
 		type1FreeWorkers.clear();
 		type1FreeWorkers.addAll(Arrays.asList(type1Workers));
 		vehiclesWaitingForOrder.clear();
 		vehiclesOrdering.clear();
 		vehiclesToBeReturned.clear();
-
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -75,6 +73,7 @@ public class OfficeAgent extends BaseAgent {
 		new CancelCustomerProcess(Id.cancelCustomerProcess, mySim(), this);
 		new TakeOrderProcess(Id.takeOrderProcess, mySim(), this);
 		new ReturnCarProcess(Id.returnCarProcess, mySim(), this);
+		addOwnMessage(Mc.endOfDay);
 		addOwnMessage(Mc.returnCar);
 		addOwnMessage(Mc.init);
 		addOwnMessage(Mc.freeWorker1);
@@ -85,8 +84,23 @@ public class OfficeAgent extends BaseAgent {
 	}
 	//meta! tag="end"
 
+
+	@Override
+	public void onGuiUpdate() {
+		super.onGuiUpdate();
+		List<Rst.WorkerState> states = new ArrayList<>();
+		for (Worker1 worker: type1Workers) {
+			states.add(worker.getWorkerState());
+		}
+		Rst.WorkerUpdate update = new Rst.WorkerUpdate();
+		update.states = states;
+		publishValueContinous(Rst.WORKER1_STATE, update);
+
+	}
+
 	public void onNewCarArrived(MyMessage message) {
 		vehiclesWaitingForOrder.add(new Pair<>(mySim().currentTime(), message));
+		message.getVehicle().setCurrentState(Vehicle.State.WaitForOrder);
 		MyMessage cancelOrder = (MyMessage) message.createCopy();
 		cancelOrder.setCode(Mc.start);
 		cancelOrder.setAddressee(findAssistant(Id.cancelCustomerProcess));
@@ -99,6 +113,7 @@ public class OfficeAgent extends BaseAgent {
 		if (!vehiclesWaitingForOrder.isEmpty() && vehiclesWaitingForOrder.peek().second.getVehicle() == vehicle) {
 			publishValueContinous(Rst.CONSOLE_LOG, "Vehicle cancels order after waiting too long " + vehicle);
 			MyMessage msg = vehiclesWaitingForOrder.dequeue();
+			vehicle.persistCurrentState();
 			vehicle.addFinsihedState(Vehicle.State.CancelOrder);
 			manager().response(msg);
 		}
@@ -124,16 +139,29 @@ public class OfficeAgent extends BaseAgent {
 		manager().response(message);
 	}
 
+	public void onEndOfDay(MyMessage message) {
+		int waitingVehiclesCount = vehiclesWaitingForOrder.size();
+		publishValueContinous(Rst.CONSOLE_LOG, "End of day cancels " + waitingVehiclesCount + " + customers.");
+		while (!vehiclesWaitingForOrder.isEmpty()) {
+			MyMessage msg = vehiclesWaitingForOrder.dequeue();
+			Vehicle vehicle = msg.getVehicle();
+			vehicle.persistCurrentState();
+			vehicle.addFinsihedState(Vehicle.State.ShopClosed);
+			manager().response(msg);
+		}
+
+	}
+
 	public void findWork() {
 		if (hasFreeWorkers() && hasWork()) {
-			if (!hasOrdersToTake()) {
+			if (!hasOrdersToTake() || !canTakeNewOrder()) {
 				returnRepairedCar();
 			} else if (!hasCarsToReturn()) {
 				prepareTakingOrder();
 			} else {
-				Worker1Decision decision = Worker1Decision.ReturnCar;//decider.evaluate();
+				Worker1Decision decision = decider.evaluate();
 
-				if (decision == Worker1Decision.TakeOrder && canTakeNewOrder()) {
+				if (decision == Worker1Decision.TakeOrder) {
 					prepareTakingOrder();
 				} else {
 					returnRepairedCar();
@@ -145,7 +173,11 @@ public class OfficeAgent extends BaseAgent {
 	private void prepareTakingOrder() {
 		MyMessage msg = vehiclesWaitingForOrder.dequeue();
 		vehiclesOrdering.add(msg);
-		msg.getVehicle().setWorker1(assignWorker());
+		Worker1 worker = assignWorker();
+		worker.setState(Worker1.State.TakingOrder);
+		msg.getVehicle().setWorker1(worker);
+		msg.getVehicle().persistCurrentState();
+		lot1FreeParkingSpots.occupySingleSpot();
 
 		msg.setCode(Mc.reserveSpot);
 		msg.setPlace(Place.ParkingLot1);
@@ -162,8 +194,10 @@ public class OfficeAgent extends BaseAgent {
 	private void returnRepairedCar() {
 		MyMessage msg = vehiclesToBeReturned.dequeue();
 		Worker1 worker = assignWorker();
+		worker.setState(Worker1.State.ReturningVehicle);
 		Vehicle vehicle = msg.getVehicle();
 		vehicle.setWorker1(worker);
+		vehicle.persistCurrentState();
 		vehicle.addFinsihedState(Vehicle.State.LeaveFromLot2);
 		msg.setCode(Mc.transferVehicle);
 		msg.setAddressee(Id.carShopModelAgent);
@@ -179,6 +213,8 @@ public class OfficeAgent extends BaseAgent {
 		if (type1FreeWorkers.contains(worker)) {
 			throw new AssertionError("Attempted to free an already free worker: " + worker);
 		}
+		worker.setState(Worker1.State.Idle);
+		worker.setVehicle(null);
 		type1FreeWorkers.add(worker);
 		findWork();
 	}
@@ -189,7 +225,6 @@ public class OfficeAgent extends BaseAgent {
 
 	public void setLot1FreeParkingSpots(FreeCapacity lot1FreeParkingSpots) {
 		this.lot1FreeParkingSpots = lot1FreeParkingSpots;
-		findWork();
 	}
 
 	public FreeCapacity getLot2FreeParkingSpots() {

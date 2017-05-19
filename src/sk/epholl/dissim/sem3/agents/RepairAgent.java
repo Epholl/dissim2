@@ -74,11 +74,14 @@ public class RepairAgent extends BaseAgent {
 	public void newVehicleArrived(MyMessage message) {
 
 		vehiclesWaitingOnParkingLot.enqueue(message);
+		Vehicle vehicle = ((MyMessage)message).getVehicle();
+		vehicle.setCurrentState(Vehicle.State.WaitForRepair);
 		findWork();
 	}
 
 	public void repairFinished(MyMessage message) {
 		vehiclesRepairing.remove(message);
+		message.getVehicle().setCurrentState(Vehicle.State.WaitingForLot2Spot);
 		vehiclesRepaired.enqueue(message);
 		findWork();
 	}
@@ -88,7 +91,8 @@ public class RepairAgent extends BaseAgent {
 		Worker2 worker = vehicle.getWorker2();
 		freeWorker(worker);
 		vehicle.setWorker2(null);
-		vehicle.addFinsihedState(Vehicle.State.MoveToLot2);
+		vehicle.persistCurrentState();
+		vehicle.setCurrentState(Vehicle.State.WaitingOnLot2);
 		findWork();
 		message.setCode(Mc.repairWehicle);
 		manager().response(message);
@@ -100,6 +104,7 @@ public class RepairAgent extends BaseAgent {
 			vehiclesRepairing.add(message);
 			Worker2 worker = assignWorker();
 			Vehicle vehicle = message.getVehicle();
+			vehicle.persistCurrentState();
 			vehicle.setWorker2(worker);
 			MyMessage copy = (MyMessage) message.createCopy();
 			copy.setCode(Mc.freeSpot);

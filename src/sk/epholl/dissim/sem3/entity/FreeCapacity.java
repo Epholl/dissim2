@@ -5,8 +5,8 @@ package sk.epholl.dissim.sem3.entity;
  */
 public class FreeCapacity {
 
-    private final int capacity;
-    private final int freeUnits;
+    private int capacity;
+    private int freeUnits;
 
     public FreeCapacity(final int capacity, final int freeUnits) {
 
@@ -32,6 +32,13 @@ public class FreeCapacity {
 
     public double getLoadFactor() {
         return ((double) capacity - freeUnits) / capacity;
+    }
+
+    public void occupySingleSpot() {
+        if (freeUnits == 0) {
+            throw new AssertionError("Attempted to occupy a free spot with none available");
+        }
+        freeUnits--;
     }
 
     @Override

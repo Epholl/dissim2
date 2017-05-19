@@ -38,7 +38,6 @@ public class RepairCarProcess extends Process {
 			repairsInMinutes += repairDurationGenerator.nextValue();
 		}
 		vehicle.setRepairDuratioinInMinutes(repairsInMinutes);
-		vehicle.addFinsihedState(Vehicle.State.StartRepairing);
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Starting " + repairsCount + " repairs for " + repairsInMinutes + " minutes for " + vehicle);
 		double duration = repairsInMinutes * 60;
 		vehicle.setCurrentState(Vehicle.State.Repair, myAgent().mySim().currentTime() + duration);
