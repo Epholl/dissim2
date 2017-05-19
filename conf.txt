@@ -1,0 +1,6 @@
+replicationCount: 20
+type1WorkerCountRange: 1, 5, 10
+type2WorkerCountRange: 2, 4, 6
+clientIncomeIncreasePercentRange: 5, 10, 20
+?: c 1 == c 1 TakeOrder
+?: v somethingProvider > c 20 ReturnCar
