@@ -46,6 +46,12 @@ public class SimulationParameters {
         return warmupPercentage;
     }
 
+    public boolean isWarmupFinished(final int currentReplication) {
+        double multiplier = warmupPercentage * 0.01;
+        double warmupReplications = repliacationCount * multiplier;
+        return currentReplication > warmupReplications;
+    }
+
     public void setWarmupPercentage(int warmupPercentage) {
         this.warmupPercentage = warmupPercentage;
     }

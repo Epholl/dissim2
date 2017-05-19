@@ -5,6 +5,7 @@ import sk.epholl.dissim.sem3.continualAssistants.NewCustomerScheduler;
 import sk.epholl.dissim.sem3.managers.SurroundingsManager;
 import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.simulation.*;
+import sk.epholl.dissim.util.StatisticCounter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,14 @@ import java.util.List;
 public class SurroundingsAgent extends BaseAgent {
 
 	private List<Vehicle> vehicles;
+
+	private StatisticCounter totalCustomersCounter = new StatisticCounter();
+	private StatisticCounter finishedCustomersCounter = new StatisticCounter();
+	private StatisticCounter refusedCustomersCounter = new StatisticCounter();
+
+	private StatisticCounter finishedCustomersRatioCounter = new StatisticCounter();
+	private StatisticCounter refusedCustomersRatioCounter = new StatisticCounter();
+
 
 	private int enteredVehicles;
 	private int finishedVehicles;
@@ -47,7 +56,6 @@ public class SurroundingsAgent extends BaseAgent {
 		publishValueContinous(Rst.PROFIT, profit);
 		publishValueContinous(Rst.BALANCE, balance);
 	}
-
 
 	public void onVehicleArrived(Vehicle vehicle) {
 		enteredVehicles++;
@@ -87,6 +95,28 @@ public class SurroundingsAgent extends BaseAgent {
 
 		publishValueContinous(Rst.VEHICLE_STATE, update);
 	}
+
+	@Override
+	public void onReplicationFinished() {
+		super.onReplicationFinished();
+		totalCustomersCounter.addValue(finishedVehicles + refusedVehicles + shopClosedVehicles);
+		finishedCustomersCounter.addValue(finishedVehicles);
+		refusedCustomersCounter.addValue(refusedVehicles + shopClosedVehicles);
+		finishedCustomersRatioCounter.addValue((double)finishedVehicles / (finishedVehicles + refusedVehicles + shopClosedVehicles));
+		refusedCustomersRatioCounter.addValue((double)(refusedVehicles+shopClosedVehicles) / (finishedVehicles + refusedVehicles + shopClosedVehicles));
+		publishValueIfAfterWarmup(Rst.R_ALL_CUSTOMERS,
+				new Rst.Result(rep(), totalCustomersCounter));
+		publishValueIfAfterWarmup(Rst.R_FINISHED_CUSTOMERS,
+				new Rst.Result(rep(), finishedCustomersCounter));
+		publishValueIfAfterWarmup(Rst.R_REFUSED_CUSTOMERS,
+				new Rst.Result(rep(), refusedCustomersCounter));
+		publishValueIfAfterWarmup(Rst.R_FINISHED_RATIO,
+				new Rst.Result(rep(), finishedCustomersRatioCounter));
+		publishValueIfAfterWarmup(Rst.R_REFUSED_RATIO,
+				new Rst.Result(rep(), refusedCustomersRatioCounter));
+	}
+
+
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {

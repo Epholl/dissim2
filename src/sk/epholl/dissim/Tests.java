@@ -37,7 +37,7 @@ public class Tests {
             }
 
             @Override
-            public void onContinousUpdate(Sem2Results results) {
+            public void onContinousUpdate(Sem2Results resultTypes) {
 
             }
         });

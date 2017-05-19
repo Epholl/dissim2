@@ -47,7 +47,7 @@ public class MySimulation extends Simulation implements SimTimeProvider {
 
 	@Override
 	public void simulationFinished() {
-		// Dysplay simulation results
+		// Dysplay simulation resultTypes
 
 		resultManager.addValue(Rst.CONSOLE_LOG, "Simulation finished.");
 		super.simulationFinished();
@@ -91,6 +91,16 @@ public class MySimulation extends Simulation implements SimTimeProvider {
 		parkingAgent().onGuiUpdate();
 		officeAgent().onGuiUpdate();
 		repairAgent().onGuiUpdate();
+	}
+
+	public void agentReplicationFinishedUpdate() {
+		surroundingsAgent().onReplicationFinished();
+		modelAgent().onReplicationFinished();
+		carShopModelAgent().onReplicationFinished();
+		transportationAgent().onReplicationFinished();
+		parkingAgent().onReplicationFinished();
+		officeAgent().onReplicationFinished();
+		repairAgent().onReplicationFinished();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
