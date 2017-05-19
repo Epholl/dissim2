@@ -95,4 +95,12 @@ public class SimulationController {
     public void addSimulationEndedCallback(Runnable r) {
         afterSimulationCallbacks.add(r);
     }
+
+    public MySimulation getSimulation() {
+        return simulation;
+    }
+
+    public void setParameters(SimulationParameters parameters) {
+        this.parameters = parameters;
+    }
 }

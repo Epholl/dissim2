@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public abstract class FinalMapper {
 
     public static Reader getDefaultConfigFileReader() throws IOException {
-        return new FileReader("./conf.txt");
+        return new FileReader("sources/conf.txt");
     }
 
     private final ConditionMapper conditionMapper = new ConditionMapper();
