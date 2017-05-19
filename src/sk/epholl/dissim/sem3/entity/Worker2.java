@@ -50,6 +50,10 @@ public class Worker2 {
         this.vehicle = vehicle;
     }
 
+    public double getWorkLoadCoeficient() {
+        return stateCounter.getNotStateCoeficient(State.Idle);
+    }
+
     @Override
     public String toString() {
         return "Worker2 " + id;

@@ -8,6 +8,7 @@ import sk.epholl.dissim.sem3.entity.Worker2;
 import sk.epholl.dissim.sem3.entity.Vehicle;
 import sk.epholl.dissim.sem3.managers.RepairManager;
 import sk.epholl.dissim.sem3.simulation.*;
+import sk.epholl.dissim.util.StatisticCounter;
 import sk.epholl.dissim.util.StatisticQueue;
 
 import java.util.*;
@@ -15,9 +16,12 @@ import java.util.*;
 //meta! id="88"
 public class RepairAgent extends BaseAgent {
 
+	private StatisticCounter avgFreeWorkersCounter = new StatisticCounter();
+	private StatisticCounter avgWorkerLoadCounter = new StatisticCounter();
+
 	private int worker2IdCounter = 0;
 
-	private LinkedList<Worker2> type2FreeWorkers;
+	private StatisticQueue<Worker2> type2FreeWorkers;
 
 	private Worker2[] type2Workers;
 
@@ -33,7 +37,7 @@ public class RepairAgent extends BaseAgent {
 		super(id, mySim, parent);
 		init();
 
-		type2FreeWorkers = new LinkedList<>();
+		type2FreeWorkers = new StatisticQueue<>(getSimulation());
 		vehiclesWaitingOnParkingLot = new StatisticQueue<>(getSimulation());
 		vehiclesRepairing = new HashSet<>();
 		vehiclesRepaired = new StatisticQueue<>(getSimulation());
@@ -47,11 +51,11 @@ public class RepairAgent extends BaseAgent {
 		worker2IdCounter = 0;
 		final int type2Count = getParams().getType2WorkerCount();
 		type2Workers = new Worker2[type2Count];
+		type2FreeWorkers.clear();
 		for (int i = 0; i < type2Count; i++) {
 			type2Workers[i] = new Worker2(getSimulation(), worker2IdCounter++);
+			type2FreeWorkers.enqueue(type2Workers[i]);
 		}
-		type2FreeWorkers.clear();
-		type2FreeWorkers.addAll(Arrays.asList(type2Workers));
 		vehiclesWaitingOnParkingLot.clear();
 		vehiclesRepairing.clear();
 		vehiclesRepaired.clear();
@@ -67,6 +71,24 @@ public class RepairAgent extends BaseAgent {
 		Rst.WorkerUpdate update = new Rst.WorkerUpdate();
 		update.states = states;
 		publishValueContinous(Rst.WORKER2_STATE, update);
+	}
+
+	@Override
+	public void onReplicationFinished() {
+		super.onReplicationFinished();
+
+		avgFreeWorkersCounter.addValue(type2FreeWorkers.getAverageQueueLength());
+		double workerLoad = 0d;
+		for (Worker2 worker: type2Workers) {
+			workerLoad += worker.getWorkLoadCoeficient();
+		}
+		workerLoad /= type2Workers.length;
+		avgWorkerLoadCounter.addValue(workerLoad);
+
+		publishValueIfAfterWarmup(Rst.R_AVERAGE_FREE_WORKERS_2,
+				new Rst.Result(rep(), avgFreeWorkersCounter));
+		publishValueIfAfterWarmup(Rst.R_AVERAGE_LOAD_WORKERS_2,
+				new Rst.Result(rep(), avgWorkerLoadCounter));
 	}
 
 	public FreeCapacity getLot2FreeParkingSpots() {
@@ -144,12 +166,12 @@ public class RepairAgent extends BaseAgent {
 	}
 
 	public Worker2 assignWorker() {
-		Worker2 worker = type2FreeWorkers.removeLast();
+		Worker2 worker = type2FreeWorkers.dequeue();
 		return worker;
 	}
 
 	public void freeWorker(Worker2 worker) {
-		type2FreeWorkers.add(worker);
+		type2FreeWorkers.enqueue(worker);
 		worker.setState(Worker2.State.Idle);
 		worker.setVehicle(null);
 	}

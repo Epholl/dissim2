@@ -48,7 +48,7 @@ public class Worker1 {
         this.vehicle = vehicle;
     }
 
-    public double getCoeficientBusy() {
+    public double getWorkLoadCoeficient() {
         return stateCounter.getNotStateCoeficient(State.Idle);
     }
 
