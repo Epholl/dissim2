@@ -85,6 +85,14 @@ public class MainForm extends JFrame {
     private JComboBox graph1ComboBox;
     private JComboBox graph2ComboBox;
     private JTable resultsTable;
+    private JPanel csvOutputPanel;
+    private JTextArea csvOutputTextArea;
+    private JList csvOutputList;
+    private JButton csvOutputUpButton;
+    private JComboBox csvOutputComboBox;
+    private JButton csvOutputDownButton;
+    private JButton csvOutputDeleteButton;
+    private JButton csvOutputClearButton;
 
     private State state;
 
@@ -95,6 +103,7 @@ public class MainForm extends JFrame {
     private VehicleTableModel vehicleTableModel;
     private ParkingTableModel parkingTableModel;
     private WorkerTableModel workerTableModel;
+    private CsvOutputLogicModel csvOutputModel;
 
     private GraphController graph1Controller;
     private GraphController graph2Controller;
@@ -119,10 +128,9 @@ public class MainForm extends JFrame {
         initWatchPanel();
         initGraphPanel();
         initResultPanel();
+        initCsvOutputPanel();
 
         setState(State.Initial);
-
-        mainTabbedPane.setSelectedIndex(3);
     }
 
 
@@ -280,8 +288,6 @@ public class MainForm extends JFrame {
 
     private void initWorker1Model() {
         DefaultListModel<Worker1Condition> listModel = new DefaultListModel<>();
-        //listModel.addElement(new Worker1Condition(OfficeAgentValueProvider.lot2FreeSpace, Comparator.lessThan, OfficeAgentValueProvider.constant(3), Worker1Decision.ReturnCar));
-        //listModel.addElement(new Worker1Condition(OfficeAgentValueProvider.lot1FreeSpace, Comparator.lessThan, OfficeAgentValueProvider.constant(3), Worker1Decision.TakeOrder));
         worker1ConditionsList.setModel(listModel);
 
         worker1DefaultReturnValueCombo.setModel(new DefaultComboBoxModel(Worker1Decision.values()));
@@ -372,6 +378,26 @@ public class MainForm extends JFrame {
     private void initResultPanel() {
         resultTableController = new ResultTableController(resultsTable);
         resultTableController.init(simulationController.getResultManager());
+    }
+
+    private void initCsvOutputPanel() {
+
+        DefaultListModel<Rst.ResultType> listModel = new DefaultListModel<>();
+        csvOutputModel = new CsvOutputLogicModel(
+                csvOutputTextArea,
+                csvOutputList,
+                listModel,
+                csvOutputUpButton,
+                csvOutputDownButton,
+                csvOutputDeleteButton,
+                csvOutputComboBox,
+                csvOutputClearButton
+                );
+        csvOutputModel.setParams(simulationController.getParameters());
+        csvOutputModel.init(simulationController.getResultManager());
+        simulationController.addSimulationEndedCallback( () -> {
+            csvOutputModel.onSimulationFinished();
+        });
     }
 
     private void initVehicleTable() {

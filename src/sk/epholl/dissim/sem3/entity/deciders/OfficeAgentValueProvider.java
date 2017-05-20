@@ -1,11 +1,8 @@
 package sk.epholl.dissim.sem3.entity.deciders;
 
 import sk.epholl.dissim.sem3.agents.OfficeAgent;
+import sk.epholl.dissim.util.TimeUtils;
 import sk.epholl.dissim.util.deciders.ValueProvider;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by Tomáš on 16.05.2017.
@@ -19,10 +16,10 @@ public abstract class OfficeAgentValueProvider implements ValueProvider {
     }
 
     public static final OfficeAgentValueProvider newConstant(double value) {
-        return new OfficeAgentValueProvider() {
+        return new OfficeAgentValueProvider(null) {
             @Override
             public double getValue(OfficeAgent agent) {
-                throw new UnsupportedOperationException("use newConstant(double) instead");
+                return value;
             }
 
             @Override
@@ -35,44 +32,42 @@ public abstract class OfficeAgentValueProvider implements ValueProvider {
         };
     }
 
-    public static final OfficeAgentValueProvider constant = new OfficeAgentValueProvider() {
+    public static final OfficeAgentValueProvider constant = new OfficeAgentValueProvider("constant") {
 
             @Override
             public double getValue(OfficeAgent agent) {
-                return 0.0;
-            }
-
-            @Override
-            public String toString() {
-                return "constant";
+                throw new UnsupportedOperationException("use new(Constant(double) instead");
             }
         };
 
-    public static final OfficeAgentValueProvider lot1FreeSpace = new OfficeAgentValueProvider() {
+    public static final OfficeAgentValueProvider lot1FreeSpace = new OfficeAgentValueProvider("lot 1 free spots") {
         @Override
         public double getValue(OfficeAgent agent) {
             return agent.getLot1FreeParkingSpots().getFreeUnits();
         }
-
-        @Override
-        public String toString() {
-            return "lot 1 free spots";
-        }
     };
 
-    public static final OfficeAgentValueProvider lot2FreeSpace = new OfficeAgentValueProvider() {
+    public static final OfficeAgentValueProvider lot2FreeSpace = new OfficeAgentValueProvider("lot 2 free spots") {
         @Override
         public double getValue(OfficeAgent agent) {
             return agent.getLot2FreeParkingSpots().getFreeUnits();
         }
+    };
 
+    public static final OfficeAgentValueProvider worktimeLeftToday = new OfficeAgentValueProvider("minutes to day end") {
         @Override
-        public String toString() {
-            return "lot 2 free spots";
+        public double getValue(OfficeAgent agent) {
+            return TimeUtils.getTimeRemainingToday(agent.mySim().currentTime());
         }
     };
 
     private OfficeAgent agent;
+
+    private String name;
+
+    protected OfficeAgentValueProvider(String name) {
+        this.name = name;
+    }
 
     @Override
     public double getValue() {
@@ -83,5 +78,10 @@ public abstract class OfficeAgentValueProvider implements ValueProvider {
 
     public void setAgent(OfficeAgent agent) {
         this.agent = agent;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

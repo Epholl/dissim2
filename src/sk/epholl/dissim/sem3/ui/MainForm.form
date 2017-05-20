@@ -754,6 +754,115 @@
                   </scrollpane>
                 </children>
               </grid>
+              <grid id="b7234" binding="csvOutputPanel" layout-manager="FormLayout">
+                <rowspec value="center:d:grow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:30px:noGrow"/>
+                <colspec value="fill:280px:noGrow"/>
+                <colspec value="left:4dlu:noGrow"/>
+                <colspec value="fill:d:grow"/>
+                <constraints>
+                  <tabbedpane title="Csv Output"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="c66f8" layout-manager="FormLayout">
+                    <rowspec value="center:d:noGrow"/>
+                    <rowspec value="top:4dlu:noGrow"/>
+                    <rowspec value="center:max(d;4px):noGrow"/>
+                    <rowspec value="top:4dlu:noGrow"/>
+                    <rowspec value="center:max(d;4px):noGrow"/>
+                    <rowspec value="top:20dlu:noGrow"/>
+                    <colspec value="fill:85px:noGrow"/>
+                    <colspec value="left:4dlu:noGrow"/>
+                    <colspec value="fill:85px:grow"/>
+                    <colspec value="left:4dlu:noGrow"/>
+                    <colspec value="fill:85px:noGrow"/>
+                    <constraints>
+                      <grid row="0" column="0" row-span="3" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <forms defaultalign-vert="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="empty">
+                      <size top="4" left="4" bottom="4" right="4"/>
+                    </border>
+                    <children>
+                      <scrollpane id="fcb5f">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="11f1b" class="javax.swing.JList" binding="csvOutputList">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <component id="763ca" class="javax.swing.JButton" binding="csvOutputUpButton">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-horz="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Up"/>
+                        </properties>
+                      </component>
+                      <component id="1db5c" class="javax.swing.JComboBox" binding="csvOutputComboBox">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <forms/>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="31af3" class="javax.swing.JButton" binding="csvOutputDownButton">
+                        <constraints>
+                          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <forms/>
+                        </constraints>
+                        <properties>
+                          <text value="Down"/>
+                        </properties>
+                      </component>
+                      <component id="3fc8a" class="javax.swing.JButton" binding="csvOutputDeleteButton">
+                        <constraints>
+                          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <forms/>
+                        </constraints>
+                        <properties>
+                          <text value="Delete"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <scrollpane id="6f82d">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="6318c" class="javax.swing.JTextArea" binding="csvOutputTextArea">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="12138" class="javax.swing.JButton" binding="csvOutputClearButton">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms defaultalign-horz="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Clear"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </tabbedpane>
         </children>

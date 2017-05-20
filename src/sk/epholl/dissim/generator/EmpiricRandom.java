@@ -58,7 +58,7 @@ public class EmpiricRandom<T extends Number> extends RandomGenerator<T> {
         double val = nextDoubleValue();
 
         for (RandomPair<T> pair : randoms) {
-            if (val <pair.getProbability()) {
+            if (val < pair.getProbability()) {
                 return pair.getValue();
             }
         }

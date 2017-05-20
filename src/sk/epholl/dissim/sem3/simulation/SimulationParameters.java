@@ -76,7 +76,7 @@ public class SimulationParameters {
     }
 
     public double getTotalPrice() {
-        return getWorker1TotalPrice() + getWorker2TotalPrice() + getAdvertisementTotalPrice();
+        return getWorker1TotalPrice() + getWorker2TotalPrice() + getAdvertisementTotalPrice() + Const.monthlyFixedCost;
     }
 
     public double getClientIncomeCoeficient() {

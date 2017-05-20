@@ -31,6 +31,9 @@ public class SurroundingsAgent extends BaseAgent {
 	private StatisticCounter balanceCounter = new StatisticCounter();
 	private StatisticCounter profitCounter = new StatisticCounter();
 
+	private StatisticCounter averageRepairTimeCounter = new StatisticCounter();
+	private StatisticCounter revenuePerCustomerCounter = new StatisticCounter();
+
 	private StatisticCounter balancePerFinishedCustomerCounter = new StatisticCounter();
 	private StatisticCounter balancePerAllCustomersCounter = new StatisticCounter();
 
@@ -39,8 +42,9 @@ public class SurroundingsAgent extends BaseAgent {
 	private int refusedVehicles;
 	private int shopClosedVehicles;
 
-	private double profit;
+	private double revenue;
 	private double balance;
+	private double repairTime;
 
 	private StatisticCounter totalTimeInSystem = new StatisticCounter();
 	private StatisticCounter timeCustomerWaitingForRepair = new StatisticCounter();
@@ -65,8 +69,9 @@ public class SurroundingsAgent extends BaseAgent {
 		finishedVehicles = 0;
 		refusedVehicles = 0;
 		shopClosedVehicles = 0;
-		profit = 0;
+		revenue = 0;
 		balance = -getParams().getTotalPrice();
+		repairTime = 0;
 
 		totalTimeInSystem.clear();
 		timeCustomerWaitingForRepair.clear();
@@ -78,7 +83,7 @@ public class SurroundingsAgent extends BaseAgent {
 		publishValueContinous(Rst.REFUSED_CUSTOMERS, refusedVehicles);
 		publishValueContinous(Rst.SHOP_CLOSED_CUSTOMERS, shopClosedVehicles);
 		publishValueContinous(Rst.FINISHED_CUSTOMERS, finishedVehicles);
-		publishValueContinous(Rst.PROFIT, profit);
+		publishValueContinous(Rst.PROFIT, revenue);
 		publishValueContinous(Rst.BALANCE, balance);
 	}
 
@@ -100,9 +105,10 @@ public class SurroundingsAgent extends BaseAgent {
 			finishedVehicles++;
 			publishValueContinous(Rst.FINISHED_CUSTOMERS, finishedVehicles);
 			double vehicleProfit = (vehicle.getRepairDuratioinInMinutes() / 60.0) * Const.repairShopHourlyRate;
-			profit += vehicleProfit;
+			revenue += vehicleProfit;
 			balance += vehicleProfit;
-			publishValueContinous(Rst.PROFIT, profit);
+			repairTime += vehicle.getRepairDuratioinInMinutes();
+			publishValueContinous(Rst.PROFIT, revenue);
 			publishValueContinous(Rst.BALANCE, balance);
 			totalTimeInSystem.addValue(vehicle.getTotalTimeInSystem());
 			timeCustomerWaitingForRepair.addValue(vehicle.getTimeCustomerWaitForRepair());
@@ -141,8 +147,11 @@ public class SurroundingsAgent extends BaseAgent {
 		timeWaitingForRepairCounter.addValue(timeWaitingForRepair.getMean());
 		timeWaitiingForReturnCounter.addValue(timeWaitingForReturn.getMean());
 
-		profitCounter.addValue(profit);
+		profitCounter.addValue(revenue);
 		balanceCounter.addValue(balance);
+
+		averageRepairTimeCounter.addValue(repairTime / finishedVehicles);
+		revenuePerCustomerCounter.addValue(revenue / finishedVehicles);
 
 		balancePerAllCustomersCounter.addValue(balance / (finishedVehicles + refusedVehicles + shopClosedVehicles));
 		balancePerFinishedCustomerCounter.addValue(balance / finishedVehicles);
@@ -173,6 +182,11 @@ public class SurroundingsAgent extends BaseAgent {
 				new Rst.Result(rep(), balanceCounter));
 		publishValueIfAfterWarmup(Rst.R_MONEY_EARNED,
 				new Rst.Result(rep(), profitCounter));
+
+		publishValueIfAfterWarmup(Rst.R_AVERAGE_REPAIR_TIME,
+				new Rst.Result(rep(), averageRepairTimeCounter));
+		publishValueIfAfterWarmup(Rst.R_REVENUE_PER_FINISHED_CUSTOMERS,
+				new Rst.Result(rep(), revenuePerCustomerCounter));
 
 		publishValueIfAfterWarmup(Rst.R_MONEY_PER_ALL_CUSTOMERS,
 				new Rst.Result(rep(), balancePerAllCustomersCounter));

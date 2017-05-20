@@ -45,6 +45,9 @@ public class Rst {
                     new ResultType("Money earned", R_MONEY_EARNED),
                     new ResultType("Money balance", R_MONEY_BALANCE),
 
+                    new ResultTimeType("Average repair time", R_AVERAGE_REPAIR_TIME),
+                    new ResultType("Revenue per customer (f)", R_REVENUE_PER_FINISHED_CUSTOMERS),
+
                     new ResultType("Balance per any customer", R_MONEY_PER_ALL_CUSTOMERS),
                     new ResultType("Balance per finished customer (f)", R_MONEY_PER_FINISHED_CUSTOMERS),
 
@@ -76,6 +79,9 @@ public class Rst {
 
     public static final ValueType<Result> R_MONEY_EARNED = new ValueType<>(Result.class);
     public static final ValueType<Result> R_MONEY_BALANCE = new ValueType<>(Result.class);
+
+    public static final ValueType<Result> R_AVERAGE_REPAIR_TIME = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_REVENUE_PER_FINISHED_CUSTOMERS = new ValueType<>(Result.class);
 
     public static final ValueType<Result> R_MONEY_PER_ALL_CUSTOMERS = new ValueType<>(Result.class);
     public static final ValueType<Result> R_MONEY_PER_FINISHED_CUSTOMERS = new ValueType<>(Result.class);
@@ -139,6 +145,10 @@ public class Rst {
         }
 
         public boolean isTime() {return false;}
+        @Override
+        public String toString() {
+            return resultName;
+        }
     }
 
     public static class ResultTimeType extends ResultType {
