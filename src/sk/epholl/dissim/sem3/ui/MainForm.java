@@ -300,21 +300,6 @@ public class MainForm extends JFrame {
         worker1Arg1ConstantTextField.setEditable(false);
         worker1Arg2ConstantTextField.setEditable(false);
 
-        worker1Model = new ConditionLogicModel(
-                worker1ConditionsList,
-                listModel,
-                worker1MoveUpButton,
-                worker1MoveDownButton,
-                worker1DeleteButton,
-                worker1ConditionArg1Combo,
-                worker1ConditionComparatorCombo,
-                worker1ConditionArg2Combo,
-                worker1Arg1ConstantTextField,
-                worker1Arg2ConstantTextField,
-                worker1ConditionReturnValueCombo,
-                worker1DefaultReturnValueCombo,
-                worker1AddButton);
-
         listModel.addListDataListener(new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -341,6 +326,21 @@ public class MainForm extends JFrame {
                 }
             }
         });
+
+        worker1Model = new ConditionLogicModel(
+                worker1ConditionsList,
+                listModel,
+                worker1MoveUpButton,
+                worker1MoveDownButton,
+                worker1DeleteButton,
+                worker1ConditionArg1Combo,
+                worker1ConditionComparatorCombo,
+                worker1ConditionArg2Combo,
+                worker1Arg1ConstantTextField,
+                worker1Arg2ConstantTextField,
+                worker1ConditionReturnValueCombo,
+                worker1DefaultReturnValueCombo,
+                worker1AddButton);
     }
 
     private void figureSimSpeed() {

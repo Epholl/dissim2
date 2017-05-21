@@ -28,8 +28,8 @@ public class CarShopModelAgent extends BaseAgent {
 		new DayEndProcess(Id.dayEndProcess, mySim(), this);
 		addOwnMessage(Mc.returnCar);
 		addOwnMessage(Mc.init);
-		addOwnMessage(Mc.reserveSpot);
 		addOwnMessage(Mc.freeSpot);
+		addOwnMessage(Mc.reserveSpot);
 		addOwnMessage(Mc.parkCar);
 		addOwnMessage(Mc.repairWehicle);
 		addOwnMessage(Mc.parkingSpotsUpdate);

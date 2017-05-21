@@ -47,6 +47,11 @@ public class OfficeManager extends Manager {
 		final Vehicle vehicle = msg.getVehicle();
 		msg.setCode(Mc.takeOrder);
 
+		MyMessage copy = (MyMessage) msg.createCopy();
+		copy.setAddressee(Id.carShopModelAgent);
+		copy.setCode(Mc.freeSpot);
+		copy.setPlace(Place.MainLot);
+		notice(copy);
 		myAgent().publishValueContinous(Rst.CONSOLE_LOG, "Order taking finished: " + vehicle);
 		response(msg);
 	}
@@ -78,8 +83,9 @@ public class OfficeManager extends Manager {
 	//meta! sender="CarShopModelAgent", id="166", type="Response"
 	public void processReserveSpot(MessageForm message) {
 		MyMessage msg = (MyMessage) message;
-		myAgent().startTakingOrder(msg);
-
+		if (!msg.getVehicle().isRepaired()) {
+			myAgent().startTakingOrder(msg);
+		}
 	}
 
 	//meta! sender="CarShopModelAgent", id="169", type="Notice"
@@ -140,10 +146,6 @@ public class OfficeManager extends Manager {
 			}
 		break;
 
-		case Mc.takeOrder:
-			processTakeOrder(message);
-		break;
-
 		case Mc.freeWorker1:
 			processFreeWorker1(message);
 		break;
@@ -158,6 +160,10 @@ public class OfficeManager extends Manager {
 
 		case Mc.endOfDay:
 			processEndOfDay(message);
+		break;
+
+		case Mc.takeOrder:
+			processTakeOrder(message);
 		break;
 
 		case Mc.returnCar:

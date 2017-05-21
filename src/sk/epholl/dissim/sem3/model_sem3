@@ -5,7 +5,7 @@
       <SimId>12</SimId>
       <InternalId>92</InternalId>
       <Name>ParkingAgent</Name>
-      <Bounds>1180,1376,250,250</Bounds>
+      <Bounds>1178,1512,250,250</Bounds>
       <Reasoner>ParkingManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -14,7 +14,7 @@
       <SimId>11</SimId>
       <InternalId>88</InternalId>
       <Name>RepairAgent</Name>
-      <Bounds>1659,1369,250,250</Bounds>
+      <Bounds>1657,1506,250,250</Bounds>
       <Reasoner>RepairManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -31,7 +31,7 @@
       <SimId>9</SimId>
       <InternalId>86</InternalId>
       <Name>TransportationAgent</Name>
-      <Bounds>671,1370,250,250</Bounds>
+      <Bounds>700,1273,250,250</Bounds>
       <Reasoner>TransportationManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -74,7 +74,7 @@
       <SimId>10</SimId>
       <InternalId>87</InternalId>
       <Name>OfficeAgent</Name>
-      <Bounds>2157,1359,250,250</Bounds>
+      <Bounds>2203,1284,250,250</Bounds>
       <Reasoner>OfficeManager</Reasoner>
       <ReasonerBounds>109,35,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -407,11 +407,19 @@
       <Destination>122</Destination>
     </Message>
     <Message>
+      <SimId>1041</SimId>
+      <InternalId>189</InternalId>
+      <Name>FreeSpot</Name>
+      <Type>Notice</Type>
+      <Source>87</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
       <InternalId>126</InternalId>
       <Type>StartFinish</Type>
       <Source>83</Source>
       <Destination>125</Destination>
     </Message>
   </Messages>
-  <IID>188</IID>
+  <IID>190</IID>
 </ABAsim>

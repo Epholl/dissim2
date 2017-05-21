@@ -115,8 +115,8 @@ public class ParkingAgent extends BaseAgent {
 	public void parkCar(final Vehicle vehicle, final Place parkingLot) {
         vehicle.setCurrentPlace(parkingLot);
 		if (parkingLot == Place.MainLot) {
-			mainLot.add(vehicle);
             mainLotStatisticLoad.addValue(mainLot.size());
+            mainLot.add(vehicle);
 
         } else if (parkingLot == Place.ParkingLot1) {
 			ParkingSpot assigned = vehicle.getAssignedParkingSpot();
@@ -137,18 +137,18 @@ public class ParkingAgent extends BaseAgent {
 
 	public void freeSpot(final Vehicle vehicle, final Place parkingLot) {
 		if (parkingLot == Place.MainLot) {
+            mainLotStatisticLoad.addValue(mainLot.size());
 			mainLot.remove(vehicle);
-			mainLotStatisticLoad.addValue(mainLot.size());
 		} else if (parkingLot == Place.ParkingLot1) {
+            lot1StatisticLoad.addValue(lot1.getFreeCapacity().getUsedUnits());
 			vehicle.setAssignedParkingSpot(null);
 			lot1.free(vehicle);
             noticeParkingSpotStatus(Place.ParkingLot1, lot1.getFreeCapacity());
-            lot1StatisticLoad.addValue(lot1.getFreeCapacity().getUsedUnits());
 		} else if (parkingLot == Place.ParkingLot2) {
+            lot2StatisticLoad.addValue(lot2.getFreeCapacity().getUsedUnits());
 			vehicle.setAssignedParkingSpot(null);
 			lot2.free(vehicle);
             noticeParkingSpotStatus(Place.ParkingLot2, lot2.getFreeCapacity());
-            lot2StatisticLoad.addValue(lot2.getFreeCapacity().getUsedUnits());
 		}
 	}
 

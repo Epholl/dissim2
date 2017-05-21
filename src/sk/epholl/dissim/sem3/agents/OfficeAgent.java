@@ -125,9 +125,14 @@ public class OfficeAgent extends BaseAgent {
 		double deciderDecisions = ((double)deciderDecisionsMade.getTotalStateAmounts());
 		double deciderDecisionsRatio = deciderDecisions / totalWorkDecisionsMade;
 
+		double takeOrderRatio = deciderDecisionsMade.getStateAmount(Worker1Decision.TakeOrder) / deciderDecisions;
+		double returnCarRatio = deciderDecisionsMade.getStateAmount(Worker1Decision.ReturnCar) / deciderDecisions;
+
 		decisionsMadeByDeciserRatioCounter.addValue(deciderDecisionsRatio);
-		takeOrderDecisionRatioCounter.addValue(deciderDecisionsMade.getStateAmount(Worker1Decision.TakeOrder) / deciderDecisions);
-		returnCarDecisionRatioCounter.addValue(deciderDecisionsMade.getStateAmount(Worker1Decision.ReturnCar) / deciderDecisions);
+		if (deciderDecisions != 0) {
+			takeOrderDecisionRatioCounter.addValue(takeOrderRatio);
+			returnCarDecisionRatioCounter.addValue(returnCarRatio);
+		}
 
 		publishValueIfAfterWarmup(Rst.R_AVERAGE_FREE_WORKERS_1,
 				new Rst.Result(rep(), avgFreeWorkersCounter));
@@ -159,7 +164,11 @@ public class OfficeAgent extends BaseAgent {
 			MyMessage msg = vehiclesWaitingForOrder.dequeue();
 			vehicle.persistCurrentState();
 			vehicle.addFinsihedState(Vehicle.State.CancelOrder);
+			MyMessage copy = (MyMessage) msg.createCopy();
+			copy.setCode(Mc.freeSpot);
+			copy.setAddressee(Id.carShopModelAgent);
 			manager().response(msg);
+			manager().notice(copy);
 		}
 	}
 
@@ -191,7 +200,11 @@ public class OfficeAgent extends BaseAgent {
 			Vehicle vehicle = msg.getVehicle();
 			vehicle.persistCurrentState();
 			vehicle.addFinsihedState(Vehicle.State.ShopClosed);
+			MyMessage copy = (MyMessage) msg.createCopy();
+			copy.setCode(Mc.freeSpot);
+			copy.setAddressee(Id.carShopModelAgent);
 			manager().response(msg);
+			manager().notice(copy);
 		}
 
 	}

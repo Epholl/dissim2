@@ -8,7 +8,7 @@ import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
 /**
  * Created by Tomáš on 10.05.2017.
  */
-public class SimulationParameters {
+public class SimulationParameters implements Cloneable {
 
 
     private int repliacationCount;
@@ -28,6 +28,11 @@ public class SimulationParameters {
     private RoadModel roadModel = new RoadModel();
 
     private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar);
+
+    @Override
+    protected SimulationParameters clone() throws CloneNotSupportedException {
+        return (SimulationParameters) super.clone();
+    }
 
     public int getRepliacationCount() {
         return repliacationCount;

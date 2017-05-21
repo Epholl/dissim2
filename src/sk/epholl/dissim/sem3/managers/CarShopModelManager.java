@@ -33,7 +33,12 @@ public class CarShopModelManager extends Manager {
 		msg.setAddressee(Id.transportationAgent);
 		msg.setCode(Mc.transferVehicle);
 		msg.setPlace(Place.Enterance);
+		MyMessage copy = (MyMessage) msg.createCopy();
+		copy.setPlace(Place.MainLot);
+		copy.setCode(Mc.freeSpot);
+		copy.setAddressee(Id.parkingAgent);
 		request(msg);
+		notice(copy);
 	}
 
 	//meta! sender="ParkingAgent", id="94", type="Response"
@@ -123,6 +128,11 @@ public class CarShopModelManager extends Manager {
 					request(msg);
 				} else {
 					response(msg);
+					MyMessage copy = (MyMessage) msg.createCopy();
+					copy.setAddressee(Id.parkingAgent);
+					copy.setCode(Mc.reserveSpot);
+					copy.setPlace(Place.MainLot);
+					request(copy);
 				}
 				break;
 			case Enterance:
@@ -229,6 +239,12 @@ public class CarShopModelManager extends Manager {
 		request(msg);
 	}
 
+	//meta! sender="OfficeAgent", id="189", type="Notice"
+	public void processFreeSpotOfficeAgent(MessageForm message) {
+		message.setAddressee(Id.parkingAgent);
+		notice(message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -236,6 +252,22 @@ public class CarShopModelManager extends Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.freeSpot:
+			switch (message.sender().id()) {
+			case Id.officeAgent:
+				processFreeSpotOfficeAgent(message);
+			break;
+
+			case Id.transportationAgent:
+				processFreeSpotTransportationAgent(message);
+			break;
+
+			case Id.repairAgent:
+				processFreeSpotRepairAgent(message);
+			break;
+			}
+		break;
+
 		case Mc.parkCar:
 			switch (message.sender().id()) {
 			case Id.parkingAgent:
@@ -262,18 +294,6 @@ public class CarShopModelManager extends Manager {
 
 		case Mc.finish:
 			processFinish(message);
-		break;
-
-		case Mc.freeSpot:
-			switch (message.sender().id()) {
-			case Id.transportationAgent:
-				processFreeSpotTransportationAgent(message);
-			break;
-
-			case Id.repairAgent:
-				processFreeSpotRepairAgent(message);
-			break;
-			}
 		break;
 
 		case Mc.transferVehicle:
