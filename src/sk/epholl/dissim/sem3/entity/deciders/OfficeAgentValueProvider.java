@@ -11,7 +11,7 @@ public abstract class OfficeAgentValueProvider implements ValueProvider {
 
     public static final OfficeAgentValueProvider[] values() {
         return new OfficeAgentValueProvider[] {
-                lot1FreeSpace, lot2FreeSpace, constant,
+                lot1FreeSpace, lot2FreeSpace, worktimeLeftToday, nextCustomerWaitingTime, customersWaitingForOrderCount, constant
         };
     }
 
@@ -54,10 +54,24 @@ public abstract class OfficeAgentValueProvider implements ValueProvider {
         }
     };
 
-    public static final OfficeAgentValueProvider worktimeLeftToday = new OfficeAgentValueProvider("minutes to day end") {
+    public static final OfficeAgentValueProvider worktimeLeftToday = new OfficeAgentValueProvider("minutes till day ends") {
         @Override
         public double getValue(OfficeAgent agent) {
-            return TimeUtils.getTimeRemainingToday(agent.mySim().currentTime());
+            return TimeUtils.getTimeRemainingToday(agent.mySim().currentTime())/60;
+        }
+    };
+
+    public static final OfficeAgentValueProvider nextCustomerWaitingTime = new OfficeAgentValueProvider("minutes in queue for next order") {
+        @Override
+        public double getValue(OfficeAgent agent) {
+            return agent.getTimeNextCustomerWaitingForOrder()/60;
+        }
+    };
+
+    public static final OfficeAgentValueProvider customersWaitingForOrderCount = new OfficeAgentValueProvider("customers waiting to order") {
+        @Override
+        public double getValue(OfficeAgent agent) {
+            return agent.getCustomersWaitingForOrderCount();
         }
     };
 

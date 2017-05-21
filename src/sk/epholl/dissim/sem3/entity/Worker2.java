@@ -39,6 +39,7 @@ public class Worker2 {
         state.name = "Worker2 " + id;
         state.state = stateCounter.getCurrentState().toString();
         state.vehicle = vehicle == null? " - " : vehicle.getName();
+        state.loadCoeficient = getWorkLoadCoeficient();
         return state;
     }
 
@@ -51,7 +52,8 @@ public class Worker2 {
     }
 
     public double getWorkLoadCoeficient() {
-        return stateCounter.getNotStateCoeficient(State.Idle);
+        double coeficient = stateCounter.getNotStateDurationCoeficient(State.Idle);
+        return Double.isNaN(coeficient)? 0.0 : coeficient;
     }
 
     @Override

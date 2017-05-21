@@ -36,7 +36,8 @@ public class CsvOutputLogicModel {
         JButton downButton,
         JButton deleteButton,
         JComboBox<Rst.ResultType> comboBox,
-        JButton clearButton
+        JButton clearButton,
+        JButton addAllButton
     ) {
 
         this.textArea = textArea;
@@ -110,6 +111,15 @@ public class CsvOutputLogicModel {
                 textArea.setText(null);
                 printHeaderValues(listModel);
             }
+        });
+
+        addAllButton.addActionListener(e -> {
+            listModel.clear();
+            for (Rst.ResultType resultType: Rst.resultTypes()) {
+                listModel.addElement(resultType);
+            }
+            textArea.setText(null);
+            printHeaderValues(listModel);
         });
 
         printHeaderValues(listModel);

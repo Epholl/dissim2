@@ -37,9 +37,9 @@ public class ParkingAgent extends BaseAgent {
 
 		mainLot = new HashSet<>();
 
-		lot1 = new ParkingLot(Const.parkingLot1Capacity, "Lot1");
+		lot1 = new ParkingLot(getSimulation(), Const.parkingLot1Capacity, "Lot1");
 
-		lot2 = new ParkingLot(Const.parkingLot2Capacity, "Lot2");
+		lot2 = new ParkingLot(getSimulation(), Const.parkingLot2Capacity, "Lot2");
 	}
 
 	@Override

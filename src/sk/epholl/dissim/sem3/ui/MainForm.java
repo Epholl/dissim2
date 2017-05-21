@@ -55,7 +55,7 @@ public class MainForm extends JFrame {
     private JLabel totalMonthlyCostsLabel;
     private JPanel configurationPanel;
     private JPanel resultsPanel;
-    private JPanel WatchPanel;
+    private JPanel watchPanel;
     private JPanel consolePanel;
     private JList worker1ConditionsList;
     private JPanel worker1StrategyPanel;
@@ -93,6 +93,7 @@ public class MainForm extends JFrame {
     private JButton csvOutputDownButton;
     private JButton csvOutputDeleteButton;
     private JButton csvOutputClearButton;
+    private JButton csvOutputAddAllButton;
 
     private State state;
 
@@ -365,6 +366,7 @@ public class MainForm extends JFrame {
     private void initWatchPanel() {
 
         initVehicleTable();
+        new JLabelResultController("Entered: ", watchEnteredLabel, Rst.ENTERED_CUSTOMERS, rm());
         new JLabelResultController("Finished: ", watchFinishedCustomersLabel, Rst.FINISHED_CUSTOMERS, rm());
         new JLabelResultController("Refused: ", watchRefusedCustomersLabel, Rst.REFUSED_CUSTOMERS, rm());
         new JLabelResultController("Day end: ", watchShopClosedCustomersLabel, Rst.SHOP_CLOSED_CUSTOMERS, rm());
@@ -391,7 +393,8 @@ public class MainForm extends JFrame {
                 csvOutputDownButton,
                 csvOutputDeleteButton,
                 csvOutputComboBox,
-                csvOutputClearButton
+                csvOutputClearButton,
+                csvOutputAddAllButton
                 );
         csvOutputModel.setParams(simulationController.getParameters());
         csvOutputModel.init(simulationController.getResultManager());
@@ -410,6 +413,8 @@ public class MainForm extends JFrame {
             }
         });
         vehiclesTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        vehiclesTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        vehiclesTable.getColumnModel().getColumn(3).setPreferredWidth(24);
         vehiclesTable.getColumnModel().getColumn(4).setPreferredWidth(12);
     }
 
@@ -443,7 +448,7 @@ public class MainForm extends JFrame {
 
     private static class VehicleTableModel extends AbstractTableModel {
 
-        private String[] columnNames = new String[] {"Vehicle", "Place", "Worker", "Activity", "State"};
+        private String[] columnNames = new String[] {"Vehicle", "Place", "Activity", "Worker", "State"};
 
         private Rst.VehicleUpdate vehicles;
 
@@ -504,7 +509,7 @@ public class MainForm extends JFrame {
 
     private static class ParkingTableModel extends AbstractTableModel {
 
-        private String[] columnNames = new String[] {"Spot", "State", "Vehicle"};
+        private String[] columnNames = new String[] {"Spot", "State", "Vehicle", "Load rate"};
 
         private Rst.ParkingUpdate spots;
 
@@ -533,6 +538,8 @@ public class MainForm extends JFrame {
                     return state.state;
                 case 2:
                     return state.vehicle;
+                case 3:
+                    return String.format("%.2f%%", state.loadCoeficient*100);
             }
             return " - ";
         }
@@ -550,7 +557,7 @@ public class MainForm extends JFrame {
 
     private static class WorkerTableModel extends AbstractTableModel {
 
-        private String[] columnNames = new String[] {"Worker", "State", "Vehicle"};
+        private String[] columnNames = new String[] {"Worker", "State", "Vehicle", "Load rate"};
 
         private List<Rst.WorkerState> workers1;
         private List<Rst.WorkerState> workers2;
@@ -582,6 +589,8 @@ public class MainForm extends JFrame {
                     return state.state;
                 case 2:
                     return state.vehicle;
+                case 3:
+                    return String.format("%.2f%%", state.loadCoeficient*100);
             }
             return " - ";
         }

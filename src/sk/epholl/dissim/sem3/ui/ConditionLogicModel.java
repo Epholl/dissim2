@@ -9,6 +9,7 @@ import sk.epholl.dissim.util.deciders.Comparator;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 
 public class ConditionLogicModel {
 
@@ -57,10 +58,10 @@ public class ConditionLogicModel {
             Worker1Decision result = (Worker1Decision) resultSpinner.getSelectedItem();
 
             if (leftOperand == OfficeAgentValueProvider.constant) {
-                leftOperand = OfficeAgentValueProvider.newConstant(Double.parseDouble(leftOperandConstantTextField.getText()));
+                leftOperand = OfficeAgentValueProvider.newConstant(parseDoubleFromTextField(leftOperandConstantTextField));
             }
             if (rightOperand == OfficeAgentValueProvider.constant) {
-                rightOperand = OfficeAgentValueProvider.newConstant(Double.parseDouble(rightOperandConstantTextField.getText()));
+                rightOperand = OfficeAgentValueProvider.newConstant(parseDoubleFromTextField(rightOperandConstantTextField));
             }
 
             Worker1Condition condition = instantiateCondition(
@@ -152,6 +153,14 @@ public class ConditionLogicModel {
                 operator,
                 rightOperand,
                 result);
+    }
 
+    private double parseDoubleFromTextField(JTextField textField) {
+        try {
+            double number = Double.parseDouble(textField.getText());
+            return number;
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
     }
 }

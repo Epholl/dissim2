@@ -18,12 +18,7 @@ public class JLabelResultController {
         this.label = label;
         label.setText(name);
 
-        rm.addSubscriber(valueType, new Subscriber<Object>() {
-            @Override
-            public void onValueEmitted(Object value) {
-                valueEmitted(value);
-            }
-        });
+        rm.addSubscriber(valueType, this::valueEmitted);
     }
 
     public void valueEmitted(Object value) {

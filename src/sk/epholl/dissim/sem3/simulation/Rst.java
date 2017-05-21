@@ -35,6 +35,7 @@ public class Rst {
                     new ResultType("Refused customers", R_REFUSED_CUSTOMERS),
                     new ResultType("Finished customers ratio", R_FINISHED_RATIO),
                     new ResultType("Refused customers ratio", R_REFUSED_RATIO),
+                    new ResultType("Day end refused ratio", R_DAY_END_REFUSED_RATIO),
 
                     new ResultTimeType("Total time in system (f)", R_CUSTOMER_TOTAL_TIME),
                     new ResultTimeType("Waiting for repair time (f)", R_CUSTOMER_WAIT_FOR_REPAIR_TIME),
@@ -62,6 +63,10 @@ public class Rst {
                     new ResultType("Average vehicles on lot 2", R_LOT2_TAKEN_SPOTS),
                     new ResultType("Lot 1 load index", R_LOT1_LOAD),
                     new ResultType("Lot 2 load index", R_LOT2_LOAD),
+
+                    new ResultType("Ratio of times worker 1 decided", R_DECIDER_DECISIONS_RATIO),
+                    new ResultType("Ratio of take order decisions", R_DECIDER_TAKE_ORDER_RATIO),
+                    new ResultType("Ratio of return car decisions", R_DECIDER_RETURN_CAR_RATIO),
             };
     }
 
@@ -70,6 +75,7 @@ public class Rst {
     public static final ValueType<Result> R_REFUSED_CUSTOMERS = new ValueType<>(Result.class);
     public static final ValueType<Result> R_FINISHED_RATIO = new ValueType<>(Result.class);
     public static final ValueType<Result> R_REFUSED_RATIO = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_DAY_END_REFUSED_RATIO = new ValueType<>(Result.class);
 
     public static final ValueType<Result> R_CUSTOMER_TOTAL_TIME = new ValueType<>(Result.class);
     public static final ValueType<Result> R_CUSTOMER_WAIT_FOR_REPAIR_TIME = new ValueType<>(Result.class);
@@ -98,7 +104,9 @@ public class Rst {
     public static final ValueType<Result> R_LOT1_LOAD = new ValueType<>(Result.class);
     public static final ValueType<Result> R_LOT2_LOAD = new ValueType<>(Result.class);
 
-
+    public static final ValueType<Result> R_DECIDER_DECISIONS_RATIO = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_DECIDER_TAKE_ORDER_RATIO = new ValueType<>(Result.class);
+    public static final ValueType<Result> R_DECIDER_RETURN_CAR_RATIO = new ValueType<>(Result.class);
 
 
     public static class VehicleUpdate {
@@ -123,6 +131,7 @@ public class Rst {
         public String name;
         public String state;
         public String vehicle;
+        public double loadCoeficient;
     }
 
     public static class WorkerUpdate {
@@ -133,6 +142,7 @@ public class Rst {
         public String name;
         public String state;
         public String vehicle;
+        public double loadCoeficient;
     }
 
     public static class ResultType {

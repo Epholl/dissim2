@@ -46,6 +46,13 @@ public class StatisticQueue<T> extends LinkedList<Pair<Double, T>> {
         return polled.second;
     }
 
+    public T peekNext() {
+        if (isEmpty()) {
+            return null;
+        }
+        return peekFirst().second;
+    }
+
     public double getAverageQueueLength() {
         updateStatistics();
         double totalTime = simulation.getSimulationTime();

@@ -1,6 +1,7 @@
 package sk.epholl.dissim.sem3.agents;
 
 import OSPABA.*;
+import OSPStat.Stat;
 import sk.epholl.dissim.sem3.continualAssistants.NewCustomerScheduler;
 import sk.epholl.dissim.sem3.managers.SurroundingsManager;
 import sk.epholl.dissim.sem3.entity.Vehicle;
@@ -21,6 +22,7 @@ public class SurroundingsAgent extends BaseAgent {
 
 	private StatisticCounter finishedCustomersRatioCounter = new StatisticCounter();
 	private StatisticCounter refusedCustomersRatioCounter = new StatisticCounter();
+	private StatisticCounter dayEndRefusedCustomersRatioCounter = new StatisticCounter();
 
 	private StatisticCounter totalTimeInSystemCounter = new StatisticCounter();
 	private StatisticCounter timeCustomerWaitingForRepairCounter = new StatisticCounter();
@@ -107,7 +109,7 @@ public class SurroundingsAgent extends BaseAgent {
 			double vehicleProfit = (vehicle.getRepairDuratioinInMinutes() / 60.0) * Const.repairShopHourlyRate;
 			revenue += vehicleProfit;
 			balance += vehicleProfit;
-			repairTime += vehicle.getRepairDuratioinInMinutes();
+			repairTime += vehicle.getRepairDuratioinInMinutes()*60;
 			publishValueContinous(Rst.PROFIT, revenue);
 			publishValueContinous(Rst.BALANCE, balance);
 			totalTimeInSystem.addValue(vehicle.getTotalTimeInSystem());
@@ -138,8 +140,9 @@ public class SurroundingsAgent extends BaseAgent {
 		totalCustomersCounter.addValue(finishedVehicles + refusedVehicles + shopClosedVehicles);
 		finishedCustomersCounter.addValue(finishedVehicles);
 		refusedCustomersCounter.addValue(refusedVehicles + shopClosedVehicles);
-		finishedCustomersRatioCounter.addValue((double)finishedVehicles / (finishedVehicles + refusedVehicles + shopClosedVehicles));
-		refusedCustomersRatioCounter.addValue((double)(refusedVehicles+shopClosedVehicles) / (finishedVehicles + refusedVehicles + shopClosedVehicles));
+		finishedCustomersRatioCounter.addValue(nonNaN(((double)finishedVehicles) / (finishedVehicles + refusedVehicles + shopClosedVehicles)));
+		refusedCustomersRatioCounter.addValue(nonNaN((((double)refusedVehicles)+shopClosedVehicles) / (finishedVehicles + refusedVehicles + shopClosedVehicles)));
+		dayEndRefusedCustomersRatioCounter.addValue(nonNaN(((double)shopClosedVehicles)/(refusedVehicles+shopClosedVehicles)));
 
 		totalTimeInSystemCounter.addValue(totalTimeInSystem.getMean());
 		timeCustomerWaitingForRepairCounter.addValue(timeCustomerWaitingForRepair.getMean());
@@ -166,6 +169,8 @@ public class SurroundingsAgent extends BaseAgent {
 				new Rst.Result(rep(), finishedCustomersRatioCounter));
 		publishValueIfAfterWarmup(Rst.R_REFUSED_RATIO,
 				new Rst.Result(rep(), refusedCustomersRatioCounter));
+		publishValueIfAfterWarmup(Rst.R_DAY_END_REFUSED_RATIO,
+				new Rst.Result(rep(), dayEndRefusedCustomersRatioCounter));
 
 		publishValueIfAfterWarmup(Rst.R_CUSTOMER_TOTAL_TIME,
 				new Rst.Result(rep(), totalTimeInSystemCounter));
@@ -204,4 +209,8 @@ public class SurroundingsAgent extends BaseAgent {
 		addOwnMessage(Mc.customerExit);
 	}
 	//meta! tag="end"
+
+	private double nonNaN(double value) {
+		return Double.isNaN(value)? 0.0 : value;
+	}
 }

@@ -173,7 +173,7 @@ public class Vehicle extends Entity {
     }
 
     public double getTimeWaitForRepair() {
-        return getTimeDifference(State.WaitForOrder, State.MoveToLot1);
+        return getTimeDifference(State.MoveToLot1, State.WaitForRepair);
     }
 
     public double getTimeWaitForLot2Spot() {
@@ -182,6 +182,10 @@ public class Vehicle extends Entity {
 
     public double getTimeWaitForReturn() {
         return getTimeDifference(State.WaitingForLot2Spot, State.WaitingOnLot2);
+    }
+
+    public double getTimeWaitForOrderStarted() {
+        return findState(State.MoveToOfficeLot).first;
     }
 
     public int getRepairDuratioinInMinutes() {

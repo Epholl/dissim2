@@ -1,6 +1,7 @@
 package sk.epholl.dissim.sem3.entity;
 
 
+import sk.epholl.dissim.sem3.simulation.MySimulation;
 import sk.epholl.dissim.sem3.simulation.Rst;
 
 import java.util.ArrayList;
@@ -22,12 +23,12 @@ public class ParkingLot {
 
     private String name;
 
-    public ParkingLot(int capacity, String name) {
+    public ParkingLot(MySimulation simulation, int capacity, String name) {
         this.capacity = capacity;
         this.spots = new ParkingSpot[capacity];
         this.name = name;
         for (int i = 0; i < spots.length; i++) {
-            spots[i] = new ParkingSpot(name);
+            spots[i] = new ParkingSpot(simulation, name);
         }
         this.freeSpots = capacity;
         this.parkedVehicles = new HashMap<>();

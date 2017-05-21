@@ -15,6 +15,7 @@ import sk.epholl.dissim.sem3.simulation.*;
 import sk.epholl.dissim.util.Pair;
 import sk.epholl.dissim.util.StatisticCounter;
 import sk.epholl.dissim.util.StatisticQueue;
+import sk.epholl.dissim.util.StatisticStateCounter;
 
 import java.util.*;
 
@@ -24,7 +25,12 @@ public class OfficeAgent extends BaseAgent {
 	private StatisticCounter avgFreeWorkersCounter = new StatisticCounter();
 	private StatisticCounter avgWorkerLoadCounter = new StatisticCounter();
 
-	private int worker1IdCounter;
+	private StatisticCounter decisionsMadeByDeciserRatioCounter = new StatisticCounter();
+	private StatisticCounter takeOrderDecisionRatioCounter = new StatisticCounter();
+	private StatisticCounter returnCarDecisionRatioCounter = new StatisticCounter();
+
+	private int totalWorkDecisionsMade;
+	private StatisticStateCounter<Worker1Decision> deciderDecisionsMade = new StatisticStateCounter<>(getSimulation());
 
 	private StatisticQueue<Worker1> type1FreeWorkers;
 
@@ -57,7 +63,7 @@ public class OfficeAgent extends BaseAgent {
 		super.prepareReplication();
 		// Setup component for the next replication
 
-		worker1IdCounter = 0;
+		int worker1IdCounter = 0;
 		final int type1Count = getParams().getType1WorkerCount();
 		type1Workers = new Worker1[type1Count];
 		type1FreeWorkers.clear();
@@ -69,6 +75,8 @@ public class OfficeAgent extends BaseAgent {
 		vehiclesWaitingForOrder.clear();
 		vehiclesOrdering.clear();
 		vehiclesToBeReturned.clear();
+		totalWorkDecisionsMade = 0;
+		deciderDecisionsMade.clear();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -114,11 +122,24 @@ public class OfficeAgent extends BaseAgent {
 		workerLoad /= type1Workers.length;
 		avgWorkerLoadCounter.addValue(workerLoad);
 
+		double deciderDecisions = ((double)deciderDecisionsMade.getTotalStateAmounts());
+		double deciderDecisionsRatio = deciderDecisions / totalWorkDecisionsMade;
+
+		decisionsMadeByDeciserRatioCounter.addValue(deciderDecisionsRatio);
+		takeOrderDecisionRatioCounter.addValue(deciderDecisionsMade.getStateAmount(Worker1Decision.TakeOrder) / deciderDecisions);
+		returnCarDecisionRatioCounter.addValue(deciderDecisionsMade.getStateAmount(Worker1Decision.ReturnCar) / deciderDecisions);
 
 		publishValueIfAfterWarmup(Rst.R_AVERAGE_FREE_WORKERS_1,
 				new Rst.Result(rep(), avgFreeWorkersCounter));
 		publishValueIfAfterWarmup(Rst.R_AVERAGE_LOAD_WORKERS_1,
 				new Rst.Result(rep(), avgWorkerLoadCounter));
+
+		publishValueIfAfterWarmup(Rst.R_DECIDER_DECISIONS_RATIO,
+				new Rst.Result(rep(), decisionsMadeByDeciserRatioCounter));
+		publishValueIfAfterWarmup(Rst.R_DECIDER_TAKE_ORDER_RATIO,
+				new Rst.Result(rep(), takeOrderDecisionRatioCounter));
+		publishValueIfAfterWarmup(Rst.R_DECIDER_RETURN_CAR_RATIO,
+				new Rst.Result(rep(), returnCarDecisionRatioCounter));
 	}
 
 	public void onNewCarArrived(MyMessage message) {
@@ -133,7 +154,7 @@ public class OfficeAgent extends BaseAgent {
 
 	public void onCustomerWaitTimeout(MyMessage message) {
 		final Vehicle vehicle = message.getVehicle();
-		if (!vehiclesWaitingForOrder.isEmpty() && vehiclesWaitingForOrder.peek().second.getVehicle() == vehicle) {
+		if (!vehiclesWaitingForOrder.isEmpty() && vehiclesWaitingForOrder.peekNext().getVehicle() == vehicle) {
 			publishValueContinous(Rst.CONSOLE_LOG, "Vehicle cancels order after waiting too long " + vehicle);
 			MyMessage msg = vehiclesWaitingForOrder.dequeue();
 			vehicle.persistCurrentState();
@@ -177,12 +198,14 @@ public class OfficeAgent extends BaseAgent {
 
 	public void findWork() {
 		if (hasFreeWorkers() && hasWork()) {
+			totalWorkDecisionsMade++;
 			if (!hasOrdersToTake() || !canTakeNewOrder()) {
 				returnRepairedCar();
 			} else if (!hasCarsToReturn()) {
 				prepareTakingOrder();
 			} else {
 				Worker1Decision decision = decider.evaluate();
+				deciderDecisionsMade.setCurrentState(decision);
 
 				if (decision == Worker1Decision.TakeOrder) {
 					prepareTakingOrder();
@@ -278,6 +301,18 @@ public class OfficeAgent extends BaseAgent {
 
 	public boolean hasWork() {
 		return hasCarsToReturn() || (hasOrdersToTake() && lot1FreeParkingSpots.getFreeUnits() > 0);
+	}
+
+	public double getTimeNextCustomerWaitingForOrder() {
+		if (vehiclesWaitingForOrder.isEmpty()) {
+			return 0;
+		}
+		Vehicle next = vehiclesWaitingForOrder.peekNext().getVehicle();
+		return mySim().currentTime() - next.getTimeWaitForOrderStarted();
+	}
+
+	public int getCustomersWaitingForOrderCount() {
+		return vehiclesWaitingForOrder.size();
 	}
 
 	public void setDecider(Worker1Decider decider) {

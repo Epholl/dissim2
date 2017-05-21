@@ -501,7 +501,7 @@
                   </component>
                 </children>
               </grid>
-              <grid id="1cadb" binding="WatchPanel" layout-manager="FormLayout">
+              <grid id="1cadb" binding="watchPanel" layout-manager="FormLayout">
                 <rowspec value="center:18px:noGrow"/>
                 <rowspec value="top:4dlu:noGrow"/>
                 <rowspec value="center:d:noGrow"/>
@@ -760,7 +760,9 @@
                 <rowspec value="center:30px:noGrow"/>
                 <colspec value="fill:280px:noGrow"/>
                 <colspec value="left:4dlu:noGrow"/>
-                <colspec value="fill:d:grow"/>
+                <colspec value="right:max(d;4px):grow"/>
+                <colspec value="left:4dlu:noGrow"/>
+                <colspec value="fill:d:noGrow"/>
                 <constraints>
                   <tabbedpane title="Csv Output"/>
                 </constraints>
@@ -840,7 +842,7 @@
                   </grid>
                   <scrollpane id="6f82d">
                     <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <forms defaultalign-horz="false" defaultalign-vert="false"/>
                     </constraints>
                     <properties/>
@@ -854,11 +856,20 @@
                   </scrollpane>
                   <component id="12138" class="javax.swing.JButton" binding="csvOutputClearButton">
                     <constraints>
-                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                       <forms defaultalign-horz="false"/>
                     </constraints>
                     <properties>
                       <text value="Clear"/>
+                    </properties>
+                  </component>
+                  <component id="72262" class="javax.swing.JButton" binding="csvOutputAddAllButton">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Add all"/>
                     </properties>
                   </component>
                 </children>

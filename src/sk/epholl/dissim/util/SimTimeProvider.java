@@ -5,4 +5,6 @@ package sk.epholl.dissim.util;
  */
 public interface SimTimeProvider {
     double getSimulationTime();
+
+    public static final SimTimeProvider MOCK = () -> 0;
 }

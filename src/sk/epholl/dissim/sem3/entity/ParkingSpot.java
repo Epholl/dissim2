@@ -1,6 +1,8 @@
 package sk.epholl.dissim.sem3.entity;
 
 import sk.epholl.dissim.sem3.simulation.Rst;
+import sk.epholl.dissim.util.SimTimeProvider;
+import sk.epholl.dissim.util.StatisticStateCounter;
 
 /**
  * Created by Tomáš on 12.05.2017.
@@ -12,17 +14,18 @@ public class ParkingSpot {
     }
 
     private String name;
-    private State state;
+    private StatisticStateCounter<State> state;
     private Vehicle vehicle;
 
-    public ParkingSpot(String name) {
+    public ParkingSpot(SimTimeProvider sim, String name) {
         this.name = name;
-        this.state = State.Free;
+        this.state = new StatisticStateCounter<>(sim);
+        state.setCurrentState(State.Free);
         this.vehicle = null;
     }
 
     public State getState() {
-        return state;
+        return state.getCurrentState();
     }
 
     public Vehicle getVehicle() {
@@ -30,7 +33,7 @@ public class ParkingSpot {
     }
 
     public void setState(State state) {
-        this.state = state;
+        this.state.setCurrentState(state);
     }
 
     public void setVehicle(Vehicle vehicle) {
@@ -38,7 +41,8 @@ public class ParkingSpot {
     }
 
     public void clear() {
-        state = State.Free;
+        state.clear();
+        state.setCurrentState(State.Free);
         vehicle = null;
     }
 
@@ -50,8 +54,14 @@ public class ParkingSpot {
     public Rst.ParkingSpotState getSpotState() {
         Rst.ParkingSpotState state = new Rst.ParkingSpotState();
         state.name = name;
-        state.state = this.state.toString();
-        state.vehicle = this.vehicle == null? " - " : this.vehicle.getName();
+        state.state = getState().toString();
+        state.vehicle = getVehicle() == null? " - " : getVehicle().getName();
+        state.loadCoeficient = getWorkLoadCoeficient();
         return state;
+    }
+
+    public double getWorkLoadCoeficient() {
+        double coeficient = state.getNotStateDurationCoeficient(State.Free);
+        return Double.isNaN(coeficient)? 0.0 : coeficient;
     }
 }
