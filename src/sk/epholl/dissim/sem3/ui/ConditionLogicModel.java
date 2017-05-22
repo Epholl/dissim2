@@ -110,6 +110,9 @@ public class ConditionLogicModel {
                 list.setSelectedIndex(selectedIndex);
             }
         });
+
+        defaultReturnValue.setReturnValue((Worker1Decision) defaultReturnValueComboBox.getSelectedItem());
+        listModel.setElementAt(defaultReturnValue, listModel.size()-1);
     }
 
     private void initOperantEditTexts(JComboBox comboBox, JTextField textField) {

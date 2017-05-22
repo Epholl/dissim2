@@ -165,6 +165,8 @@
                 <rowspec value="center:max(d;4px):noGrow"/>
                 <rowspec value="top:4dlu:noGrow"/>
                 <rowspec value="center:max(d;4px):noGrow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:max(d;4px):noGrow"/>
                 <colspec value="fill:153px:noGrow"/>
                 <colspec value="left:4dlu:noGrow"/>
                 <colspec value="fill:66px:noGrow"/>
@@ -517,6 +519,15 @@
                     </constraints>
                     <properties>
                       <text value="Batched simulations: 0"/>
+                    </properties>
+                  </component>
+                  <component id="eea84" class="javax.swing.JButton" binding="batchResetButton">
+                    <constraints>
+                      <grid row="20" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Reset"/>
                     </properties>
                   </component>
                 </children>

@@ -31,7 +31,7 @@ public class StatisticNumberCounter {
 
     public void clear() {
         statesDurations.clear();
-        lastState = 0;
+        lastUpdate = 0;
         lastState = 0;
     }
 

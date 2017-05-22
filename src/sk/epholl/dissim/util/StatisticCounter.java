@@ -44,11 +44,11 @@ public class StatisticCounter {
     }
 
     public double getLeftConfidenceInterval() {
-        return getMean() - (CONFIDENCE_INTERVAL_90_PERCENT * getDeviation()) / Math.sqrt(count-1);
+        return nonNaN(getMean() - (CONFIDENCE_INTERVAL_90_PERCENT * getDeviation()) / Math.sqrt(count-1));
     }
 
     public double getRightConfidenceInterval() {
-        return getMean() + (CONFIDENCE_INTERVAL_90_PERCENT * getDeviation()) / Math.sqrt(count-1);
+        return nonNaN(getMean() + (CONFIDENCE_INTERVAL_90_PERCENT * getDeviation()) / Math.sqrt(count-1));
     }
 
     public void clear() {
@@ -77,5 +77,9 @@ public class StatisticCounter {
 
     private String f(double val) {
         return String.format("%.4f", val);
+    }
+
+    private double nonNaN(double d) {
+        return Double.isNaN(d)? 0.0 : d;
     }
 }

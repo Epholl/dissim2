@@ -96,6 +96,7 @@ public class MainForm extends JFrame {
     private JButton csvOutputAddAllButton;
     private JButton batchButton;
     private JLabel batchLabel;
+    private JButton batchResetButton;
 
     private State state;
 
@@ -286,6 +287,10 @@ public class MainForm extends JFrame {
             batchLabel.setText("Batched simulations: " + simulationController.getBatchesRemaingSize());
         });
         simulationController.addSimulationEndedCallback(() -> {
+            batchLabel.setText("Batched simulations: " + simulationController.getBatchesRemaingSize());
+        });
+        batchResetButton.addActionListener(e -> {
+            simulationController.resetBatches();
             batchLabel.setText("Batched simulations: " + simulationController.getBatchesRemaingSize());
         });
     }

@@ -125,4 +125,8 @@ public class SimulationController {
     public int getBatchesRemaingSize() {
         return batchQueue.size();
     }
+
+    public void resetBatches() {
+        batchQueue.clear();
+    }
 }
