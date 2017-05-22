@@ -66,4 +66,18 @@ public class TimeUtils {
                     .append(String.format("%02d", seconds));
             return builder.toString();
         }
+
+    public static String formatTimePeriodDecimalSeconds(double time) {
+        StringBuilder builder = new StringBuilder();
+
+        final long hours = TimeUnit.SECONDS.toHours( (int) time);
+        final long minutes = TimeUnit.SECONDS.toMinutes( (int) time) % 60;
+        final double seconds = time % 60;
+        builder.append(String.format("%02d", hours))
+                .append(":")
+                .append(String.format("%02d", minutes))
+                .append(":")
+                .append(String.format("%.4f", seconds));
+        return builder.toString();
+    }
 }

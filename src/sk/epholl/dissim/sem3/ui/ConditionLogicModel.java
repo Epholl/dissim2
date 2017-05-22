@@ -107,8 +107,10 @@ public class ConditionLogicModel {
 
             int selectedIndex = list.getSelectedIndex();
             if (selectedIndex != -1) {
-                listModel.removeElementAt(selectedIndex);
-                list.setSelectedIndex(selectedIndex);
+                if (! (listModel.getElementAt(selectedIndex) instanceof Worker1Condition.Default)) {
+                    listModel.removeElementAt(selectedIndex);
+                    list.setSelectedIndex(selectedIndex);
+                }
             }
         });
 

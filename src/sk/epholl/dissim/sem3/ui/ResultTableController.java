@@ -97,7 +97,7 @@ public class ResultTableController {
 
         private String getValue(int rowIndex, double value) {
             if (resultTypes[rowIndex].isTime()) {
-                return TimeUtils.formatTimePeriod(value);
+                return TimeUtils.formatTimePeriodDecimalSeconds(value);
             }
             return String.format("%.4f", value);
         }
