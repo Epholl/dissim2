@@ -94,6 +94,8 @@ public class MainForm extends JFrame {
     private JButton csvOutputDeleteButton;
     private JButton csvOutputClearButton;
     private JButton csvOutputAddAllButton;
+    private JButton batchButton;
+    private JLabel batchLabel;
 
     private State state;
 
@@ -215,7 +217,10 @@ public class MainForm extends JFrame {
         simulationController = new SimulationController();
         simulationController.getParameters().setReplicationDurationDays(21); //TODO parametrize
         simulationController.addSimulationEndedCallback(() -> {
-            setState(State.Finished);
+            if (!simulationController.hasBatchesRemaining()) {
+                setState(State.Finished);
+            }
+
         });
     }
 
@@ -275,6 +280,14 @@ public class MainForm extends JFrame {
         type2WorkersPricelabel.setText("= " + simulationController.getParameters().getWorker2TotalPrice() + "€ monthly");
         advertismentsPriceLabel.setText("% = " + simulationController.getParameters().getAdvertisementTotalPrice() + "€ monthly");
         updateTotalPrice();
+
+        batchButton.addActionListener(e -> {
+            simulationController.batchCurrent();
+            batchLabel.setText("Batched simulations: " + simulationController.getBatchesRemaingSize());
+        });
+        simulationController.addSimulationEndedCallback(() -> {
+            batchLabel.setText("Batched simulations: " + simulationController.getBatchesRemaingSize());
+        });
     }
 
     private void updateTotalPrice() {
@@ -386,6 +399,7 @@ public class MainForm extends JFrame {
 
         DefaultListModel<Rst.ResultType> listModel = new DefaultListModel<>();
         csvOutputModel = new CsvOutputLogicModel(
+                simulationController,
                 csvOutputTextArea,
                 csvOutputList,
                 listModel,
@@ -396,7 +410,6 @@ public class MainForm extends JFrame {
                 csvOutputClearButton,
                 csvOutputAddAllButton
                 );
-        csvOutputModel.setParams(simulationController.getParameters());
         csvOutputModel.init(simulationController.getResultManager());
         simulationController.addSimulationEndedCallback( () -> {
             csvOutputModel.onSimulationFinished();

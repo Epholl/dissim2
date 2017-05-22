@@ -4,6 +4,8 @@ import sk.epholl.dissim.sem3.agents.OfficeAgent;
 import sk.epholl.dissim.util.deciders.Condition;
 import sk.epholl.dissim.util.deciders.Decider;
 
+import java.util.LinkedList;
+
 /**
  * Created by Tomáš on 16.05.2017.
  */
@@ -31,6 +33,13 @@ public class Worker1Decider extends Decider<Worker1Decision> {
 
     public OfficeAgent getAgent() {
         return agent;
+    }
+
+    public Worker1Decider copy() {
+        Worker1Decider copy = new Worker1Decider(defaultValue);
+        copy.conditions = new LinkedList<>();
+        copy.conditions.addAll(this.conditions);
+        return copy;
     }
 
 }

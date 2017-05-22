@@ -2,6 +2,7 @@ package sk.epholl.dissim.sem3.ui;
 
 import sk.epholl.dissim.sem3.entity.deciders.Worker1Condition;
 import sk.epholl.dissim.sem3.simulation.Rst;
+import sk.epholl.dissim.sem3.simulation.SimulationController;
 import sk.epholl.dissim.sem3.simulation.SimulationParameters;
 import sk.epholl.dissim.util.subscribers.ResultManager;
 import sk.epholl.dissim.util.subscribers.Subscriber;
@@ -20,7 +21,7 @@ public class CsvOutputLogicModel {
 
     public static final String DELIMITER = ",";
 
-    private SimulationParameters params;
+    private SimulationController simulationController;
 
     private JTextArea textArea;
 
@@ -29,6 +30,7 @@ public class CsvOutputLogicModel {
     private Map<ValueType<Rst.Result>, Rst.Result> results = new HashMap<>();
 
     public CsvOutputLogicModel(
+        SimulationController simulationController,
         JTextArea textArea,
         JList<Rst.ResultType> list,
         DefaultListModel<Rst.ResultType> listModel,
@@ -40,6 +42,7 @@ public class CsvOutputLogicModel {
         JButton addAllButton
     ) {
 
+        this.simulationController = simulationController;
         this.textArea = textArea;
         textArea.setFont(textArea.getFont().deriveFont(9f));
         this.listModel = listModel;
@@ -125,10 +128,6 @@ public class CsvOutputLogicModel {
         printHeaderValues(listModel);
     }
 
-    public void setParams(SimulationParameters params) {
-        this.params = params;
-    }
-
     public void init(ResultManager rm) {
         for (Rst.ResultType resultType: Rst.resultTypes()){
             rm.addSubscriber(resultType.valueType, new Subscriber<Rst.Result>() {
@@ -142,11 +141,11 @@ public class CsvOutputLogicModel {
 
     public void onSimulationFinished() {
         StringBuilder builder = new StringBuilder();
-        builder.append(params.getType1WorkerCount());
+        builder.append(simulationController.getParameters().getType1WorkerCount());
         builder.append(DELIMITER);
-        builder.append(params.getType2WorkerCount());
+        builder.append(simulationController.getParameters().getType2WorkerCount());
         builder.append(DELIMITER);
-        builder.append(params.getClientIncomeIncreasePercent());
+        builder.append(simulationController.getParameters().getClientIncomeIncreasePercent());
         for (int i = 0; i < listModel.size(); i++) {
             builder.append(DELIMITER);
             Rst.ResultType resultType = listModel.getElementAt(i);

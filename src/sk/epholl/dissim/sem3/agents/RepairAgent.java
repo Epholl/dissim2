@@ -154,6 +154,7 @@ public class RepairAgent extends BaseAgent {
 			message.setPlace(Place.ParkingLot2);
 			message.setAddressee(Id.carShopModelAgent);
 			manager().request(message);
+			lot2FreeParkingSpots.occupySingleSpot();
 		}
 	}
 

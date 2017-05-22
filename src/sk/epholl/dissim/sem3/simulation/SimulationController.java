@@ -18,12 +18,15 @@ public class SimulationController {
 
     private List<Runnable> afterSimulationCallbacks;
 
+    private LinkedList<SimulationParameters> batchQueue;
+
     public SimulationController() {
         this.simulation = new MySimulation();
         parameters = new SimulationParameters();
         resultManager = new ResultManager();
         simulation.setResultManager(resultManager);
         afterSimulationCallbacks = new LinkedList<>();
+        batchQueue = new LinkedList<>();
 
         setUpSimulationCallbacks();
     }
@@ -45,6 +48,9 @@ public class SimulationController {
     }
 
     public void startSimulation() {
+        if (hasBatchesRemaining()) {
+            setParameters(batchQueue.poll());
+        }
         simulation.setParameters(parameters);
         final Thread simThread = new Thread(() -> {
             simulation.simulate(getParameters().getRepliacationCount(), parameters.getReplicationDurationSeconds());
@@ -74,6 +80,10 @@ public class SimulationController {
             for (Runnable r: afterSimulationCallbacks) {
                 r.run();
             }
+            if (hasBatchesRemaining()) {
+                resetSimulation();
+                startSimulation();
+            }
         });
 
         simulation.onRefreshUI(simulation1 -> {
@@ -102,5 +112,17 @@ public class SimulationController {
 
     public void setParameters(SimulationParameters parameters) {
         this.parameters = parameters;
+    }
+
+    public void batchCurrent() {
+        batchQueue.add(parameters.copy());
+    }
+
+    public boolean hasBatchesRemaining() {
+        return !batchQueue.isEmpty();
+    }
+
+    public int getBatchesRemaingSize() {
+        return batchQueue.size();
     }
 }

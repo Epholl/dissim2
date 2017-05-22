@@ -8,7 +8,7 @@ import sk.epholl.dissim.sem3.entity.deciders.Worker1Decision;
 /**
  * Created by Tomáš on 10.05.2017.
  */
-public class SimulationParameters implements Cloneable {
+public class SimulationParameters {
 
 
     private int repliacationCount;
@@ -29,9 +29,18 @@ public class SimulationParameters implements Cloneable {
 
     private Worker1Decider worker1Decider = new Worker1Decider(Worker1Decision.ReturnCar);
 
-    @Override
-    protected SimulationParameters clone() throws CloneNotSupportedException {
-        return (SimulationParameters) super.clone();
+    public SimulationParameters copy() {
+        SimulationParameters copy = new SimulationParameters();
+        copy.repliacationCount = repliacationCount;
+        copy.replicationDurationSeconds = replicationDurationSeconds;
+        copy.warmupPercentage = warmupPercentage;
+        copy.type1WorkerCount = type1WorkerCount;
+        copy.type2WorkerCount = type2WorkerCount;
+        copy.clientIncomeIncreasePercent = clientIncomeIncreasePercent;
+        copy.generators = new Generators(getClientIncomeCoeficient());
+        copy.roadModel = new RoadModel();
+        copy.worker1Decider = worker1Decider.copy();
+        return copy;
     }
 
     public int getRepliacationCount() {

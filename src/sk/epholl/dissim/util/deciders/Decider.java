@@ -35,6 +35,4 @@ public abstract class Decider<T> {
     public void addCondition(Condition<T> condition) {
         conditions.add(condition);
     }
-
-
 }
