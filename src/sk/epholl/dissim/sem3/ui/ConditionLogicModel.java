@@ -38,6 +38,7 @@ public class ConditionLogicModel {
         initOperantEditTexts(rightOperandsComboBox, rightOperandConstantTextField);
 
         defaultReturnValueComboBox.addActionListener(e -> {
+
             defaultReturnValue.setReturnValue((Worker1Decision) defaultReturnValueComboBox.getSelectedItem());
             listModel.setElementAt(defaultReturnValue, listModel.size()-1);
         });

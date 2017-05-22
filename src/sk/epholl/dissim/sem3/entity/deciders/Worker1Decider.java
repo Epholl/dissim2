@@ -38,7 +38,13 @@ public class Worker1Decider extends Decider<Worker1Decision> {
     public Worker1Decider copy() {
         Worker1Decider copy = new Worker1Decider(defaultValue);
         copy.conditions = new LinkedList<>();
-        copy.conditions.addAll(this.conditions);
+        for (Condition<Worker1Decision> condition: this.conditions) {
+            if (condition instanceof Worker1Condition.Default) {
+                copy.conditions.add(new Worker1Condition.Default(condition.getReturnValue()));
+            } else {
+                copy.conditions.add(condition);
+            }
+        }
         return copy;
     }
 

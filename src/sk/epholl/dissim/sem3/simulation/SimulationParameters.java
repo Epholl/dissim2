@@ -39,7 +39,7 @@ public class SimulationParameters {
         copy.clientIncomeIncreasePercent = clientIncomeIncreasePercent;
         copy.generators = new Generators(getClientIncomeCoeficient());
         copy.roadModel = new RoadModel();
-        copy.worker1Decider = worker1Decider.copy();
+        copy.worker1Decider = this.worker1Decider.copy();
         return copy;
     }
 
